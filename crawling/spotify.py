@@ -10,3 +10,5 @@ client_credentials_manager = SpotifyClientCredentials(client_id=client_id, clien
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 csv_file_path = "spotify_tracks.csv"
+
+chart_tracks = sp.playlist_tracks('37i9dQZEVXbMDoHDwVN2tF') #트랙 인기차트 id
