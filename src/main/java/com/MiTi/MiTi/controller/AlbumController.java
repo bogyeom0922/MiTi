@@ -11,4 +11,9 @@ public class AlbumController {
         return "home";
     }
 
+    @GetMapping("/album")
+    public String album_detail() {
+        return "album/album_detail";
+    }
+
 }
