@@ -7,24 +7,35 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import com.MiTi.MiTi.service.AlbumService;
 
 import java.util.List;
 
 @Controller
 public class AlbumController {
+
+    private final AlbumService albumService;
+
     @Autowired
-    private AlbumRepository albumRepository;
+    public AlbumController(AlbumService albumService) {
+        this.albumService = albumService;
+    }
+
     @GetMapping("/")
     public String home() {
         return "home";
     }
 
-    @GetMapping("/album/{id}")
-    public String album_detail(@PathVariable("id") Long id, Model model) {
-        // 1. id를 조회해 데이터 가져오기
-        Album album = albumRepository.findById(id).orElse(null);
-        // 2. 모델에 데이터 등록하기
-        model.addAttribute("album", album);
+    public String getMainPage(Model model) {
+        List<String> albumDetails = albumService.getAllAlbumDetails();
+        model.addAttribute("albumDetails", albumDetails);
+        return "album/main_list";
+    }
+
+    @GetMapping("/album/{albumDetail}")
+    public String getAlbumDetail(@PathVariable String albumDetail, Model model) {
+        List<Album> albums = albumService.getAlbumsByDetail(albumDetail);
+        model.addAttribute("albums", albums);
         return "album/album_detail";
     }
 

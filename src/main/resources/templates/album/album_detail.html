@@ -9,10 +9,18 @@
 </head>
 <body>
 
-<p>album 정보</p>
-음악 이름:<p th:text="${album.music_name}"></p>
-앨범 이미지:<img th:src="@{${album.album_image}}" alt="Album Image"/>
-아티스트 이름:<p th:text="${album.music_artist_name}"></p>
-앨범 이름:<p th:text="${album.album_detail}"></p>
+<!--<p>album 정보</p>-->
+<!--앨범 이미지:<img th:src="@{${album.album_image}}" alt="Album Image"/>-->
+<!--아티스트 이름:<p th:text="${album.music_artist_name}"></p>-->
+<!--앨범 이름:<p th:text="${album.album_detail}"></p>-->
+
+<!--<li th:each="music : ${musicList}">-->
+<!--    <span th:text="${music.music_name}"></span>-->
+<!--</li>-->
+
+<h1 th:text="'Album Detail for ' + ${albums[0].getAlbumDetail()}"></h1>
+<ul>
+    <li th:each="album : ${albums}" th:text="${album.getMusicName()}"></li>
+</ul>
 </body>
 </html>

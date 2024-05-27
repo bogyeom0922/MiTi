@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Main List</title>
+</head>
+<body>
+<h1>앨범 목록</h1>
+<ul>
+    <!-- 앨범 목록을 순회하며 각 앨범에 대한 링크를 생성합니다. -->
+    <li th:each="detail : ${albumDetails}">
+        <a th:href="@{/album/{detail}(detail=${detail})}" th:text="${detail}"></a>
+    </li>
+</ul>
+</body>
+</html>
