@@ -1,5 +1,7 @@
 package com.MiTi.MiTi.controller;
 
+import com.MiTi.MiTi.entity.Album;
+import com.MiTi.MiTi.repository.AlbumRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

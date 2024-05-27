@@ -28,7 +28,7 @@ public class AlbumDto {
     private String music_duration_ms;
     private String music_instrumentalness;
     private String music_acousticness;
-    private String music_danceablility;
+    private String music_danceability;
     private String music_energy;
     private String music_liveness;
     private String music_loudness;
@@ -60,7 +60,7 @@ public class AlbumDto {
                 .music_duration_ms(music_duration_ms)
                 .music_instrumentalness(music_instrumentalness)
                 .music_acousticness(music_acousticness)
-                .music_danceablility(music_danceablility)
+                .music_danceability(music_danceability)
                 .music_energy(music_energy)
                 .music_liveness(music_liveness)
                 .music_loudness(music_loudness)

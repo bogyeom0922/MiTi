@@ -32,7 +32,7 @@ public class Album {
     private String music_duration_ms;
     private String music_instrumentalness;
     private String music_acousticness;
-    private String music_danceablility;
+    private String music_danceability;
     private String music_energy;
     private String music_liveness;
     private String music_loudness;
