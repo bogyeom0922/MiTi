@@ -5,7 +5,10 @@
     <title>Detail</title>
 </head>
 <body>
-<h1 th:text="${album.detail}"></h1>
+<div th:if="${firstAlbum != null}">
+    <h1  th:text="${firstAlbum.detail}"></h1>
+</div>
+<hr>
 <ul style="list-style-type: none;">
     <li th:each="album : ${albums}">
         <span th:text="${album.music_name}"></span>

@@ -45,6 +45,9 @@ public class AlbumController {
     public String detailList(@PathVariable("detail") String detail, Model model) {
         List<Album> albums = albumService.findByDetail(detail);
         model.addAttribute("albums", albums);
+        if (!albums.isEmpty()) {
+            model.addAttribute("firstAlbum", albums.get(0));
+        }
         return "album/detail";
     }
 
