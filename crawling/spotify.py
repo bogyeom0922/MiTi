@@ -11,7 +11,10 @@ sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 csv_file_path = "spotify_tracks.csv"
 
-chart_tracks = sp.playlist_tracks('37i9dQZEVXbMDoHDwVN2tF') #트랙 인기차트 id
+chart_tracks = sp.playlist_tracks('37i9dQZEVXbNG2KDcFcKOF') # 트랙 인기차트 id
+
+# 기존에 기록된 음악 이름들을 추적하기 위한 집합(set) 생성
+recorded_music_names = set()
 
 with open(csv_file_path, 'w', newline='', encoding='utf-8') as file:
     writer = csv.writer(file)
@@ -38,6 +41,14 @@ with open(csv_file_path, 'w', newline='', encoding='utf-8') as file:
             # 개별 트랙의 상세 정보
             track_details = sp.track(album_track['id'])
 
+            # 이미 기록된 음악인지 확인
+            music_name = album_track['name']
+            if music_name in recorded_music_names:
+                continue  # 이미 기록된 음악이면 건너뜁니다.
+
+            # 새로운 음악이므로 기록합니다.
+            recorded_music_names.add(music_name)
+
             # 오디오 특징
             audio_features = sp.audio_features(album_track['id'])[0]
             
@@ -59,7 +70,7 @@ with open(csv_file_path, 'w', newline='', encoding='utf-8') as file:
 
             # 행 작성
             writer.writerow([
-                track_id, album_track['name'], album_track['id'], 
+                track_id, music_name, album_track['id'], 
                 track_details['popularity'],  # 개별 트랙의 인기도 가져오기
                 track_info['album']['images'][0]['url'], track_info['album']['name'],
                 ', '.join(artist_names), ', '.join(artist_ids), ', '.join(map(str, artist_popularities)),
