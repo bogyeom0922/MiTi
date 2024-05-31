@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail</title>
+</head>
+<body>
+<h1 th:text="${album.detail}"></h1>
+<ul style="list-style-type: none;">
+    <li th:each="album : ${albums}">
+        <span th:text="${album.music_name}"></span>
+    </li>
+</ul>
+</body>
+</html>

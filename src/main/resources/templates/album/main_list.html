@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <title>Main List</title>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Album</title>
 </head>
 <body>
-<h1>앨범 목록</h1>
-<ul>
-    <!-- 앨범 목록을 순회하며 각 앨범에 대한 링크를 생성합니다. -->
-    <li th:each="detail : ${albumDetails}">
-        <a th:href="@{/album/{detail}(detail=${detail})}" th:text="${detail}"></a>
+<h1>ALBUM RANKING</h1>
+<ul style="list-style-type: none;">
+    <li th:each="detail : ${details}">
+        <a th:href="'/detail/' + ${detail}"><p th:text="${detail}"></p></a>
     </li>
 </ul>
 </body>

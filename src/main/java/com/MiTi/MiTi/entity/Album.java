@@ -1,9 +1,6 @@
 package com.MiTi.MiTi.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -16,11 +13,12 @@ public class Album {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private String music_name;
     private String music_id;
     private String music_popularity;
     private String album_image;
-    private String album_detail;
+    private String detail;
     private String music_artist_name;
     private String music_artist_id;
     private String music_artist_popularity;
@@ -44,8 +42,4 @@ public class Album {
     private String music_track_href;
     private String music_type;
     private String music_uri;
-
-    public String getAlbumDetail() {
-        return this.album_detail;
-    }
 }
