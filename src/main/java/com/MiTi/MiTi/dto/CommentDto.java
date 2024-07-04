@@ -1,10 +1,10 @@
 package com.MiTi.MiTi.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class CommentDto {
     private Long Id; //id
     private String comment; //comment
