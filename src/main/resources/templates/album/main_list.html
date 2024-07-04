@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Album</title>
+</head>
+<body>
+<h1>ALBUM RANKING</h1>
+<ul style="list-style-type: none;">
+    <li th:each="detail : ${details}">
+        <a th:href="'/detail/' + ${detail}"><p th:text="${detail}"></p></a>
+    </li>
+</ul>
+</body>
+</html>
