@@ -1,6 +1,9 @@
 package com.MiTi.MiTi.entity;
 
-public class Comment
-{
+import jakarta.persistence.Entity;
+import lombok.*;
+
+@Entity
+public class Comment {
 
 }
