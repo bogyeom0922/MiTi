@@ -13,4 +13,8 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "album_id")
     private Album album_id;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user_id;
 }
