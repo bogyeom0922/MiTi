@@ -15,4 +15,7 @@ public class User {
     @Column
     private String user_pw;
 
+    @Column
+    private String user_name;
+
 }
