@@ -18,4 +18,6 @@ public class User {
     @Column
     private String user_name;
 
+    @Column
+    private String user_mail;
 }
