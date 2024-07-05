@@ -11,6 +11,7 @@ import lombok.*;
 @Entity
 @Table(name = "user_comment")
 public class Comment {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,4 +23,8 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user_id;
+
+    @Column
+    private String comment;
+
 }
