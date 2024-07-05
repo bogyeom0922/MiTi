@@ -5,6 +5,7 @@ import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @Entity
 @Table(name = "user_comment")
 public class Comment {
