@@ -3,6 +3,8 @@ package com.MiTi.MiTi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "user_comment")
 public class Comment {
