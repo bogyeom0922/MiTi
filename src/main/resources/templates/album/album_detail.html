@@ -2,8 +2,16 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link href="/css/album.css" rel="stylesheet">
     <title>Album Detail</title>
-    <link href="/css/main.css?after" rel="stylesheet">
+    <!--음악 재생 시간 분:초 단위로 변경-->
+    <script type="text/javascript">
+        function formatDuration(ms) {
+            var minutes = Math.floor(ms / 60000);
+            var seconds = ((ms % 60000) / 1000).toFixed(0);
+            return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+        }
+    </script>
 </head>
 
 <body>
@@ -19,8 +27,8 @@
 <hr>
 
 <!--앨범에 해당되는 곡 목록-->
-<ul style="list-style-type: none; padding: 0;">
-    <li th:each="album, iterStat : ${albums}" style="border-bottom: 1px solid #ccc; padding: 10px;">
+<ul style="list-style-type: none;">
+    <li th:each="album, iterStat : ${albums}">
         <span th:text="${iterStat.index + 1} + '. ' + ${album.music_name}"></span>
         <script th:inline="javascript">
             var duration = /*[[${album.music_duration_ms}]]*/ '0';
@@ -35,6 +43,7 @@
         </div>
     </li>
 </ul>
+
 
 <!--댓글 작성-->
 <form>
@@ -53,15 +62,6 @@
 </div>
 
 </body>
-
-<!--음악 재생 시간 분:초 단위로 변경-->
-<script type="text/javascript">
-    function formatDuration(ms) {
-        var minutes = Math.floor(ms / 60000);
-        var seconds = ((ms % 60000) / 1000).toFixed(0);
-        return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-    }
-</script>
 
 <!--댓글 생성 폼 json 형태로 전송-->
 <script>
@@ -115,11 +115,5 @@
             });
         }
     });
-
-    function formatDuration(duration) {
-        var minutes = Math.floor(duration / 60000);
-        var seconds = ((duration % 60000) / 1000).toFixed(0);
-        return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-    }
 </script>
 </html>

@@ -11,7 +11,7 @@
 <h1>ALBUM RANKING</h1>
 <ul style="list-style-type: none;">
     <li th:each="detail : ${details}">
-        <a th:href="@{/{detail}/{id}(detail=${detail}, id=${member.id})}"><p th:text="${detail}"></p></a>
+        <a th:href="@{/album/{detail}/{id}(detail=${detail}, id=${member.id})}"><p th:text="${detail}"></p></a>
     </li>
 </ul>
 
