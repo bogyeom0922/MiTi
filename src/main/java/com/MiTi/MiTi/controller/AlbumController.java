@@ -59,7 +59,9 @@ public class AlbumController {
             model.addAttribute("firstAlbum", albums.get(0));
         }
 
-        List<Comment> commentDtos = commentService.comments(String.valueOf(albums.get(0).getId()));
+        List<Comment> comments = commentService.comments(String.valueOf(albums.get(0).getId()));
+        model.addAttribute("comments", comments);
+
         return "album/album_detail";
     }
 }
