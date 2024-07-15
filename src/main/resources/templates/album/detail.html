@@ -30,38 +30,46 @@
     </li>
 </ul>
 
-<form id="commentForm">
-    <input type="text" name="userId" placeholder="User ID" /><br/>
-    <input type="text" name="albumId" placeholder="Album ID" /><br/>
-    <textarea name="comment" placeholder="Comment"></textarea><br/>
+<form>
+    <input type="text" name="userId" id="userId" />
+    <input type="text" name="albumId" id="albumId" />
+    <textarea name="comment" id="comment"></textarea>
     <button type="button" onclick="submitComment()">댓글 작성</button>
 </form>
 
+
 <script>
     function submitComment() {
-        var commentData = {
-            userId: document.getElementById("userId").value,
-            albumId: document.getElementById("albumId").value,
-            comment: document.getElementById("comment").value
+        var userId = document.getElementById('userId').value;
+        var albumId = document.getElementById('albumId').value;
+        var comment = document.getElementById('comment').value;
+
+        // 데이터를 JSON 형태로 만들어 서버로 전송
+        var data = {
+            userId: userId,
+            albumId: albumId,
+            comment: comment
         };
 
+        // 서버로 데이터 전송하는 로직
         fetch('/submitComment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(commentData)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                // 처리 성공 시 로직 추가
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+            body: JSON.stringify(data)
+        }).then(function(response) {
+            // 응답 처리
+            if (response.ok) {
+                console.log('Comment submitted successfully');
+            } else {
+                console.error('Failed to submit comment');
+            }
+        }).catch(function(error) {
+            console.error('Error submitting comment:', error);
+        });
     }
+
 </script>
 
 

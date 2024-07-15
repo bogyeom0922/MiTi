@@ -4,6 +4,7 @@ import com.MiTi.MiTi.dto.CommentDto;
 import com.MiTi.MiTi.entity.Comment;
 import com.MiTi.MiTi.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,13 +20,14 @@ public class CommentController {
     }
 
     @PostMapping("/submitComment")
-    public void submitComment(@RequestBody CommentDto commentDto) {
-        // CommentDto를 Comment 엔티티로 변환하여 서비스로 전달
+    public ResponseEntity<String> submitComment(@RequestBody CommentDto commentDto) {
         Comment comment = new Comment(
                 commentDto.getAlbumId(),
                 commentDto.getUserId(),
                 commentDto.getComment()
         );
         commentService.saveComment(comment);
+        return ResponseEntity.ok("Comment saved successfully");
     }
+
 }
