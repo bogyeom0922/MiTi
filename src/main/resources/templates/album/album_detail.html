@@ -37,7 +37,16 @@
     <button type="button" onclick="submitComment()">댓글 작성</button>
 </form>
 
+<div th:if="${comments != null}">
+    <h2>Comments</h2>
+    <ul>
+        <li th:each="comment : ${comments}">
+            <p th:text="${comment.userId} + ' : ' + ${comment.comment}"></p>
+        </li>
+    </ul>
+</div>
 
+</body>
 <script>
     function submitComment() {
         var userId = document.getElementById('userId').value;
@@ -71,7 +80,4 @@
     }
 
 </script>
-
-
-</body>
 </html>
