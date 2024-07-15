@@ -3,13 +3,10 @@ package com.MiTi.MiTi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import javax.net.ssl.SSLSession;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Entity
 @Table(name = "user_comment")
 public class Comment {
@@ -18,13 +15,19 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String  album_id;
+    @Column(name = "album_id")
+    private String albumId;
 
-    @Column
-    private String user_id;
+    @Column(name = "user_id")
+    private String userId;
 
     @Column
     private String comment;
+
+    public Comment(String albumId, String userId, String comment) {
+        this.albumId = albumId;
+        this.userId = userId;
+        this.comment = comment;
+    }
 
 }
