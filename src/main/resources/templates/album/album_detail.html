@@ -31,7 +31,7 @@
 </ul>
 
 <form>
-    <input type="text" name="userId" id="userId"/>
+    <input type="hidden" name="userId" id="userId" th:value="${member.id}"/>
     <input type="hidden" name="albumId" id="albumId" th:value="${firstAlbum.id}"/>
     <textarea name="comment" id="comment"></textarea>
     <button type="button" onclick="submitComment()">댓글 작성</button>
@@ -69,6 +69,7 @@
             // 응답 처리
             if (response.ok) {
                 console.log('Comment submitted successfully');
+                location.reload();
             } else {
                 console.error('Failed to submit comment');
             }

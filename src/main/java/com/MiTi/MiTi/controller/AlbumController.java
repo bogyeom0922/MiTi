@@ -1,11 +1,15 @@
 package com.MiTi.MiTi.controller;
 
 import com.MiTi.MiTi.dto.CommentDto;
+import com.MiTi.MiTi.dto.MemberDTO;
 import com.MiTi.MiTi.entity.Album;
 import com.MiTi.MiTi.entity.Comment;
+import com.MiTi.MiTi.entity.MemberEntity;
 import com.MiTi.MiTi.repository.AlbumRepository;
+import com.MiTi.MiTi.repository.MemberRepository;
 import com.MiTi.MiTi.service.AlbumService;
 import com.MiTi.MiTi.service.CommentService;
+import com.MiTi.MiTi.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +32,10 @@ public class AlbumController {
 
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private MemberService memberService;
 
     @GetMapping("/")
     public String home() {
@@ -50,8 +58,9 @@ public class AlbumController {
         return "album/main_list";
     }
 
-    @GetMapping("/detail/{detail}")
-    public String detailList(@PathVariable("detail") String detail, Model model) {
+    @GetMapping("/detail/{detail}/{id}")
+    public String detailList(@PathVariable("detail") String detail, @PathVariable Long id,  Model model) {
+        //album
         log.info(detail);
         List<Album> albums = albumService.findByDetail(detail);
         model.addAttribute("albums", albums);
@@ -59,8 +68,13 @@ public class AlbumController {
             model.addAttribute("firstAlbum", albums.get(0));
         }
 
+        //comment
         List<Comment> comments = commentService.comments(String.valueOf(albums.get(0).getId()));
         model.addAttribute("comments", comments);
+
+        //user
+        MemberDTO memberDTO = memberService.findById(id);
+        model.addAttribute("member", memberDTO);
 
         return "album/album_detail";
     }
