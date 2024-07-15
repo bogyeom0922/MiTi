@@ -3,6 +3,7 @@ package com.MiTi.MiTi.controller;
 import com.MiTi.MiTi.entity.Album;
 import com.MiTi.MiTi.repository.AlbumRepository;
 import com.MiTi.MiTi.service.AlbumService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 public class AlbumController {
 
@@ -43,6 +45,7 @@ public class AlbumController {
 
     @GetMapping("/detail/{detail}")
     public String detailList(@PathVariable("detail") String detail, Model model) {
+        log.info(detail);
         List<Album> albums = albumService.findByDetail(detail);
         model.addAttribute("albums", albums);
         if (!albums.isEmpty()) {
