@@ -39,11 +39,9 @@
 
 <div th:if="${comments != null}">
     <h2>Comments</h2>
-    <ul>
-        <li th:each="comment : ${comments}">
-            <p th:text="${comment.userId} + ' : ' + ${comment.comment}"></p>
-        </li>
-    </ul>
+    <div th:each="comment : ${comments}">
+        <p th:text="${comment.userId} + ' : ' + ${comment.comment}"></p>
+    </div>
 </div>
 
 </body>
