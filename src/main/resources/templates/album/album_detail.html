@@ -29,23 +29,26 @@
 <!--앨범에 해당되는 곡 목록-->
 <ul style="list-style-type: none;">
     <li th:each="album, iterStat : ${albums}">
+        <div class="accordion_block">
         <span th:text="${iterStat.index + 1} + '. ' + ${album.music_name}"></span>
         <script th:inline="javascript">
             var duration = /*[[${album.music_duration_ms}]]*/ '0';
             document.write(formatDuration(duration));
         </script>
-        <button class="accordion">Options</button>
+        <button class="accordion">:</button>
         <div class="panel">
             <button>좋아요</button>
             <button>재생목록에 추가</button>
             <button>다음에 재생</button>
             <button>공유</button>
         </div>
+        </div>
     </li>
 </ul>
-
+<hr>
 
 <!--댓글 작성-->
+<h2>Comments</h2>
 <form>
     <input type="hidden" name="userId" id="userId" th:value="${member.id}"/>
     <input type="hidden" name="albumId" id="albumId" th:value="${firstAlbum.id}"/>
@@ -55,7 +58,6 @@
 
 <!--댓글 목록-->
 <div th:if="${comments != null}">
-    <h2>Comments</h2>
     <div th:each="comment : ${comments}">
         <p th:text="${comment.userId} + ' : ' + ${comment.comment}"></p>
     </div>

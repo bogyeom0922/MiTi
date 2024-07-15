@@ -1,26 +1,32 @@
-/*accordion menu*/
+/* accordion menu */
 .accordion {
     cursor: pointer;
-    padding: 10px;
-    width: 100%;
+    top: -3px;
+    left: 20px;
+    width: 10px;
     border: none;
     text-align: left;
     outline: none;
     transition: 0.4s;
-    background-color: #f1f1f1;
-    border-bottom: 1px solid #ccc;
     font-size: 16px;
+    position: relative;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0);
 }
 
 .accordion:hover, .accordion.active {
-    background-color: #ccc;
+    background-color: rgba(255, 255, 255, 0);
 }
 
 .panel {
-    padding: 0 18px;
+    position: relative;
+    top: 0;
+    left: 40px; /* Adjust the left position based on your design */
+    width: 120px; /* Adjust width as needed */
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0);
     display: none;
-    background-color: white;
-    overflow: hidden;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* optional: add shadow for panel */
 }
 
 .panel button {
@@ -36,5 +42,16 @@
 }
 
 .panel button:hover {
-    background-color: #eee;
+    background-color: rgba(255, 255, 255, 0);
+}
+
+/* Show panel when accordion is active */
+.accordion.active + .panel {
+    display: block;
+}
+
+.accordion_block {
+    display: flex;
+    justify-content: left;
+    margin-bottom: 20px;
 }
