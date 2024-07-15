@@ -3,16 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Album Detail</title>
-    <script type="text/javascript">
-        function formatDuration(ms) {
-            var minutes = Math.floor(ms / 60000);
-            var seconds = ((ms % 60000) / 1000).toFixed(0);
-            return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-        }
-    </script>
     <link href="/css/main.css?after" rel="stylesheet">
 </head>
+
 <body>
+
+<!--앨범 기본 정보-->
 <div th:if="${firstAlbum != null}">
     <h1 th:text="${firstAlbum.detail}"></h1>
     <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" width="300px">
@@ -21,6 +17,8 @@
     <p>artist genres: <span th:text="${firstAlbum.music_artist_genres}"></span></p>
 </div>
 <hr>
+
+<!--앨범에 해당되는 곡 목록-->
 <ul style="list-style-type: none; padding: 0;">
     <li th:each="album, iterStat : ${albums}" style="border-bottom: 1px solid #ccc; padding: 10px;">
         <span th:text="${iterStat.index + 1} + '. ' + ${album.music_name}"></span>
@@ -38,6 +36,7 @@
     </li>
 </ul>
 
+<!--댓글 작성-->
 <form>
     <input type="hidden" name="userId" id="userId" th:value="${member.id}"/>
     <input type="hidden" name="albumId" id="albumId" th:value="${firstAlbum.id}"/>
@@ -45,6 +44,7 @@
     <button type="button" onclick="submitComment()">댓글 작성</button>
 </form>
 
+<!--댓글 목록-->
 <div th:if="${comments != null}">
     <h2>Comments</h2>
     <div th:each="comment : ${comments}">
@@ -53,6 +53,17 @@
 </div>
 
 </body>
+
+<!--음악 재생 시간 분:초 단위로 변경-->
+<script type="text/javascript">
+    function formatDuration(ms) {
+        var minutes = Math.floor(ms / 60000);
+        var seconds = ((ms % 60000) / 1000).toFixed(0);
+        return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+    }
+</script>
+
+<!--댓글 생성 폼 json 형태로 전송-->
 <script>
     function submitComment() {
         var userId = document.getElementById('userId').value;
@@ -88,6 +99,7 @@
 
 </script>
 
+<!--아코디언 메뉴-->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var acc = document.getElementsByClassName("accordion");
