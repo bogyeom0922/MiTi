@@ -2,7 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Detail</title>
+    <link href="/css/album.css" rel="stylesheet">
+    <title>Album Detail</title>
+    <!--음악 재생 시간 분:초 단위로 변경-->
     <script type="text/javascript">
         function formatDuration(ms) {
             var minutes = Math.floor(ms / 60000);
@@ -11,7 +13,10 @@
         }
     </script>
 </head>
+
 <body>
+
+<!--앨범 기본 정보-->
 <div th:if="${firstAlbum != null}">
     <h1 th:text="${firstAlbum.detail}"></h1>
     <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" width="300px">
@@ -20,16 +25,30 @@
     <p>artist genres: <span th:text="${firstAlbum.music_artist_genres}"></span></p>
 </div>
 <hr>
+
+<!--앨범에 해당되는 곡 목록-->
 <ul style="list-style-type: none;">
     <li th:each="album, iterStat : ${albums}">
+        <div class="accordion_block">
         <span th:text="${iterStat.index + 1} + '. ' + ${album.music_name}"></span>
         <script th:inline="javascript">
             var duration = /*[[${album.music_duration_ms}]]*/ '0';
             document.write(formatDuration(duration));
         </script>
+        <button class="accordion">:</button>
+        <div class="panel">
+            <button>좋아요</button>
+            <button>재생목록에 추가</button>
+            <button>다음에 재생</button>
+            <button>공유</button>
+        </div>
+        </div>
     </li>
 </ul>
+<hr>
 
+<!--댓글 작성-->
+<h2>Comments</h2>
 <form>
     <input type="hidden" name="userId" id="userId" th:value="${member.id}"/>
     <input type="hidden" name="albumId" id="albumId" th:value="${firstAlbum.id}"/>
@@ -37,14 +56,16 @@
     <button type="button" onclick="submitComment()">댓글 작성</button>
 </form>
 
+<!--댓글 목록-->
 <div th:if="${comments != null}">
-    <h2>Comments</h2>
     <div th:each="comment : ${comments}">
         <p th:text="${comment.userId} + ' : ' + ${comment.comment}"></p>
     </div>
 </div>
 
 </body>
+
+<!--댓글 생성 폼 json 형태로 전송-->
 <script>
     function submitComment() {
         var userId = document.getElementById('userId').value;
@@ -79,4 +100,23 @@
     }
 
 </script>
+
+<!--아코디언 메뉴-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var acc = document.getElementsByClassName("accordion");
+        for (var i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+    });
+</script>
+
 </html>

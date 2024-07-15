@@ -63,7 +63,7 @@ public class AlbumController {
         return "album/album_list";
     }
 
-    @GetMapping("/{detail}/{id}")
+    @GetMapping("/album/{detail}/{id}")
     public String detailList(@PathVariable("detail") String detail, @PathVariable Long id,  Model model) {
         //album
         log.info(detail);
