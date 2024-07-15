@@ -2,6 +2,7 @@ package com.MiTi.MiTi.controller;
 
 import com.MiTi.MiTi.dto.CommentDto;
 import com.MiTi.MiTi.entity.Album;
+import com.MiTi.MiTi.entity.Comment;
 import com.MiTi.MiTi.repository.AlbumRepository;
 import com.MiTi.MiTi.service.AlbumService;
 import com.MiTi.MiTi.service.CommentService;
@@ -58,7 +59,7 @@ public class AlbumController {
             model.addAttribute("firstAlbum", albums.get(0));
         }
 
-        List<CommentDto> commentDtos = commentService.comments(albums.get(0).getId());
+        List<Comment> commentDtos = commentService.comments(String.valueOf(albums.get(0).getId()));
         return "album/album_detail";
     }
 }

@@ -15,10 +15,7 @@ public class CommentService {
     private CommentRepository commentRepository;
 
     public List<Comment> comments(String albumId) {
-        return commentRepository.findByAlbumId(albumId)
-                .stream() //리스트에 저장된 요소들 하나씩 참조하며 반복 처리할 때 사용
-                .map(CommentDto::createCommentDto)
-                .collect(Collectors.toList());
+        return commentRepository.findByAlbumId(albumId);
     }
 
     public void saveComment(Comment comment) {
