@@ -11,8 +11,8 @@ import lombok.*;
 public class CommentDto {
     private Long Id; //id
     private String comment; //comment
-    private Long user_id; //user 테이블 id값
-    private Long album_id; //album 테이블 id값
+    private String user_id; //user 테이블 id값
+    private String album_id; //album 테이블 id값
 
 
     public static Object createCommentDto(Comment comment) {
