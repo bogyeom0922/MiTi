@@ -30,9 +30,41 @@
     </li>
 </ul>
 
-<form>
-
+<form id="commentForm">
+    <input type="text" name="userId" placeholder="User ID" /><br/>
+    <input type="text" name="albumId" placeholder="Album ID" /><br/>
+    <textarea name="comment" placeholder="Comment"></textarea><br/>
+    <button type="button" onclick="submitComment()">댓글 작성</button>
 </form>
+
+<script>
+    function submitComment() {
+        var commentData = {
+            userId: document.getElementById("userId").value,
+            albumId: document.getElementById("albumId").value,
+            comment: document.getElementById("comment").value
+        };
+
+        fetch('/submitComment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(commentData)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                // 처리 성공 시 로직 추가
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+
+
 
 </body>
 </html>
