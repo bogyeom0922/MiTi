@@ -42,8 +42,9 @@ public class AlbumController {
         return "home";
     }
 
-    @GetMapping("/main_list")
-    public String mainList(Model model) {
+    @GetMapping("/album_list/{id}")
+    public String albumList(Model model, @PathVariable Long id) {
+        //album
         List<String> details = albumRepository.findAll()
                 .stream()
                 .map(Album::getDetail)
@@ -55,10 +56,14 @@ public class AlbumController {
                 .collect(Collectors.toList());
 
         model.addAttribute("details", uniqueDetails);
-        return "album/main_list";
+
+        //user
+        MemberDTO memberDTO = memberService.findById(id);
+        model.addAttribute("member", memberDTO);
+        return "album/album_list";
     }
 
-    @GetMapping("/detail/{detail}/{id}")
+    @GetMapping("/{detail}/{id}")
     public String detailList(@PathVariable("detail") String detail, @PathVariable Long id,  Model model) {
         //album
         log.info(detail);
