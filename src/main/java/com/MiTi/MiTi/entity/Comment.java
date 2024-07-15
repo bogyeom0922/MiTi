@@ -3,6 +3,8 @@ package com.MiTi.MiTi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import javax.net.ssl.SSLSession;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,13 +18,11 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "album_id")
-    private Album album_id;
+    @Column
+    private String  album_id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user_id;
+    @Column
+    private String user_id;
 
     @Column
     private String comment;
