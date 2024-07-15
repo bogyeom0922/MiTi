@@ -1,8 +1,6 @@
 package com.MiTi.MiTi.controller;
 
-import com.MiTi.MiTi.dto.CommentDto;
 import com.MiTi.MiTi.entity.Album;
-import com.MiTi.MiTi.entity.Comment;
 import com.MiTi.MiTi.repository.AlbumRepository;
 import com.MiTi.MiTi.service.AlbumService;
 import com.MiTi.MiTi.service.CommentService;
@@ -12,8 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,6 +56,6 @@ public class AlbumController {
         if (!albums.isEmpty()) {
             model.addAttribute("firstAlbum", albums.get(0));
         }
-        return "album/detail";
+        return "album/album_detail";
     }
 }

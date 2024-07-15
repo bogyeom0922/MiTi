@@ -13,7 +13,7 @@
 </head>
 <body>
 <div th:if="${firstAlbum != null}">
-    <h1  th:text="${firstAlbum.detail}"></h1>
+    <h1 th:text="${firstAlbum.detail}"></h1>
     <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" width="300px">
     <p th:text="${firstAlbum.music_artist_name}"></p>
     <p>followers: <span th:text="${firstAlbum.music_artist_followers}"></span></p>
@@ -31,8 +31,8 @@
 </ul>
 
 <form>
-    <input type="text" name="userId" id="userId" />
-    <input type="text" name="albumId" id="albumId" />
+    <input type="text" name="userId" id="userId"/>
+    <input type="hidden" name="albumId" id="albumId" th:value="${firstAlbum.id}"/>
     <textarea name="comment" id="comment"></textarea>
     <button type="button" onclick="submitComment()">댓글 작성</button>
 </form>
@@ -58,20 +58,19 @@
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(data)
-        }).then(function(response) {
+        }).then(function (response) {
             // 응답 처리
             if (response.ok) {
                 console.log('Comment submitted successfully');
             } else {
                 console.error('Failed to submit comment');
             }
-        }).catch(function(error) {
+        }).catch(function (error) {
             console.error('Error submitting comment:', error);
         });
     }
 
 </script>
-
 
 
 </body>
