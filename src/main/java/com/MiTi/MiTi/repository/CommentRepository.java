@@ -10,7 +10,8 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     //특정 앨범 댓글 조회
-    @Query(value = "SELECT * FROM user_comment WHERE album_id = :albumId", nativeQuery = true)
-    List<Comment> findByAlbumId(Long albumId);
+    List<Comment> findByAlbumId(String albumId);
+    //특정 사용자 댓글 조회
+    List<Comment> findByUserId(String userId);
 
 }
