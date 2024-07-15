@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>유저 음악 기록</title>
+</head>
+<body>
+<div class ="layout">
+    <button onclick="location.href='record'">음악 기록</button>
+    <button onclick="location.href='like'">좋아요</button>
+    <button onclick="location.href='user_genre'">선호 장르</button>
+    <button onclick="location.href='comment'">댓글</button>
+    <button onclick="location.href='user_playlist'">플레이리스트</button>
+</div>
+
+<table>
+    <tr>
+        <th>User ID</th>
+        <th>Album ID</th>
+        <th>Album ID</th>
+    </tr>
+    <tr th:each="post : ${postList}">
+        <td>
+            <span th:text="${post.user_id}"></span>
+        </td>
+        <td>
+            <span th:text="${post.album_id}"></span>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
