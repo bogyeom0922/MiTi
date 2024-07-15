@@ -1,5 +1,6 @@
 package com.MiTi.MiTi.controller;
 
+import com.MiTi.MiTi.dto.CommentDto;
 import com.MiTi.MiTi.entity.Album;
 import com.MiTi.MiTi.repository.AlbumRepository;
 import com.MiTi.MiTi.service.AlbumService;
@@ -56,6 +57,8 @@ public class AlbumController {
         if (!albums.isEmpty()) {
             model.addAttribute("firstAlbum", albums.get(0));
         }
+
+        List<CommentDto> commentDtos = commentService.comments(albums.get(0).getId());
         return "album/album_detail";
     }
 }
