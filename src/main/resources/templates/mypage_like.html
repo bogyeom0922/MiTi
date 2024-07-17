@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>유저 좋아요 기록</title>
+</head>
+<body>
+<div class="layout">
+    <button onclick="location.href='record'">음악 기록</button>
+    <button onclick="location.href='like'">좋아요</button>
+    <button onclick="location.href='user_genre'">선호 장르</button>
+    <button onclick="location.href='comment'">댓글</button>
+    <button onclick="location.href='user_playlist'">플레이리스트</button>
+</div>
+
+<table>
+    <tr>
+        <th>좋아요 한 음악</th>
+    </tr>
+    <tr>
+        <th>앨범 이미지</th>
+        <th>음악 이름</th>
+        <th>가수</th>
+        <th>음악 길이</th>
+        <th>좋아요 취소</th>
+    </tr>
+    <tr th:each="post : ${postList}">
+        <td>
+            <img th:src="@{${post.album_image}}" width="50">
+        </td>
+        <td>
+            <span th:text="${post.music_name}"></span>
+        </td>
+        <td>
+            <span th:text="${post.music_artist_name}"></span>
+        </td>
+        <td>
+            <span th:text="${post.formattedDuration}"></span>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

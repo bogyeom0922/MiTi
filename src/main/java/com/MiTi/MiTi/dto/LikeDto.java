@@ -1,13 +1,14 @@
 package com.MiTi.MiTi.dto;
 
-import com.MiTi.MiTi.entity.Record;
+
+import com.MiTi.MiTi.entity.Like;
 import lombok.*;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class RecordDto {
+public class LikeDto {
 
     private Integer user_id;
     private Integer album_id;
@@ -16,15 +17,15 @@ public class RecordDto {
     private String music_artist_name;
     private String music_duration_ms;
 
-    public Record toEntity() {
-        return Record.builder()
+    public Like toEntity() {
+        return Like.builder()
                 .user_id(user_id)
                 .album_id(album_id)
                 .build();
     }
 
     @Builder
-    public RecordDto(Integer user_id, Integer album_id, String music_name, String album_image, String music_artist_name, String music_duration_ms) {
+    public LikeDto(Integer user_id, Integer album_id, String music_name, String album_image, String music_artist_name, String music_duration_ms) {
         this.user_id = user_id;
         this.album_id = album_id;
         this.music_name = music_name;
