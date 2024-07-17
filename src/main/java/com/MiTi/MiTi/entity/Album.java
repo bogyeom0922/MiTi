@@ -27,7 +27,7 @@ public class Album {
     private String music_artist_followers;
     private String music_analysis_url;
     private String music_key;
-    private String music_duration_ms;
+    private Integer music_duration_ms;
     private String music_instrumentalness;
     private String music_acousticness;
     private String music_danceability;
@@ -42,4 +42,7 @@ public class Album {
     private String music_track_href;
     private String music_type;
     private String music_uri;
+
+
+
 }
