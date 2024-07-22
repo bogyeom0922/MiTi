@@ -43,7 +43,11 @@
             <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
                 <button>앨범 정보</button>
             </a>
-            <button>공유</button>
+            <button class="share-btn">공유</button>
+            <div class="share-menu" style="display: none;">
+                <button onclick="copyUrl()">URL 복사</button>
+                <button onclick="shareKakao()">카카오톡으로 전송</button>
+            </div>
         </div>
         </div>
     </li>
