@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="/css/album.css" rel="stylesheet">
+    <title>Album Detail</title>
+    <!--음악 재생 시간 분:초 단위로 변경-->
+    <script type="text/javascript">
+        function formatDuration(ms) {
+            var minutes = Math.floor(ms / 60000);
+            var seconds = ((ms % 60000) / 1000).toFixed(0);
+            return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+        }
+    </script>
+</head>
+
+<body>
+
+<!--앨범 기본 정보-->
+<div th:if="${firstAlbum != null}">
+    <h1 th:text="${firstAlbum.detail}"></h1>
+    <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" width="300px">
+    <p th:text="${firstAlbum.music_artist_name}"></p>
+    <p>followers: <span th:text="${firstAlbum.music_artist_followers}"></span></p>
+    <p>artist genres: <span th:text="${firstAlbum.music_artist_genres}"></span></p>
+</div>
+<hr>
+
+<!--앨범에 해당되는 곡 목록-->
+<ul style="list-style-type: none;">
+    <li th:each="album, iterStat : ${albums}">
+        <div class="accordion_block">
+        <span th:text="${iterStat.index + 1} + '. ' + ${album.music_name}"></span>
+        <script th:inline="javascript">
+            var duration = /*[[${album.music_duration_ms}]]*/ '0';
+            document.write(formatDuration(duration));
+        </script>
+        <button class="accordion">:</button>
+        <div class="panel">
+            <button>좋아요</button>
+            <button>재생 목록에 추가</button>
+            <button>다음에 재생</button>
+            <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
+                <button>앨범 정보</button>
+            </a>
+            <button class="share-btn">공유</button>
+            <div class="share-menu" style="display: none;">
+                <button onclick="copyUrl()">URL 복사</button>
+                <button onclick="shareKakao()">카카오톡으로 전송</button>
+            </div>
+        </div>
+        </div>
+    </li>
+</ul>
+<hr>
+
+<!--댓글 작성-->
+<h2>Comments</h2>
+<form>
+    <input type="hidden" name="userId" id="userId" th:value="${member.id}"/>
+    <input type="hidden" name="albumId" id="albumId" th:value="${firstAlbum.id}"/>
+    <textarea name="comment" id="comment"></textarea>
+    <button type="button" onclick="submitComment()">댓글 작성</button>
+</form>
+
+<!--댓글 목록-->
+<div th:if="${comments != null}">
+    <div th:each="comment : ${comments}">
+        <p th:text="${comment.userId} + ' : ' + ${comment.comment}"></p>
+    </div>
+</div>
+
+</body>
+
+<!--댓글 생성 폼 json 형태로 전송-->
+<script>
+    function submitComment() {
+        var userId = document.getElementById('userId').value;
+        var albumId = document.getElementById('albumId').value;
+        var comment = document.getElementById('comment').value;
+
+        // 데이터를 JSON 형태로 만들어 서버로 전송
+        var data = {
+            userId: userId,
+            albumId: albumId,
+            comment: comment
+        };
+
+        // 서버로 데이터 전송하는 로직
+        fetch('/submitComment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(function (response) {
+            // 응답 처리
+            if (response.ok) {
+                console.log('Comment submitted successfully');
+                location.reload();
+            } else {
+                console.error('Failed to submit comment');
+            }
+        }).catch(function (error) {
+            console.error('Error submitting comment:', error);
+        });
+    }
+
+</script>
+
+<!--아코디언 메뉴-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var acc = document.getElementsByClassName("accordion");
+        for (var i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+    });
+</script>
+
+</html>
