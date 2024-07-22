@@ -38,9 +38,16 @@
         <button class="accordion">:</button>
         <div class="panel">
             <button>좋아요</button>
-            <button>재생목록에 추가</button>
+            <button>재생 목록에 추가</button>
             <button>다음에 재생</button>
-            <button>공유</button>
+            <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
+                <button>앨범 정보</button>
+            </a>
+            <button class="share-btn">공유</button>
+            <div class="share-menu" style="display: none;">
+                <button onclick="copyUrl()">URL 복사</button>
+                <button onclick="shareKakao()">카카오톡으로 전송</button>
+            </div>
         </div>
         </div>
     </li>
