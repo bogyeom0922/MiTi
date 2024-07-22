@@ -18,8 +18,8 @@ public class RecordService {
     }
 
     @Transactional
-    public List<RecordDto> getRecordList() {
-        List<Record> recordList = recordRepository.findAll();
+    public List<RecordDto> getRecordListByUserId(Integer user_id) {
+        List<Record> recordList = recordRepository.findByUser_id(user_id);
         List<RecordDto> recordDtoList = new ArrayList<>();
 
         for (Record record : recordList) {
