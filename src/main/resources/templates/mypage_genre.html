@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>유저 선호 장르</title>
+</head>
+<body>
+<div class="layout">
+    <button onclick="location.href='/record/{userId}'">음악 기록</button>
+    <button onclick="location.href='/like/{userId}'">좋아요</button>
+    <button onclick="location.href='/user_genre/{userId}'">선호 장르</button>
+    <button onclick="location.href='/comment/{userId}'">댓글</button>
+    <button onclick="location.href='/user_playlist/{userId}'">플레이리스트</button>
+</div>
+
+<table>
+    <tr>
+        <th>선호 장르</th>
+    </tr>
+    <tr>
+        <th>장르 이름</th>
+        <th>장르 삭제</th>
+    </tr>
+    <tr th:each="post : ${postList}">
+        <td>
+            <span th:text="${post.genre}"></span>
+        </td>
+        <td>
+            <button th:onclick="'deleteGenre(' + ${post.id} + ')'" class="btn btn-danger">삭제</button>
+        </td>
+    </tr>
+</table>
+
+<script>
+    function deleteGenre(id) {
+        console.log(`Deleting genre with id: ${id}`);
+        fetch(`/mypage/genre/${id}`, {
+            method: 'DELETE'
+        })
+            .then(response => response.text())
+            .then(result => {
+                console.log(`Response: ${result}`);
+                if (result === 'success') {
+                    location.reload();
+                } else {
+                    alert('삭제 실패');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+
+</body>
+</html>
