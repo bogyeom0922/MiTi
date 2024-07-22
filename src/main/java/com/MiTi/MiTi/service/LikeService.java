@@ -26,6 +26,7 @@ public class LikeService {
 
         for (Like like : likeList) {
             LikeDto likeDto = LikeDto.builder()
+                    .id(like.getId())
                     .userId(like.getUserId())
                     .albumId(like.getAlbumId())
                     .album_image(like.getAlbum().getAlbum_image())
@@ -41,10 +42,9 @@ public class LikeService {
 
 
     @Transactional
-    public void deleteLike(String userId, String albumId) {
-        likeRepository.deleteByUserIdAndAlbumId(userId, albumId);
+    public void deleteLike(Long id) {
+        likeRepository.deleteById(id);
     }
-
 }
 
 

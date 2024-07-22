@@ -35,18 +35,18 @@
             <span th:text="${post.music_artist_name}"></span>
         </td>
         <td>
-            <span th:text="${post.music_duration_ms}"></span>
+            <span th:text="${post.formattedDuration}"></span>
         </td>
         <td>
-            <a href="/mypage/like/{{post.user_id}}/{{post.album_id}}/delete" class="btn btn-danger">Delete</a>
+            <button th:onclick="'deleteLike(' + ${post.id} + ')'" class="btn btn-danger">삭제</button>
         </td>
     </tr>
 </table>
 
 <script>
-    function deleteLike(user_id, album_id) {
-        console.log(`Deleting like for userId: ${user_id}, albumId: ${album_id}`);
-        fetch(`/mypage/like/${user_id}/${album_id}`, {
+    function deleteLike(id) {
+        console.log(`Deleting like for userId: ${id}`);
+        fetch(`/mypage/like/${id}`, {
             method: 'DELETE'
         })
             .then(response => response.text())
