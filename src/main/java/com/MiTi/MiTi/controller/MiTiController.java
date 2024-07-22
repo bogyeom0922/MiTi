@@ -4,10 +4,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class HeartController {
-
-    @GetMapping("/heart") //"/heart" 경로에 대한 GET 요청을 처리
+public class MiTiController {
+    @GetMapping("/")
     public String index() {
-        return "logo"; // "logo"라는 이름의 뷰를 반환
+        return "index";
     }
 }

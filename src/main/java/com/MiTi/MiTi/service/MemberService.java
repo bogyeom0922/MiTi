@@ -4,71 +4,102 @@ import com.MiTi.MiTi.dto.MemberDTO;
 import com.MiTi.MiTi.entity.MemberEntity;
 import com.MiTi.MiTi.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final JavaMailSender mailSender;
+    private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
+
+    public boolean idCheck(String memberId) {
+        return memberRepository.existsByMemberId(memberId);
+    }
+
+    private String generateAuthCode() {
+        Random random = new Random();
+        int code = 100000 + random.nextInt(900000); // 6자리 숫자 생성
+        return Integer.toString(code);
+    }
+
+    private void saveAuthCode(String email, String authCode) {
+        if (email == null || email.isEmpty()) {
+            logger.error("Cannot save auth code because email is null or empty");
+            return;
+        }
+
+        Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
+        if (memberOptional.isPresent()) {
+            MemberEntity member = memberOptional.get();
+            member.setAuthCode(authCode);
+            member.setAuthCodeExpiration(LocalDateTime.now().plusMinutes(10));
+            memberRepository.save(member);
+        } else {
+            logger.error("No member found with email: {}", email);
+        }
+    }
+
+    private void sendAuthCodeEmail(String email, String authCode) {
+        if (email == null || email.isEmpty()) {
+            logger.error("Cannot send email because email is null or empty");
+            return;
+        }
+
+        String subject = "회원가입 인증 코드";
+        String body = "회원가입을 위해 아래의 인증 코드를 입력하세요:\n\n" + authCode;
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject(subject);
+        message.setText(body);
+        mailSender.send(message);
+    }
 
     public String registerMember(MemberDTO memberDTO) {
-        // 이메일 중복 체크
-        Optional<MemberEntity> existingMember = memberRepository.findByMemberEmail(memberDTO.getMemberEmail());
-        if (existingMember.isPresent()) {
-            return "duplicate"; // 이미 존재하는 이메일이므로 실패 메시지 반환
+        if (memberDTO == null) {
+            logger.error("MemberDTO is null");
+            return "error";
         }
 
-        // 아이디 중복 체크도 추가 가능
+        if (idCheck(memberDTO.getMemberId())) {
+            return "duplicate";
+        }
 
-        // 회원 등록
+        String authCode = generateAuthCode();
+        saveAuthCode(memberDTO.getMemberEmail(), authCode);
+        sendAuthCodeEmail(memberDTO.getMemberEmail(), authCode);
+
         MemberEntity memberEntity = MemberEntity.toMemberEntity(memberDTO);
         memberRepository.save(memberEntity);
-        return "ok"; // 회원가입 성공 메시지 반환
+
+        return "ok";
     }
 
-    public MemberDTO login(MemberDTO memberDTO) {
-        Optional<MemberEntity> byMemberEmail = memberRepository.findByMemberEmail(memberDTO.getMemberEmail());
-        if (byMemberEmail.isPresent()) {
-            MemberEntity memberEntity = byMemberEmail.get();
-            if (memberEntity.getMemberPassword().equals(memberDTO.getMemberPassword())) {
-                return MemberDTO.toMemberDTO(memberEntity);
-            }
+    public boolean verifyCode(String email, String providedCode) {
+        if (email == null || email.isEmpty()) {
+            logger.error("Cannot verify code because email is null or empty");
+            return false;
         }
-        return null; // 로그인 실패 시 null 반환
-    }
 
-    public List<MemberDTO> findAll() {
-        List<MemberEntity> memberEntityList = memberRepository.findAll();
-        return memberEntityList.stream()
-                .map(MemberDTO::toMemberDTO)
-                .collect(Collectors.toList());
-    }
+        Optional<MemberEntity> memberOptional = memberRepository.findByEmail(email);
+        if (memberOptional.isPresent()) {
+            MemberEntity member = memberOptional.get();
+            String storedCode = member.getAuthCode();
+            LocalDateTime expiration = member.getAuthCodeExpiration();
 
-    public MemberDTO findById(Long id) {
-        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(id);
-        return optionalMemberEntity.map(MemberDTO::toMemberDTO).orElse(null);
-    }
+            return storedCode != null && storedCode.equals(providedCode) && LocalDateTime.now().isBefore(expiration);
+        }
+        return false;
 
-    public MemberDTO updateForm(String myEmail) {
-        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(myEmail);
-        return optionalMemberEntity.map(MemberDTO::toMemberDTO).orElse(null);
-    }
-
-    public void update(MemberDTO memberDTO) {
-        memberRepository.save(MemberEntity.toUpdateMemberEntity(memberDTO));
-    }
-
-    public void deleteById(Long id) {
-        memberRepository.deleteById(id);
-    }
-
-    public String emailCheck(String memberEmail) {
-        Optional<MemberEntity> byMemberEmail = memberRepository.findByMemberEmail(memberEmail);
-        return byMemberEmail.isPresent() ? "duplicate" : "ok";
     }
 }
