@@ -35,9 +35,34 @@
             <span th:text="${post.music_artist_name}"></span>
         </td>
         <td>
-            <span th:text="${post.formattedDuration}"></span>
+            <span th:text="${post.music_duration_ms}"></span>
+        </td>
+        <td>
+            <button onclick="deleteLike([[${post.user_id}]], [[${post.album_id}]])">삭제</button>
         </td>
     </tr>
 </table>
+
+<script>
+    function deleteLike(user_id, album_id) {
+        console.log(`Deleting like for userId: ${user_id}, albumId: ${album_id}`);
+        fetch(`/mypage/like/${user_id}/${album_id}`, {
+            method: 'DELETE'
+        })
+            .then(response => response.text())
+            .then(result => {
+                console.log(`Response: ${result}`);
+                if (result === 'success') {
+                    location.reload();
+                } else {
+                    alert('삭제 실패');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+
 </body>
 </html>
