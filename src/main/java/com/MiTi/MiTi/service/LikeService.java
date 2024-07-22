@@ -1,7 +1,9 @@
 package com.MiTi.MiTi.service;
 
 import com.MiTi.MiTi.dto.LikeDto;
+import com.MiTi.MiTi.dto.RecordDto;
 import com.MiTi.MiTi.entity.Like;
+import com.MiTi.MiTi.entity.Record;
 import com.MiTi.MiTi.repository.LikeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -18,14 +20,14 @@ public class LikeService {
     }
 
     @Transactional
-    public List<LikeDto> getLikeList() {
-        List<Like> likeList = likeRepository.findAll();
+    public List<LikeDto> getLikeListByUserId(String userId) {
+        List<Like> likeList = likeRepository.findByUserId(userId);
         List<LikeDto> likeDtoList = new ArrayList<>();
 
         for (Like like : likeList) {
             LikeDto likeDto = LikeDto.builder()
-                    .user_id(like.getUser_id())
-                    .album_id(like.getAlbum_id())
+                    .userId(like.getUserId())
+                    .albumId(like.getAlbumId())
                     .album_image(like.getAlbum().getAlbum_image())
                     .music_name(like.getAlbum().getMusic_name())
                     .music_artist_name(like.getAlbum().getMusic_artist_name())
@@ -34,7 +36,15 @@ public class LikeService {
             likeDtoList.add(likeDto);
         }
         return likeDtoList;
+
     }
+
+
+    @Transactional
+    public void deleteLike(String userId, String albumId) {
+        likeRepository.deleteByUserIdAndAlbumId(userId, albumId);
+    }
+
 }
 
 
