@@ -38,8 +38,11 @@
         <button class="accordion">:</button>
         <div class="panel">
             <button>좋아요</button>
-            <button>재생목록에 추가</button>
+            <button>재생 목록에 추가</button>
             <button>다음에 재생</button>
+            <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
+                <button>앨범 정보</button>
+            </a>
             <button>공유</button>
         </div>
         </div>
