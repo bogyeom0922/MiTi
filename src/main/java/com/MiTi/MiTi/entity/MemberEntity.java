@@ -2,50 +2,59 @@ package com.MiTi.MiTi.entity;
 
 import com.MiTi.MiTi.dto.MemberDTO;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Setter
+@Table(name = "members")
 @Getter
-@Table(name = "member_table")
+@Setter
+@NoArgsConstructor
 public class MemberEntity {
-    @Id // pk 지정
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true) // unique 제약조건 추가
-    private String memberEmail;
-
-    @Column
-    private String memberPassword;
-
-    @Column
-    private String memberName;
-
-    @Column
+    @Column(name = "member_id", unique = true, nullable = false)
     private String memberId;
 
-    // MemberDTO를 MemberEntity로 변환하는 메서드
-    public static MemberEntity toMemberEntity(MemberDTO memberDTO) {
-        MemberEntity memberEntity = new MemberEntity();
-        memberEntity.setMemberEmail(memberDTO.getMemberEmail());
-        memberEntity.setMemberPassword(memberDTO.getMemberPassword());
-        memberEntity.setMemberName(memberDTO.getMemberName());
-        memberEntity.setMemberId(memberDTO.getMemberId());
-        return memberEntity;
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
+
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Column(name = "auth_code")
+    private String authCode;
+
+    @Column(name = "auth_code_expiration")
+    private LocalDateTime authCodeExpiration;
+
+    // DTO를 Entity로 변환하는 메서드
+    public static MemberEntity toMemberEntity(MemberDTO dto) {
+        MemberEntity entity = new MemberEntity();
+        entity.setMemberId(dto.getMemberId());
+        entity.setName(dto.getMemberName());
+        entity.setEmail(dto.getMemberEmail());
+        entity.setPassword(dto.getMemberPassword());
+        return entity;
     }
 
-    // 업데이트 시 사용되는 MemberDTO를 MemberEntity로 변환하는 메서드
-    public static MemberEntity toUpdateMemberEntity(MemberDTO memberDTO) {
-        MemberEntity memberEntity = new MemberEntity();
-        memberEntity.setId(memberDTO.getId());
-        memberEntity.setMemberEmail(memberDTO.getMemberEmail());
-        memberEntity.setMemberPassword(memberDTO.getMemberPassword());
-        memberEntity.setMemberName(memberDTO.getMemberName());
-        memberEntity.setMemberId(memberDTO.getMemberId());
-        return memberEntity;
+    // 업데이트 시 사용되는 MemberDTO를 Entity로 변환하는 메서드
+    public static MemberEntity toUpdateMemberEntity(MemberDTO dto) {
+        MemberEntity entity = new MemberEntity();
+        entity.setId(dto.getId());
+        entity.setMemberId(dto.getMemberId());
+        entity.setName(dto.getMemberName());
+        entity.setEmail(dto.getMemberEmail());
+        entity.setPassword(dto.getMemberPassword());
+        return entity;
     }
-
 }

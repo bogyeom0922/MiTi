@@ -1,189 +1,129 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>회원 가입</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 이메일로 인증 코드 요청
+            document.getElementById('emailForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // 폼의 기본 제출 동작 방지
+                const email = document.getElementById('email').value;
+
+                fetch('/member/send-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({ email: email })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Email sent successfully');
+                            document.getElementById('message').innerText = '인증 코드가 이메일로 전송되었습니다.';
+                        } else {
+                            console.log('Failed to send email');
+                            document.getElementById('message').innerText = '이메일 전송에 실패했습니다.';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('message').innerText = '이메일 전송 중 오류가 발생했습니다.';
+                    });
+            });
+
+            // 인증 코드 확인
+            document.getElementById('authCodeForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // 폼의 기본 제출 동작 방지
+                const authCode = document.getElementById('authCode').value;
+
+                fetch('/member/verify-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({ code: authCode })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
+                            console.log('Code verified successfully');
+                            document.getElementById('message').innerText = '인증 코드가 확인되었습니다.';
+                        } else {
+                            console.log('Invalid code');
+                            document.getElementById('message').innerText = '잘못된 인증 코드입니다.';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('message').innerText = '인증 코드 확인 중 오류가 발생했습니다.';
+                    });
+            });
+
+            // 아이디 중복 확인
+            document.getElementById('idCheckButton').addEventListener('click', function(event) {
+                event.preventDefault(); // 버튼의 기본 제출 동작 방지
+                const memberId = document.getElementById('memberId').value;
+
+                fetch('/member/id-check', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({ memberId: memberId })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
+                            document.getElementById('idCheckMessage').innerText = '이미 사용 중인 아이디입니다.';
+                        } else {
+                            document.getElementById('idCheckMessage').innerText = '사용 가능한 아이디입니다.';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('idCheckMessage').innerText = '아이디 중복 확인 중 오류가 발생했습니다.';
+                    });
+            });
+        });
+    </script>
 </head>
-
 <body>
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <form id="memberForm" th:action="@{/member/save}" method="post">
-                <div class="form-group">
-                    <label for="memberEmail">이메일</label>
-                    <div class="input-group">
-                        <input type="email" class="form-control" name="memberEmail" id="memberEmail" placeholder="이메일을 입력해주세요" required>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-primary" type="button" onclick="sendVerificationCode()">인증번호</button>
-                        </div>
-                    </div>
-                    <span id="email-check-result"></span>
-                </div>
+<h1>회원 가입</h1>
 
-                <div class="form-group">
-                    <label for="verificationCode">인증번호</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" name="verificationCode" id="verificationCode" placeholder="인증번호를 입력해주세요" required>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-primary" type="button" onclick="verifyCode()">확인하기</button>
-                        </div>
-                    </div>
-                    <p id="verification-result"></p>
-                </div>
-                <div class="form-group">
-                    <label for="memberName">이름</label>
-                    <input class="form-control" placeholder="이름을 입력해주세요" name="memberName" id="memberName" type="text" required>
-                </div>
-                <div class="form-group">
-                    <label for="memberId">아이디</label>
-                    <div class="input-group">
-                        <input class="form-control" placeholder="아이디를 입력해주세요" name="memberId" id="memberId" type="text" required>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" onclick="checkId()">중복확인</button>
-                        </div>
-                    </div>
-                    <p id="id-check-result"></p>
-                </div>
-                <div class="form-group">
-                    <label for="memberPassword">비밀번호</label>
-                    <input class="form-control" placeholder="비밀번호를 입력해주세요" name="memberPassword" id="memberPassword" type="password" required>
-                </div>
-                <button type="button" class="btn btn-primary" onclick="submitRegistration()">회원가입</button>
-            </form>
-        </div>
-    </div>
-</div>
+<!-- 이메일로 인증 코드 요청 폼 -->
+<form id="emailForm">
+    <label for="email">이메일:</label>
+    <input type="email" id="email" name="email" required />
+    <button type="submit">인증 코드 요청</button>
+</form>
 
-<script th:inline="javascript">
-    // 이메일 형식 확인하는 함수
-    function isEmailValid(email) {
-        const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-        return emailRegex.test(email);
-    }
+<!-- 인증 코드 입력 폼 -->
+<form id="authCodeForm">
+    <label for="authCode">인증 코드:</label>
+    <input type="text" id="authCode" name="authCode" required />
+    <button type="submit">인증 코드 확인</button>
+</form>
 
-    // 이메일 중복 확인
-    function emailDuplicateCheck() {
-        $("#email-check-result").text(""); // 초기화
+<!-- 아이디 중복 확인 -->
+<form id="idCheckForm">
+    <label for="memberId">아이디:</label>
+    <input type="text" id="memberId" name="memberId" required />
+    <button id="idCheckButton">아이디 중복 확인</button>
+    <div id="idCheckMessage"></div>
+</form>
 
-        var email = $("#memberEmail").val();
+<!-- 회원가입 폼 -->
+<form method="post" action="/member/save">
+    <label for="name">이름:</label>
+    <input type="text" id="name" name="name" required /><br><br>
 
-        // 형식 검사
-        if (!isEmailValid(email)) {
-            $("#email-check-result").text("올바른 이메일 형식이 아닙니다").addClass("text-danger");
-            return;
-        }
+    <label for="password">비밀번호:</label>
+    <input type="password" id="password" name="password" required /><br><br>
 
-        $.ajax({
-            type: "POST",
-            url: "/SignUpForm/emailDuplicateCheck",
-            data: { "email": email },
-            success: function (res) {
-                if (res === "ok") {
-                    $("#email-check-result").text("사용 가능한 이메일입니다").removeClass("text-danger").addClass("text-success");
-                } else {
-                    $("#email-check-result").text("이미 사용 중인 이메일입니다").addClass("text-danger");
-                }
-            },
-            error: function (err) {
-                $("#email-check-result").text("서버 오류가 발생했습니다").addClass("text-danger");
-            }
-        });
-    }
+    <button type="submit">회원가입</button>
+</form>
 
-    // 인증번호 발송
-    function sendVerificationCode() {
-        $("#verification-result").text(""); // 초기화
-
-        var email = $("#memberEmail").val();
-
-        $.ajax({
-            type: "POST",
-            url: "/member/send-verification-code",
-            data: { "memberEmail": email },
-            success: function (data) {
-                if (data.success) {
-                    alert("인증 번호가 이메일로 전송되었습니다.");
-                } else {
-                    alert("인증 번호 발송에 실패했습니다.");
-                }
-            },
-            error: function () {
-                alert("서버 오류가 발생했습니다.");
-            }
-        });
-    }
-
-    // 인증번호 확인
-    function verifyCode() {
-        var verificationCode = $("#verificationCode").val();
-
-        $.ajax({
-            type: "POST",
-            url: "/member/verify-code",
-            data: { "verificationCode": verificationCode },
-            success: function (data) {
-                if (data.valid) {
-                    $("#verification-result").text("인증 번호가 확인되었습니다").addClass("text-success");
-                    submitRegistration(); // 인증 성공 시 회원가입 폼 제출
-                } else {
-                    $("#verification-result").text("인증 번호가 일치하지 않습니다").addClass("text-danger");
-                }
-            },
-            error: function () {
-                $("#verification-result").text("서버 오류가 발생했습니다").addClass("text-danger");
-            }
-        });
-    }
-
-    // 아이디 중복 확인
-    function checkId() {
-        $("#id-check-result").text(""); // 초기화
-
-        var memberId = $("#memberId").val();
-
-        $.ajax({
-            type: "POST",
-            url: "/member/id-check",
-            data: { "memberId": memberId },
-            success: function (data) {
-                if (data) {
-                    $("#id-check-result").text("이미 사용 중인 아이디입니다").addClass("text-danger");
-                } else {
-                    $("#id-check-result").text("사용 가능한 아이디입니다").removeClass("text-danger").addClass("text-success");
-                }
-            },
-            error: function () {
-                $("#id-check-result").text("서버 오류가 발생했습니다").addClass("text-danger");
-            }
-        });
-    }
-
-    // 회원가입 폼 제출
-    function submitRegistration() {
-        var email = $("#memberEmail").val();
-        var memberId = $("#memberId").val();
-        var password = $("#memberPassword").val();
-        var name = $("#memberName").val();
-
-        // 각 필드의 유효성 검사 (필요시 추가)
-
-        if (!email || !memberId || !password || !name) {
-            alert("모든 필드를 입력해주세요");
-            return;
-        }
-
-        // 폼 제출
-        $("#memberForm").submit();
-    }
-</script>
-
+<!-- 인증 코드 발송 및 확인 알림 -->
+<div id="message"></div>
 </body>
 </html>
