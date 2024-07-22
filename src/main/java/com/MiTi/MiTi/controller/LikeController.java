@@ -7,10 +7,7 @@ import com.MiTi.MiTi.repository.LikeRepository;
 import com.MiTi.MiTi.service.LikeService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,13 +24,23 @@ public class LikeController {
 
     @GetMapping("/mypage/like/{userId}")
     public String list(@PathVariable String userId, Model model) {
-        List<LikeDto> recordDtoList = likeService.getLikeListByUserId(String.valueOf(userId));
-        model.addAttribute("postList", recordDtoList);
+        List<LikeDto> likeDtoList = likeService.getLikeListByUserId(String.valueOf(userId));
+        model.addAttribute("postList", likeDtoList);
         return "mypage_like";
     }
 
+    // 게시글 삭제 (물리적 삭제)
 
-
+    @DeleteMapping("/mypage/like/{id}")
+    @ResponseBody
+    public String deleteLike(@PathVariable Long id) {
+        try {
+            likeService.deleteLike(id);
+            return "success";
+        } catch (Exception e) {
+            return "failure";
+        }
+    }
 
 
 }
