@@ -12,14 +12,17 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-@IdClass(RecordId.class)
 public class Record {
 
     @Id
-    private Integer user_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Id
-    private Integer album_id;
+    @Column(name = "album_id")
+    private String albumId;
+
+    @Column(name = "user_id")
+    private String userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id", referencedColumnName = "id", insertable = false, updatable = false)

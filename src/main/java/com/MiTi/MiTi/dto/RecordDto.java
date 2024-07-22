@@ -9,8 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 public class RecordDto {
 
-    private Integer user_id;
-    private Integer album_id;
+    private String userId;
+    private String albumId;
     private String music_name;
     private String album_image;
     private String music_artist_name;
@@ -18,15 +18,15 @@ public class RecordDto {
 
     public Record toEntity() {
         return Record.builder()
-                .user_id(user_id)
-                .album_id(album_id)
+                .userId(userId)
+                .albumId(albumId)
                 .build();
     }
 
     @Builder
-    public RecordDto(Integer user_id, Integer album_id, String music_name, String album_image, String music_artist_name, String music_duration_ms) {
-        this.user_id = user_id;
-        this.album_id = album_id;
+    public RecordDto(String userId, String albumId, String music_name, String album_image, String music_artist_name, String music_duration_ms) {
+        this.userId = userId;
+        this.albumId = albumId;
         this.music_name = music_name;
         this.album_image = album_image;
         this.music_artist_name = music_artist_name;

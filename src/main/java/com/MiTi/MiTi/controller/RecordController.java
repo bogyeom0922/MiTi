@@ -18,9 +18,9 @@ public class RecordController {
         this.recordService = recordService;
     }
 
-    @GetMapping("/mypage/record/{user_id}")
-    public String list(@PathVariable Integer user_id, Model model) {
-        List<RecordDto> recordDtoList = recordService.getRecordListByUserId(user_id);
+    @GetMapping("/mypage/record/{userId}")
+    public String list(@PathVariable Integer userId, Model model) {
+        List<RecordDto> recordDtoList = recordService.getRecordListByUserId(String.valueOf(userId));
         model.addAttribute("postList", recordDtoList);
         return "mypage_record";
     }

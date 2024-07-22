@@ -6,11 +6,11 @@
 </head>
 <body>
 <div class="layout">
-    <button onclick="location.href='record'">음악 기록</button>
-    <button onclick="location.href='like'">좋아요</button>
-    <button onclick="location.href='user_genre'">선호 장르</button>
-    <button onclick="location.href='comment'">댓글</button>
-    <button onclick="location.href='user_playlist'">플레이리스트</button>
+    <button onclick="location.href='record/${user_id}'">음악 기록</button>
+    <button onclick="location.href='like/${user_id}'">좋아요</button>
+    <button onclick="location.href='user_genre/${user_id}'">선호 장르</button>
+    <button onclick="location.href='comment/${user_id}'">댓글</button>
+    <button onclick="location.href='user_playlist/${user_id}'">플레이리스트</button>
 </div>
 
 <table>
@@ -38,7 +38,7 @@
             <span th:text="${post.music_duration_ms}"></span>
         </td>
         <td>
-            <button onclick="deleteLike([[${post.user_id}]], [[${post.album_id}]])">삭제</button>
+            <a href="/mypage/like/{{post.user_id}}/{{post.album_id}}/delete" class="btn btn-danger">Delete</a>
         </td>
     </tr>
 </table>
