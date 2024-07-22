@@ -42,7 +42,4 @@ public class Album {
     private String music_track_href;
     private String music_type;
     private String music_uri;
-
-
-
 }

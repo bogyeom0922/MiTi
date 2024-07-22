@@ -1,4 +1,4 @@
-package MiTi.dto;
+package com.MiTi.MiTi.dto;
 
 // AlbumDTO.java
 
