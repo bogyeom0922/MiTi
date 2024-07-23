@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>플레이리스트 노래 목록</title>
+</head>
+<body>
+
+<table>
+    <tr>
+
+    <tr th:each="album : ${albumList}" >
+    <td th:text="${album.userPlaylistName}"></td>
+        <td th:text="${album.music_name}"></td>
+        <td>
+            <img th:src="@{${album.album_image}}" width="50" alt="앨범 이미지"/>
+        </td>
+        <td th:text="${album.music_artist_name}"></td>
+    </tr>
+
+
+</table>
+</body>
+</html>

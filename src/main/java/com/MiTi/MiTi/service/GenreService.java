@@ -28,6 +28,7 @@ public class GenreService {
                     .id(genre.getId())
                     .userId(genre.getUserId())
                     .genre(genre.getGenre())
+                    .genre_image(genre.getGenre_image())
                     .build();
             genreDtoList.add(genreDto);
         }

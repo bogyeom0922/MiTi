@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>사용자 플레이 리스트</title>
+</head>
+<body>
+<div class="layout">
+    <button onclick="location.href='/record/{userId}'">음악 기록</button>
+    <button onclick="location.href='/like/{userId}'">좋아요</button>
+    <button onclick="location.href='/user_genre/{userId}'">선호 장르</button>
+    <button onclick="location.href='/comment/{userId}'">댓글</button>
+    <button onclick="location.href='/user_playlist/{userId}'">플레이리스트</button>
+</div>
+
+<table>
+    <tr>
+        <th>플레이 리스트</th>
+    </tr>
+
+    <tr th:each="post : ${postList}">
+        <td>
+            <a th:href="@{'/mypage/playlist/albums?userPlaylistName=' + ${post.userPlaylistName}}" target="_blank">
+                <img th:src="@{${post.userPlaylistImage}}" width="50">
+            </a>
+            <span th:text="${post.userPlaylistName}"></span>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
