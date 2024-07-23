@@ -1,14 +1,12 @@
 package com.MiTi.MiTi.controller;
 
-import com.MiTi.MiTi.dto.CommentDto;
 import com.MiTi.MiTi.dto.MemberDTO;
 import com.MiTi.MiTi.entity.Album;
-import com.MiTi.MiTi.entity.Comment;
-import com.MiTi.MiTi.entity.MemberEntity;
+import com.MiTi.MiTi.entity.MyComment;
 import com.MiTi.MiTi.repository.AlbumRepository;
 import com.MiTi.MiTi.repository.MemberRepository;
 import com.MiTi.MiTi.service.AlbumService;
-import com.MiTi.MiTi.service.CommentService;
+import com.MiTi.MiTi.service.MyCommentService;
 import com.MiTi.MiTi.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +29,7 @@ public class AlbumController {
     private AlbumRepository albumRepository;
 
     @Autowired
-    private CommentService commentService;
+    private MyCommentService myCommentService;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -74,8 +72,8 @@ public class AlbumController {
         }
 
         //comment
-        List<Comment> comments = commentService.comments(String.valueOf(albums.get(0).getId()));
-        model.addAttribute("comments", comments);
+        List<MyComment> myComments = myCommentService.comments(String.valueOf(albums.get(0).getId()));
+        model.addAttribute("comments", myComments);
 
         //user
         MemberDTO memberDTO = memberService.findById(id);

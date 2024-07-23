@@ -10,7 +10,6 @@
     <tr>
 
     <tr th:each="album : ${albumList}" >
-    <td th:text="${album.userPlaylistName}"></td>
         <td th:text="${album.music_name}"></td>
         <td>
             <img th:src="@{${album.album_image}}" width="50" alt="앨범 이미지"/>

@@ -22,6 +22,7 @@ public class RecordController {
     public String list(@PathVariable Integer userId, Model model) {
         List<RecordDto> recordDtoList = recordService.getRecordListByUserId(String.valueOf(userId));
         model.addAttribute("postList", recordDtoList);
+        model.addAttribute("userId", userId);
         return "mypage_record";
     }
 }
