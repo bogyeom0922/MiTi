@@ -1,19 +1,19 @@
 package com.MiTi.MiTi.entity;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-
 @Entity
 @Getter
 @Setter
-@Table(name = "user_genre")
+@Table(name = "user_playlist")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class Genre {
+public class Playlist {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,15 +22,17 @@ public class Genre {
     @Column(name = "user_id")
     private String userId;
 
-    @Column(name = "genre")
-    private String genre;
+    @Column(name = "album_id")
+    private String albumId;
 
-    private String genre_image;
+    @Column(name = "user_playlist_name")
+    private String userPlaylistName;
 
-/*
+    @Column(name = "user_playlist_image")
+    private String userPlaylistImage;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Album album;
 
- */
 }

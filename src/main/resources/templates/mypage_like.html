@@ -6,11 +6,12 @@
 </head>
 <body>
 <div class="layout">
-    <button onclick="location.href='record/${user_id}'">음악 기록</button>
-    <button onclick="location.href='like/${user_id}'">좋아요</button>
-    <button onclick="location.href='user_genre/${user_id}'">선호 장르</button>
-    <button onclick="location.href='comment/${user_id}'">댓글</button>
-    <button onclick="location.href='user_playlist/${user_id}'">플레이리스트</button>
+    <button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${userId})}'|">음악 기록</button>
+    <button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${userId})}'|">좋아요</button>
+    <button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${userId})}'|">선호 장르</button>
+    <button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${userId})}'|">댓글</button>
+    <button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|">플레이리스트</button>
+
 </div>
 
 <table>
