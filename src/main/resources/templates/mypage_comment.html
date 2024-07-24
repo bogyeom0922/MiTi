@@ -43,7 +43,7 @@
             <button th:onclick="'editComment(' + ${comment.id}+ ')'" class="btn btn-warning">수정</button>
         </td>
         <td>
-            <button th:onclick="'deleteGenre(' + ${comment.id} + ')'" class="btn btn-danger">삭제</button>
+            <button th:onclick="'deleteMyComment(' + ${comment.id} + ')'" class="btn btn-danger">삭제</button>
         </td>
     </tr>
 </table>
@@ -101,7 +101,7 @@
             });
     }
 
-    function deleteComment(id) {
+    function deleteMyComment(id) {
         fetch(`/mypage/comment/${id}`, {
             method: 'DELETE'
         })

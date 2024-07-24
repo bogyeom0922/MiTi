@@ -42,7 +42,7 @@ public class MyCommentService {
 
 
     @Transactional
-    public void deleteComment(Long id) {
+    public void deleteMyComment(Long id) {
         myCommentRepository.deleteById(id);
     }
 

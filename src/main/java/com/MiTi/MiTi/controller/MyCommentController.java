@@ -46,9 +46,9 @@ public class MyCommentController {
 
     @DeleteMapping("/mypage/comment/{id}")
     @ResponseBody
-    public String deleteComment(@PathVariable Long id) {
+    public String deleteMyComment(@PathVariable Long id) {
         try {
-            myCommentService.deleteComment(id);
+            myCommentService.deleteMyComment(id);
             return "success";
         } catch (Exception e) {
             return "failure";
