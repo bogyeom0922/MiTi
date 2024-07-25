@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>유저 좋아요 기록</title>
+</head>
+<body>
+<div class="layout">
+    <button onclick="location.href='record'">음악 기록</button>
+    <button onclick="location.href='like'">좋아요</button>
+    <button onclick="location.href='user_genre'">선호 장르</button>
+    <button onclick="location.href='comment'">댓글</button>
+    <button onclick="location.href='user_playlist'">플레이리스트</button>
+</div>
+
+<table>
+    <tr>
+        <th>좋아요 한 음악</th>
+    </tr>
+    <tr>
+        <th>앨범 이미지</th>
+        <th>음악 이름</th>
+        <th>가수</th>
+        <th>음악 길이</th>
+        <th>좋아요 취소</th>
+    </tr>
+    <tr th:each="post : ${postList}">
+        <td>
+            <img th:src="@{${post.album_image}}" width="50">
+        </td>
+        <td>
+            <span th:text="${post.music_name}"></span>
+        </td>
+        <td>
+            <span th:text="${post.music_artist_name}"></span>
+        </td>
+        <td>
+            <span th:text="${post.music_duration_ms}"></span>
+        </td>
+        <td>
+            <button onclick="deleteLike([[${post.user_id}]], [[${post.album_id}]])">삭제</button>
+        </td>
+    </tr>
+</table>
+
+<script>
+    function deleteLike(user_id, album_id) {
+        console.log(`Deleting like for userId: ${user_id}, albumId: ${album_id}`);
+        fetch(`/mypage/like/${user_id}/${album_id}`, {
+            method: 'DELETE'
+        })
+            .then(response => response.text())
+            .then(result => {
+                console.log(`Response: ${result}`);
+                if (result === 'success') {
+                    location.reload();
+                } else {
+                    alert('삭제 실패');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+
+</body>
+</html>
