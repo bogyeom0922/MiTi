@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -33,6 +34,7 @@ public class UserService {
         return userRepository.existsByUserMail(email);
     }
 
+    @Transactional
     public String registerUser(UserDTO userDTO) {
         if (userDTO == null) {
             logger.error("UserDTO is null");
@@ -77,6 +79,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void updateUser(UserDTO userDTO) {
         Optional<UserEntity> userEntityOptional = userRepository.findById(userDTO.getId());
         if (userEntityOptional.isPresent()) {
@@ -90,6 +93,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void saveUser(UserDTO userDTO) {
         UserEntity userEntity = UserEntity.fromDTO(userDTO);
         userRepository.save(userEntity);

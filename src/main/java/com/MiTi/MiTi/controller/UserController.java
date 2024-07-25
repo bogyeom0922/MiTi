@@ -20,25 +20,25 @@ public class UserController {
 
     @GetMapping("/login")
     public String loginPage() {
-        return "login"; // login.html 반환
+        return "signup/login"; // login.html 반환
     }
 
     @GetMapping("/save")
     public String saveForm(Model model) {
         model.addAttribute("userDTO", new UserDTO());
-        return "save";
+        return "signup/save";
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute UserDTO userDTO, Model model, HttpSession session) {
+    @ResponseBody
+    public ResponseEntity<String> save(@ModelAttribute UserDTO userDTO, HttpSession session) {
         String email = (String) session.getAttribute("email");
         String userId = (String) session.getAttribute("userId");
         String verificationStatus = (String) session.getAttribute("verificationStatus");
         String idStatus = (String) session.getAttribute("idStatus");
 
         if (email == null || userId == null || !"verified".equals(verificationStatus) || !"ok".equals(idStatus)) {
-            model.addAttribute("error", "이메일 인증 또는 아이디 중복 확인을 완료해주세요.");
-            return "save";
+            return ResponseEntity.badRequest().body("이메일 인증 또는 아이디 중복 확인을 완료해주세요.");
         }
 
         userDTO.setUserMail(email);
@@ -47,12 +47,10 @@ public class UserController {
         String result = userService.registerUser(userDTO);
 
         if ("duplicate_email".equals(result)) {
-            model.addAttribute("error", "이미 사용 중인 이메일입니다.");
-            return "save";
+            return ResponseEntity.badRequest().body("이미 사용 중인 이메일입니다.");
         }
         if ("duplicate_id".equals(result)) {
-            model.addAttribute("error", "이미 사용 중인 아이디입니다.");
-            return "save";
+            return ResponseEntity.badRequest().body("이미 사용 중인 아이디입니다.");
         }
 
         userService.saveUser(userDTO); // 유저 저장
@@ -62,8 +60,7 @@ public class UserController {
         session.removeAttribute("verificationStatus");
         session.removeAttribute("idStatus");
 
-        model.addAttribute("success", "회원가입되었습니다."); // 성공 메시지 추가
-        return "index"; // 회원가입 성공 시 index 페이지로 이동
+        return ResponseEntity.ok("회원가입이 완료되었습니다."); // 성공 메시지 추가
     }
 
     @PostMapping("/email-check")
@@ -104,9 +101,9 @@ public class UserController {
     @PostMapping("/verify-email")
     @ResponseBody
     public ResponseEntity<Boolean> verifyEmail(@RequestParam("code") String code, HttpSession session) {
-        String storedCode = (String) session.getAttribute("verificationCode");
+        String email = (String) session.getAttribute("email");
 
-        if (storedCode != null && storedCode.equals(code)) {
+        if (email != null && emailService.verifyCode(email, code)) {
             session.setAttribute("verificationStatus", "verified");
             return ResponseEntity.ok(true);
         } else {
@@ -114,10 +111,12 @@ public class UserController {
             return ResponseEntity.ok(false);
         }
     }
+
     @GetMapping("/findid")
     public String findIdForm() {
-        return "findid"; // findpw.html 반환
+        return "signup/findid"; // findid.html 반환
     }
+
     @PostMapping("/findid")
     public String findIdByEmail(@RequestParam("email") String email, Model model) {
         String userId = userService.findUserIdByEmail(email);
@@ -126,12 +125,12 @@ public class UserController {
         } else {
             model.addAttribute("message", "해당 이메일로 등록된 아이디가 없습니다.");
         }
-        return "findid"; // 같은 findid.html 페이지로 반환
+        return "signup/findid"; // 같은 findid.html 페이지로 반환
     }
 
     @GetMapping("/findpw")
     public String findPwForm() {
-        return "findpw"; // findpw.html 반환
+        return "signup/findpw"; // findpw.html 반환
     }
 
     @PostMapping("/findpw")
@@ -142,6 +141,6 @@ public class UserController {
         } else {
             model.addAttribute("message", "해당 이메일로 등록된 계정이 없습니다.");
         }
-        return "findpw"; // 같은 findpw.html 페이지로 반환
+        return "signup/findpw"; // 같은 findpw.html 페이지로 반환
     }
 }
