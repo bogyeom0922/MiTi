@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -17,7 +19,7 @@ public class EmailService {
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
     private final JavaMailSender javaMailSender;
     private static final String senderEmail = "your-email@example.com";  // 실제 이메일 주소로 변경
-    private String verificationCode;  // 인증 코드 저장
+    private final Map<String, String> verificationCodes = new HashMap<>();  // 인증 코드를 저장하는 맵
 
     // 인증 코드 생성
     private String generateVerificationCode() {
@@ -28,7 +30,7 @@ public class EmailService {
 
     // 인증 코드 이메일 양식 작성
     private MimeMessage createVerificationMail(String mail) {
-        verificationCode = generateVerificationCode();  // 인증 코드 생성
+        String verificationCode = generateVerificationCode();  // 인증 코드 생성
         MimeMessage message = javaMailSender.createMimeMessage();
 
         try {
@@ -40,6 +42,8 @@ public class EmailService {
         } catch (MessagingException e) {
             logger.error("Failed to create email", e);
         }
+
+        verificationCodes.put(mail, verificationCode);  // 인증 코드 저장
 
         return message;
     }
@@ -77,19 +81,22 @@ public class EmailService {
             logger.error("Failed to send email", e);
             return null;
         }
-        return verificationCode;
+        return verificationCodes.get(to);  // 인증 코드 반환
     }
 
     // 인증 코드 확인
-    public boolean verifyCode(String inputCode) {
-        return verificationCode != null && verificationCode.equals(inputCode);
+    public boolean verifyCode(String email, String inputCode) {
+        String storedCode = verificationCodes.get(email);
+        return storedCode != null && storedCode.equals(inputCode);
     }
 
     // sendVerificationCode 메서드 정의
     public String sendVerificationCode(String email) {
         String code = generateVerificationCode();
         String body = generateVerificationEmailBody(code);
-        return sendEmail(email, "[MiTi] 로그인을 위한 비밀번호 요청", body);
+        sendEmail(email, "[MiTi] 회원가입을 위한 이메일 인증", body);
+        verificationCodes.put(email, code);  // 인증 코드 저장
+        return code;
     }
 
     // 비밀번호 전송 메서드

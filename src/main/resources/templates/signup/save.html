@@ -10,25 +10,45 @@
                 const emailDomain = document.getElementById('emailDomain').value;
                 const email = `${emailUser}@${emailDomain}`;
 
-                fetch('/user/send-email', {
+                // 이메일 중복 체크
+                fetch('/user/email-check', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    body: new URLSearchParams({ email: email })
+                    body: new URLSearchParams({ userMail: email })
                 })
-                    .then(response => {
-                        if (response.ok) {
-                            console.log('Email sent successfully');
-                            document.getElementById('message').innerText = '인증 코드가 이메일로 전송되었습니다.';
-                        } else {
-                            console.log('Failed to send email');
-                            document.getElementById('message').innerText = '이메일 전송에 실패했습니다.';
+                    .then(response => response.text())
+                    .then(data => {
+                        if (data === "duplicate") {
+                            document.getElementById('message').innerText = '이미 존재하는 계정입니다.';
+                        } else if (data === "ok") {
+                            // 이메일 중복이 아닐 경우에만 인증 코드 요청
+                            fetch('/user/send-email', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: new URLSearchParams({ email: email })
+                            })
+                                .then(response => {
+                                    if (response.ok) {
+                                        console.log('Email sent successfully');
+                                        document.getElementById('message').innerText = '인증 코드가 이메일로 전송되었습니다.';
+                                    } else {
+                                        console.log('Failed to send email');
+                                        document.getElementById('message').innerText = '이메일 전송에 실패했습니다.';
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    document.getElementById('message').innerText = '이메일 전송 중 오류가 발생했습니다.';
+                                });
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        document.getElementById('message').innerText = '이메일 전송 중 오류가 발생했습니다.';
+                        document.getElementById('message').innerText = '이메일 확인 중 오류가 발생했습니다.';
                     });
             });
 
@@ -97,15 +117,27 @@
                 if (idStatus !== 'ok' || verificationStatus !== 'verified') {
                     event.preventDefault();
                     document.getElementById('message').innerText = '아이디 중복 확인 또는 이메일 인증을 완료해주세요.';
+                } else {
+                    event.preventDefault(); // 기본 폼 제출 막기
+                    const formData = new FormData(document.getElementById('registrationForm'));
+
+                    fetch('/user/save', {
+                        method: 'POST',
+                        body: new URLSearchParams(formData)
+                    })
+                        .then(response => response.text())
+                        .then(data => {
+                            alert(data);
+                            if (data === "회원가입이 완료되었습니다.") {
+                                window.location.href = "/user/login";
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            document.getElementById('message').innerText = '회원가입 중 오류가 발생했습니다.';
+                        });
                 }
             });
-
-            // 회원가입 성공 시 팝업 메시지 표시 및 index로 이동
-            const successMessage = /*[[${success}]]*/ ''; // Spring에서 성공 메시지 가져오기
-            if (successMessage) {
-                alert(successMessage);
-                window.location.href = '/';
-            }
         });
     </script>
 </head>
@@ -142,7 +174,7 @@
     <input type="hidden" id="idStatus" name="idStatus" />
 </form>
 
-<form id="registrationForm" method="post" action="/user/save">
+<form id="registrationForm">
     <label for="userName">이름:</label>
     <input type="text" id="userName" name="userName" required /><br><br>
 

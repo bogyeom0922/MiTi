@@ -8,4 +8,3 @@ import lombok.Setter;
 public class JoinRequest {
     private String email;
 }
-
