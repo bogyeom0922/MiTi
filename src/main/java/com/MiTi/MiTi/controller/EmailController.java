@@ -14,7 +14,7 @@ public class EmailController {
 
     @PostMapping("/emailConfirm")
     public String mailConfirm(@RequestBody JoinRequest joinRequest) {
-        String authCode = emailService.sendEmail(joinRequest.getEmail());
+        String authCode = emailService.sendVerificationCode(joinRequest.getEmail());
         return "인증 코드가 발급되었습니다: " + authCode;
     }
 
