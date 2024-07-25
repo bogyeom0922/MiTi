@@ -1,15 +1,20 @@
 package com.MiTi.MiTi.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import jakarta.mail.internet.MimeMessage;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
+    private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
     private final JavaMailSender javaMailSender;
     private static final String senderEmail = "your-email@example.com";  // 실제 이메일 주소로 변경
     private String verificationCode;  // 인증 코드 저장
@@ -21,42 +26,55 @@ public class EmailService {
         return String.valueOf(code);
     }
 
-    // 이메일 양식 작성
-    private MimeMessage createMail(String mail) {
+    // 인증 코드 이메일 양식 작성
+    private MimeMessage createVerificationMail(String mail) {
         verificationCode = generateVerificationCode();  // 인증 코드 생성
         MimeMessage message = javaMailSender.createMimeMessage();
 
         try {
-            message.setFrom(senderEmail);  // 보내는 이메일
-            message.setRecipients(MimeMessage.RecipientType.TO, mail); // 받는 이메일 설정
-            message.setSubject("[MiTi] 회원가입을 위한 이메일 인증");  // 제목 설정
-
-            String body = "<h1>안녕하세요.</h1>";
-            body += "<h1>MiTiʚ♡ɞ  입니다.</h1>";
-            body += "<h3>회원가입을 위한 요청하신 인증 번호입니다.</h3><br>";
-            body += "<h2>아래 코드를 회원가입 창으로 돌아가 입력해주세요.</h2>";
-
-            body += "<div align='center' style='border:1px solid black; font-family:verdana;'>";
-            body += "<h2>회원가입 인증 코드입니다.</h2>";
-            body += "<h1 style='color:blue'>" + verificationCode + "</h1>";
-            body += "</div><br>";
-            body += "<h3>감사합니다.</h3>";
-
-            message.setContent(body, "text/html; charset=UTF-8");
-        } catch (Exception e) {
-            e.printStackTrace(); // 로깅을 고려하세요
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(senderEmail);  // 보내는 이메일
+            helper.setTo(mail); // 받는 이메일 설정
+            helper.setSubject("[MiTi] 회원가입을 위한 이메일 인증");  // 제목 설정
+            helper.setText(generateVerificationEmailBody(verificationCode), true);  // 내용 설정
+        } catch (MessagingException e) {
+            logger.error("Failed to create email", e);
         }
 
         return message;
     }
 
+    private String generateVerificationEmailBody(String code) {
+        String body = "<h1>안녕하세요.</h1>";
+        body += "<h1>MiTiʚ♡ɞ  입니다.</h1>";
+        body += "<h3>회원가입을 위한 요청하신 인증 번호입니다.</h3><br>";
+        body += "<h2>아래 코드를 회원가입 창으로 돌아가 입력해주세요.</h2>";
+        body += "<div align='center' style='border:1px solid black; font-family:verdana;'>";
+        body += "<h2>회원가입 인증 코드입니다.</h2>";
+        body += "<h1 style='color:blue'>" + code + "</h1>";
+        body += "</div><br>";
+        body += "<h3>감사합니다.</h3>";
+        return body;
+    }
+
     // 이메일 발송
-    public String sendEmail(String userEmail) {
-        MimeMessage message = createMail(userEmail);
+    public String sendEmail(String to, String subject, String text) {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(senderEmail);  // 보내는 이메일
+            helper.setTo(to); // 받는 이메일 설정
+            helper.setSubject(subject);  // 제목 설정
+            helper.setText(text, true);  // 내용 설정
+        } catch (MessagingException e) {
+            logger.error("Failed to create email", e);
+            return null;
+        }
+
         try {
             javaMailSender.send(message);
         } catch (Exception e) {
-            e.printStackTrace(); // 로깅을 고려하세요
+            logger.error("Failed to send email", e);
             return null;
         }
         return verificationCode;
@@ -69,6 +87,23 @@ public class EmailService {
 
     // sendVerificationCode 메서드 정의
     public String sendVerificationCode(String email) {
-        return sendEmail(email);
+        String code = generateVerificationCode();
+        String body = generateVerificationEmailBody(code);
+        return sendEmail(email, "[MiTi] 로그인을 위한 비밀번호 요청", body);
+    }
+
+    // 비밀번호 전송 메서드
+    public void sendPasswordEmail(String email, String password) {
+        String subject = "[MiTi] 비밀번호 찾기";
+        String body = "<h1>안녕하세요.</h1>";
+        body += "<h1>MiTiʚ♡ɞ  입니다.</h1>";
+        body += "<h3>요청하신 비밀번호는 아래와 같습니다.</h3><br>";
+        body += "<div align='center' style='border:1px solid black; font-family:verdana;'>";
+        body += "<h2>비밀번호:</h2>";
+        body += "<h1 style='color:blue'>" + password + "</h1>";
+        body += "</div><br>";
+        body += "<h3>감사합니다.</h3>";
+
+        sendEmail(email, subject, body);
     }
 }

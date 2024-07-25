@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Find ID</title>
+</head>
+<body>
+<form action="/user/findid" method="post">
+    이메일: <label>
+    <input type="text" name="email">
+</label> <br>
+    <input type="submit" value="아이디 찾기">
+</form>
+<div>
+    <p th:text="${message}"></p>
+</div>
+<button type="button" onclick="location.href='/user/login'">로그인 화면으로 돌아가기</button>
+</body>
+</html>
