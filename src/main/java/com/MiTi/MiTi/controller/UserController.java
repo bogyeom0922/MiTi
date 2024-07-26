@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -32,7 +34,7 @@ public class UserController {
 
     @PostMapping("/save")
     @ResponseBody
-    public ResponseEntity<String> save(@ModelAttribute UserDTO userDTO, HttpSession session) {
+    public ResponseEntity<String> save(@ModelAttribute UserDTO userDTO, @RequestParam List<String> genres, HttpSession session) {
         String email = (String) session.getAttribute("email");
         String userId = (String) session.getAttribute("userId");
         String verificationStatus = (String) session.getAttribute("verificationStatus");
@@ -44,6 +46,7 @@ public class UserController {
 
         userDTO.setUserMail(email);
         userDTO.setUserId(userId);
+        userDTO.setGenres(genres); // Set selected genres to userDTO
 
         String result = userService.registerUser(userDTO);
 
