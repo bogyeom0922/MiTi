@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원 가입</title>
+    <link rel="stylesheet" href="styles.css"> <!-- CSS 파일 연결 -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('emailForm').addEventListener('submit', function(event) {
@@ -104,6 +107,29 @@
                     });
             });
 
+            document.getElementById('selectGenreBtn').addEventListener('click', function(event) {
+                event.preventDefault();
+                document.getElementById('genreModal').style.display = 'block';
+            });
+
+            document.getElementsByClassName('close')[0].addEventListener('click', function() {
+                document.getElementById('genreModal').style.display = 'none';
+            });
+
+            document.getElementById('confirmSelection').addEventListener('click', function() {
+                const selectedGenres = Array.from(document.querySelectorAll('#genreModal input[name="genres"]:checked')).map(cb => cb.value);
+                document.getElementById('selectedGenres').innerText = "선택된 장르: " + selectedGenres.join(', ');
+
+                if (selectedGenres.length > 5) {
+                    alert('최대 5개의 장르를 선택할 수 있습니다.');
+                    document.querySelectorAll('#genreModal input[name="genres"]:checked').forEach((cb, index) => {
+                        if (index >= 5) cb.checked = false;
+                    });
+                }
+
+                document.getElementById('genreModal').style.display = 'none';
+            });
+
             document.getElementById('registrationForm').addEventListener('submit', function(event) {
                 const idStatus = document.getElementById('idStatus').value;
                 const verificationStatus = document.getElementById('verificationStatus').value;
@@ -121,7 +147,7 @@
                     })
                         .then(response => response.text())
                         .then(data => {
-                            document.getElementById('message').innerText = data; // 페이지에 메시지 표시
+                            alert(data); // 팝업창에 메시지 표시
                             if (data === "회원가입이 완료되었습니다.") {
                                 window.location.href = "/user/login";
                             }
@@ -174,6 +200,10 @@
     <label for="userPw">비밀번호:</label>
     <input type="password" id="userPw" name="userPw" required /><br><br>
 
+    <label>음악 장르:</label>
+    <button id="selectGenreBtn">음악 장르 선택</button>
+    <div id="selectedGenres">선택된 장르: </div><br>
+
     <input type="hidden" id="emailUserHidden" name="emailUserHidden" />
     <input type="hidden" id="emailDomainHidden" name="emailDomainHidden" />
 
@@ -181,6 +211,26 @@
 </form>
 
 <div id="message"></div>
+
+<!-- Modal -->
+<div id="genreModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="genre-grid">
+            <label><input type="checkbox" name="genres" value="운동">운동</label>
+            <label><input type="checkbox" name="genres" value="휴식">휴식</label>
+            <label><input type="checkbox" name="genres" value="집중">집중</label>
+            <label><input type="checkbox" name="genres" value="파티">파티</label>
+            <label><input type="checkbox" name="genres" value="스트레스해소">스트레스해소</label>
+            <label><input type="checkbox" name="genres" value="여행">여행</label>
+            <label><input type="checkbox" name="genres" value="사랑">사랑</label>
+            <label><input type="checkbox" name="genres" value="수면">수면</label>
+            <label><input type="checkbox" name="genres" value="클래식">클래식</label>
+            <label><input type="checkbox" name="genres" value="우울">우울</label>
+        </div>
+        <button id="confirmSelection">확인</button>
+    </div>
+</div>
 
 <script>
     document.getElementById('registrationForm').addEventListener('submit', function() {

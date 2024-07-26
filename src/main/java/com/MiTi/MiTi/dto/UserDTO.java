@@ -5,6 +5,8 @@ import lombok.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,7 +21,8 @@ public class UserDTO {
     @Email(message = "Email should be valid")
     private String userMail;      // 이메일
     private String userPw;        //비밀번호
-    private String verificationCode; //인증코드 필드
+    private String verificationCode;//인증코드 필드
+    private List<String> genres;//음악장르
 
     public static UserDTO toUserDTO(UserEntity userEntity) {
         UserDTO userDTO = new UserDTO();
