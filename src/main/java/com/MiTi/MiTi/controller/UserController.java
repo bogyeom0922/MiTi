@@ -6,6 +6,7 @@ import com.MiTi.MiTi.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -52,15 +53,20 @@ public class UserController {
         if ("duplicate_id".equals(result)) {
             return ResponseEntity.badRequest().body("이미 사용 중인 아이디입니다.");
         }
+        if ("duplicate".equals(result)) {
+            return ResponseEntity.badRequest().body("중복된 데이터가 있습니다.");
+        }
+        if ("error".equals(result)) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원가입 중 오류가 발생했습니다.");
+        }
 
-        userService.saveUser(userDTO); // 유저 저장
         session.removeAttribute("verificationCode");
         session.removeAttribute("email");
         session.removeAttribute("userId");
         session.removeAttribute("verificationStatus");
         session.removeAttribute("idStatus");
 
-        return ResponseEntity.ok("회원가입이 완료되었습니다."); // 성공 메시지 추가
+        return ResponseEntity.ok("회원가입이 완료되었습니다.");
     }
 
     @PostMapping("/email-check")

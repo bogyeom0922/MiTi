@@ -6,6 +6,7 @@ import com.MiTi.MiTi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,13 +30,9 @@ public class UserService {
         return userRepository.existsByUserMail(userMail);
     }
 
-    public boolean emailExists(String email) {
-        logger.info("Checking if email exists: {}", email);
-        return userRepository.existsByUserMail(email);
-    }
-
     @Transactional
-    public String registerUser(UserDTO userDTO) {
+    public synchronized String registerUser(UserDTO userDTO) {
+        logger.info("Registering user: {}", userDTO);
         if (userDTO == null) {
             logger.error("UserDTO is null");
             return "error";
@@ -51,21 +48,43 @@ public class UserService {
             return "error";
         }
 
-        if (idCheck(userDTO.getUserId())) {
-            logger.info("User ID already exists: {}", userDTO.getUserId());
-            return "duplicate_id";
-        }
+        try {
+            if (idCheck(userDTO.getUserId())) {
+                logger.info("User ID already exists: {}", userDTO.getUserId());
+                return "duplicate_id";
+            }
 
-        if (emailCheck(userDTO.getUserMail())) {
-            logger.info("Email already exists: {}", userDTO.getUserMail());
-            return "duplicate_email";
-        }
+            if (emailCheck(userDTO.getUserMail())) {
+                logger.info("Email already exists: {}", userDTO.getUserMail());
+                return "duplicate_email";
+            }
 
+            saveUser(userDTO);
+
+            logger.info("User registered successfully: {}", userDTO.getUserId());
+            return "ok";
+        } catch (DataIntegrityViolationException e) {
+            logger.error("Data integrity violation during user registration: ", e);
+            return "duplicate";
+        } catch (Exception e) {
+            logger.error("Unexpected error during user registration: ", e);
+            return "error";
+        }
+    }
+
+    @Transactional
+    public void saveUser(UserDTO userDTO) {
         UserEntity userEntity = UserEntity.fromDTO(userDTO);
-        userRepository.save(userEntity);
-        logger.info("User saved successfully: {}", userDTO.getUserId());
-
-        return "ok";
+        try {
+            userRepository.save(userEntity);
+            logger.info("User saved successfully: {}", userDTO.getUserId());
+        } catch (DataIntegrityViolationException e) {
+            logger.error("Data integrity violation while saving user: ", e);
+            throw e;
+        } catch (Exception e) {
+            logger.error("Unexpected error while saving user: ", e);
+            throw e;
+        }
     }
 
     public UserDTO getUserById(Long id) {
@@ -93,13 +112,6 @@ public class UserService {
         }
     }
 
-    @Transactional
-    public void saveUser(UserDTO userDTO) {
-        UserEntity userEntity = UserEntity.fromDTO(userDTO);
-        userRepository.save(userEntity);
-        logger.info("User saved successfully: {}", userDTO.getUserId());
-    }
-
     public String findUserIdByEmail(String email) {
         Optional<UserEntity> userEntityOptional = userRepository.findByUserMail(email);
         return userEntityOptional.map(UserEntity::getUserId).orElse(null);
@@ -116,3 +128,4 @@ public class UserService {
         }
     }
 }
+    
