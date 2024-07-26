@@ -10,7 +10,6 @@
                 const emailDomain = document.getElementById('emailDomain').value;
                 const email = `${emailUser}@${emailDomain}`;
 
-                // 이메일 중복 체크
                 fetch('/user/email-check', {
                     method: 'POST',
                     headers: {
@@ -23,7 +22,6 @@
                         if (data === "duplicate") {
                             document.getElementById('message').innerText = '이미 존재하는 계정입니다.';
                         } else if (data === "ok") {
-                            // 이메일 중복이 아닐 경우에만 인증 코드 요청
                             fetch('/user/send-email', {
                                 method: 'POST',
                                 headers: {
@@ -33,10 +31,8 @@
                             })
                                 .then(response => {
                                     if (response.ok) {
-                                        console.log('Email sent successfully');
                                         document.getElementById('message').innerText = '인증 코드가 이메일로 전송되었습니다.';
                                     } else {
-                                        console.log('Failed to send email');
                                         document.getElementById('message').innerText = '이메일 전송에 실패했습니다.';
                                     }
                                 })
@@ -66,11 +62,9 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data) {
-                            console.log('Code verified successfully');
                             document.getElementById('message').innerText = '인증 코드가 확인되었습니다.';
                             document.getElementById('verificationStatus').value = 'verified';
                         } else {
-                            console.log('Invalid code');
                             document.getElementById('message').innerText = '잘못된 인증 코드입니다.';
                             document.getElementById('verificationStatus').value = '';
                         }
@@ -118,7 +112,7 @@
                     event.preventDefault();
                     document.getElementById('message').innerText = '아이디 중복 확인 또는 이메일 인증을 완료해주세요.';
                 } else {
-                    event.preventDefault(); // 기본 폼 제출 막기
+                    event.preventDefault();
                     const formData = new FormData(document.getElementById('registrationForm'));
 
                     fetch('/user/save', {
@@ -127,7 +121,7 @@
                     })
                         .then(response => response.text())
                         .then(data => {
-                            alert(data);
+                            document.getElementById('message').innerText = data; // 페이지에 메시지 표시
                             if (data === "회원가입이 완료되었습니다.") {
                                 window.location.href = "/user/login";
                             }
@@ -154,7 +148,6 @@
         <option value="naver.com">@naver.com</option>
         <option value="daum.com">@daum.com</option>
         <option value="nate.com">@nate.com</option>
-        <!-- 더 많은 옵션 추가 가능 -->
     </select>
     <button type="submit">인증 코드 요청</button>
 </form>

@@ -8,6 +8,6 @@ public class HeartController {
 
     @GetMapping("/heart") //"/heart" 경로에 대한 GET 요청을 처리
     public String index() {
-        return "logo"; // "logo"라는 이름의 뷰를 반환
+        return "signup/logo"; // "logo"라는 이름의 뷰를 반환
     }
 }
