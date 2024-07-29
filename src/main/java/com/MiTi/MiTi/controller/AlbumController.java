@@ -37,11 +37,6 @@ public class AlbumController {
     @Autowired
     private MemberService memberService;
 
-    @GetMapping("/")
-    public String home() {
-        return "home";
-    }
-
     @GetMapping("/album_list/{id}")
     public String albumList(Model model, @PathVariable Long id) {
         //album

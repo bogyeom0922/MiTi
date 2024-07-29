@@ -11,8 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +23,18 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final JavaMailSender mailSender;
     private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
+
+    public List<MemberDTO> findAll() {
+        List<MemberEntity> memberEntityList = memberRepository.findAll();
+        return memberEntityList.stream()
+                .map(MemberDTO::toMemberDTO)
+                .collect(Collectors.toList());
+    }
+
+    public MemberDTO findById(Long id) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(id);
+        return optionalMemberEntity.map(MemberDTO::toMemberDTO).orElse(null);
+    }
 
     public boolean idCheck(String memberId) {
         return memberRepository.existsByMemberId(memberId);
