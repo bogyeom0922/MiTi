@@ -127,5 +127,9 @@ public class UserService {
             return false;
         }
     }
+
+    public UserDTO findById(Long id) {
+        return null;
+    }
 }
     
