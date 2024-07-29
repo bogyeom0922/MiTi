@@ -1,15 +1,12 @@
 package com.MiTi.MiTi.controller;
 
-import com.MiTi.MiTi.dto.MemberDTO;
 import com.MiTi.MiTi.dto.UserDTO;
 import com.MiTi.MiTi.entity.Album;
 import com.MiTi.MiTi.entity.MyComment;
 import com.MiTi.MiTi.repository.AlbumRepository;
-import com.MiTi.MiTi.repository.MemberRepository;
 import com.MiTi.MiTi.repository.UserRepository;
 import com.MiTi.MiTi.service.AlbumService;
 import com.MiTi.MiTi.service.MyCommentService;
-import com.MiTi.MiTi.service.MemberService;
 import com.MiTi.MiTi.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +62,7 @@ public class AlbumController {
     }
 
     @GetMapping("/album/{detail}/{id}")
-    public String detailList(@PathVariable("detail") String detail, @PathVariable Long id,  Model model) {
+    public String detailList(@PathVariable("detail") String detail, @PathVariable Long id, Model model) {
         //album
         log.info(detail);
         List<Album> albums = albumService.findByDetail(detail);
