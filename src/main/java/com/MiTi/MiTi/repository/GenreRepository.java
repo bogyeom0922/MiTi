@@ -1,15 +1,13 @@
 package com.MiTi.MiTi.repository;
 
-
-import com.MiTi.MiTi.entity.Like;
+import com.MiTi.MiTi.entity.Genre;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface LikeRepository extends JpaRepository<Like, Long> {
+public interface GenreRepository extends JpaRepository<Genre, Long> {
 
-    List<Like> findByUserId(String userID);
-
+    List<Genre> findByUserId(String userID);
     void deleteById(Long id);
 
 }

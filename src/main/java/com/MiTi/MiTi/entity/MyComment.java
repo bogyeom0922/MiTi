@@ -2,6 +2,7 @@ package com.MiTi.MiTi.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 @Getter
@@ -9,7 +10,10 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "user_comment")
-public class Comment {
+@AllArgsConstructor
+@Builder
+@EntityListeners(AuditingEntityListener.class)
+public class MyComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,10 +28,9 @@ public class Comment {
     @Column
     private String comment;
 
-    public Comment(String albumId, String userId, String comment) {
-        this.albumId = albumId;
-        this.userId = userId;
-        this.comment = comment;
-    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "album_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Album album;
 
 }
