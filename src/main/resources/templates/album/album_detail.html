@@ -128,4 +128,12 @@
     });
 </script>
 
+<script>
+    function shareTwitter() {
+        var sendText = "Paradise"; // 전달할 텍스트
+        var sendUrl = "localhost:8080/album/Paradise/1"; // 전달할 URL
+        window.open("https://twitter.com/intent/tweet?text=" + sendText + "&url=" + sendUrl);
+    }
+</script>
+
 </html>
