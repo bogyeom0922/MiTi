@@ -128,8 +128,5 @@ public class UserService {
         }
     }
 
-    public UserDTO findById(Long id) {
-        return null;
-    }
 }
     
