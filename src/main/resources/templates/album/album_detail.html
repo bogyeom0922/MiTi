@@ -48,16 +48,19 @@
                 <button class="accordion">공유</button>
                 <div class="panel">
                     <button>
-                        <a href="javascript:shareTwitter();">트위터</a>
+                        <a href="#" onclick="clip(); return false;">링크 복사</a>
                     </button>
                     <button>
-                        <a href="javascript:shareFacebook();">페이스북</a>
+                        <a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a>
                     </button>
                     <button>
-                        <a href="javascript:shareBand();">밴드</a>
+                        <a href="javascript:shareTwitter();">트위터에 공유</a>
                     </button>
                     <button>
-                        <a id="btnKakao" href="javascript:shareKakao();">카카오톡</a>
+                        <a href="javascript:shareFacebook();">페이스북에 공유</a>
+                    </button>
+                    <button>
+                        <a href="javascript:shareBand();">밴드에 공유</a>
                     </button>
                 </div>
             </div>
@@ -140,22 +143,36 @@
 
 <script th:inline="javascript">
 
+    function clip() {
+
+        // 현재 페이지의 URL을 클립보드에 복사
+        var url = window.document.location.href;
+
+        navigator.clipboard.writeText(url).then(function () {
+            alert("URL이 복사되었습니다.");
+        }).catch(function (error) {
+            console.error('클립보드에 복사할 수 없습니다:', error);
+            alert("URL 복사에 실패했습니다. 브라우저 설정을 확인해주세요.");
+        });
+
+    }
+
     var thisUrl = document.URL;
     var albumDetail = [[${firstAlbum.detail}]]; // Thymeleaf 구문을 사용하여 서버에서 이 부분을 대체
     var snsTitle = "MiTi에서 듣는 " + albumDetail;
 
     function shareTwitter() {
-        var url = "http://twitter.com/share?url="+encodeURIComponent(thisUrl)+"&text="+encodeURIComponent(snsTitle);
+        var url = "http://twitter.com/share?url=" + encodeURIComponent(thisUrl) + "&text=" + encodeURIComponent(snsTitle);
         window.open(url, "tweetPop", "width=600, height=800,scrollbars=yes");
     }
 
     function shareFacebook() {
-        var url = "http://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(thisUrl);
+        var url = "http://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(thisUrl);
         window.open(url, "", "width=600, height=800");
     }
 
     function shareBand() {
-        var url = "http://www.band.us/plugin/share?body="+encodeURIComponent(snsTitle)+"&route="+encodeURIComponent(thisUrl);
+        var url = "http://www.band.us/plugin/share?body=" + encodeURIComponent(snsTitle) + "&route=" + encodeURIComponent(thisUrl);
         window.open(url, "shareBand", "width=600, height=800, resizable=yes");
     }
 
