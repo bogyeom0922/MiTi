@@ -44,15 +44,18 @@
                 <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
                     <button>앨범 정보</button>
                 </a>
-                <button>
-                    <a href="javascript:shareTwitter();">트위터</a>
-                </button>
-                <button>
-                    <a href="javascript:shareFacebook();">페이스북</a>
-                </button>
-                <button>
-                    <a href="javascript:shareBand();">밴드</a>
-                </button>
+                <button class="accordion">공유</button>
+                <div class="panel">
+                    <button>
+                        <a href="javascript:shareTwitter();">트위터</a>
+                    </button>
+                    <button>
+                        <a href="javascript:shareFacebook();">페이스북</a>
+                    </button>
+                    <button>
+                        <a href="javascript:shareBand();">밴드</a>
+                    </button>
+                </div>
             </div>
         </div>
     </li>
