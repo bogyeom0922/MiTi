@@ -12,6 +12,7 @@
             return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
         }
     </script>
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 </head>
 
 <body>
@@ -54,6 +55,9 @@
                     </button>
                     <button>
                         <a href="javascript:shareBand();">밴드</a>
+                    </button>
+                    <button>
+                        <a id="btnKakao" href="javascript:shareKakao();">카카오톡</a>
                     </button>
                 </div>
             </div>
@@ -153,6 +157,27 @@
         var url = "http://www.band.us/plugin/share?body="+encodeURIComponent(snsTitle)+"&route="+encodeURIComponent(thisUrl);
         window.open(url, "shareBand", "width=600, height=800, resizable=yes");
     }
+
+    function shareKakao() {
+
+        // 사용할 앱의 JavaScript 키 설정
+        Kakao.init('c674475155401a14bdb7e23238b59868');
+
+        // 카카오링크 버튼 생성
+        Kakao.Link.createDefaultButton({
+            container: '#btnKakao', // 카카오공유버튼ID
+            objectType: 'feed',
+            content: {
+                title: snsTitle, // 동적으로 설정된 제목 사용
+                imageUrl: thisUrl, // 콘텐츠 URL (실제 URL로 변경)
+                link: {
+                    mobileWebUrl: thisUrl,
+                    webUrl: thisUrl
+                }
+            }
+        });
+    }
 </script>
+
 
 </html>
