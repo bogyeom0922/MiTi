@@ -50,6 +50,9 @@
                 <button>
                     <a href="javascript:shareFacebook();">페이스북</a>
                 </button>
+                <button>
+                    <a href="javascript:shareBand();">밴드</a>
+                </button>
             </div>
         </div>
     </li>
@@ -129,15 +132,23 @@
 </script>
 
 <script>
+
+    var thisUrl = document.URL;
+    var snsTitle = "MiTi에서 듣는 Paradise";
+
     function shareTwitter() {
-        var sendText = "MiTi에서 듣는 Paradise"; // 전달할 텍스트
-        var sendUrl = "http://localhost:8080/album/Paradise/1"; // 전달할 URL
-        window.open("https://twitter.com/intent/tweet?text=" + sendText + "&url=" + sendUrl);
+        var url = "http://twitter.com/share?url="+encodeURIComponent(thisUrl)+"&text="+encodeURIComponent(snsTitle);
+        window.open(url, "tweetPop", "width=600, height=800,scrollbars=yes");
     }
 
     function shareFacebook() {
-        var sendUrl = "http://localhost:8080/album/Paradise/1"; // 전달할 URL
-        window.open("http://www.facebook.com/sharer/sharer.php?u=" + sendUrl);
+        var url = "http://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(thisUrl);
+        window.open(url, "", "width=600, height=800");
+    }
+
+    function shareBand() {
+        var url = "http://www.band.us/plugin/share?body="+encodeURIComponent(snsTitle)+"&route="+encodeURIComponent(thisUrl);
+        window.open(url, "shareBand", "width=600, height=800, resizable=yes");
     }
 </script>
 
