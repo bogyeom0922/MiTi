@@ -138,10 +138,11 @@
     });
 </script>
 
-<script>
+<script th:inline="javascript">
 
     var thisUrl = document.URL;
-    var snsTitle = "MiTi에서 듣는 Paradise";
+    var albumDetail = [[${firstAlbum.detail}]]; // Thymeleaf 구문을 사용하여 서버에서 이 부분을 대체
+    var snsTitle = "MiTi에서 듣는 " + albumDetail;
 
     function shareTwitter() {
         var url = "http://twitter.com/share?url="+encodeURIComponent(thisUrl)+"&text="+encodeURIComponent(snsTitle);
