@@ -31,8 +31,6 @@ public class AlbumController {
     @Autowired
     private MyCommentService myCommentService;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private UserService userService;
 
     @GetMapping("/album_list/{id}")
@@ -51,7 +49,7 @@ public class AlbumController {
         model.addAttribute("details", uniqueDetails);
 
         //user
-        UserDTO memberDTO = userService.findById(id);
+        UserDTO memberDTO = userService.getUserById(id);
         model.addAttribute("member", memberDTO);
         return "album/album_list";
     }
@@ -71,7 +69,7 @@ public class AlbumController {
         model.addAttribute("comments", myComments);
 
         //user
-        UserDTO memberDTO = userService.findById(id);
+        UserDTO memberDTO = userService.getUserById(id);
         model.addAttribute("member", memberDTO);
 
         return "album/album_detail";
