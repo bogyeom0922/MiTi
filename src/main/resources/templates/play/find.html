@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Music</title>
+    <!-- jQuery 라이브러리 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 검색 입력 필드에 입력이 있을 때마다 AJAX 요청을 보냅니다.
+            $('#search').on('input', function() {
+                var query = $(this).val();
+                $.ajax({
+                    url: '/find/search',  // 검색 요청을 처리할 URL
+                    type: 'GET',
+                    data: { query: query },  // 검색어를 쿼리 매개변수로 전송
+                    success: function(data) {
+                        // 서버로부터 받은 HTML을 결과 div에 추가합니다.
+                        $('#results').html(data);
+                    },
+                    error: function() {
+                        // 오류 발생 시 오류 메시지를 표시합니다.
+                        $('#results').html('<p>An error occurred while processing the request.</p>');
+                    }
+                });
+            });
+        });
+    </script>
+    <style>
+        /* 기본적인 스타일링 추가 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #search {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        #results div {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        #results a {
+            text-decoration: none;
+            color: #333;
+        }
+        #results a:hover {
+            text-decoration: underline;
+        }
+        #results h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        #results p {
+            margin: 5px 0 0;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+<h1>Find Music</h1>
+<!-- 검색 입력 필드 -->
+<input type="text" id="search" placeholder="Search for music or artist" />
+
+<!-- 검색 결과를 표시할 div -->
+<div id="results"></div>
+
+<div th:replace="play/under :: footer"></div>
+</body>
+</html>

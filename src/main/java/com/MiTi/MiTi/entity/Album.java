@@ -14,12 +14,15 @@ public class Album {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String music_name;
+    @Column(name = "music_name")
+    private String musicName;
     private String music_id;
     private String music_popularity;
     private String album_image;
+    @Column(name = "detail")
     private String detail;
-    private String music_artist_name;
+    @Column(name = "music_artist_name")
+    private String musicArtistName;
     private String music_artist_id;
     private String music_artist_popularity;
     private String music_genre;

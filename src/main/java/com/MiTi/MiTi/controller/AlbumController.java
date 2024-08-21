@@ -1,15 +1,12 @@
 package com.MiTi.MiTi.controller;
 
-import com.MiTi.MiTi.dto.CommentDto;
-import com.MiTi.MiTi.dto.MemberDTO;
+import com.MiTi.MiTi.dto.UserDTO;
 import com.MiTi.MiTi.entity.Album;
 import com.MiTi.MiTi.entity.Comment;
-import com.MiTi.MiTi.entity.MemberEntity;
 import com.MiTi.MiTi.repository.AlbumRepository;
-import com.MiTi.MiTi.repository.MemberRepository;
 import com.MiTi.MiTi.service.AlbumService;
 import com.MiTi.MiTi.service.CommentService;
-import com.MiTi.MiTi.service.MemberService;
+import com.MiTi.MiTi.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,54 +29,47 @@ public class AlbumController {
 
     @Autowired
     private CommentService commentService;
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private MemberService memberService;
 
-    @GetMapping("/")
-    public String home() {
-        return "home";
-    }
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/album_list/{id}")
-    public String albumList(Model model, @PathVariable Long id) {
-        //album
+    public String albumList(@PathVariable("id") Long userId, Model model) {
+        // 앨범 상세 정보 목록 조회
         List<String> details = albumRepository.findAll()
                 .stream()
                 .map(Album::getDetail)
-                .toList();
-
-        // 중복을 제거하기 위해 Set으로 변환 후 다시 리스트로 변환
-        List<String> uniqueDetails = details.stream()
                 .distinct()
                 .collect(Collectors.toList());
 
-        model.addAttribute("details", uniqueDetails);
+        model.addAttribute("details", details);
 
-        //user
-        MemberDTO memberDTO = memberService.findById(id);
+        // 사용자 정보 조회
+        UserDTO memberDTO = userService.getUserById(userId);
         model.addAttribute("member", memberDTO);
+
         return "album/album_list";
     }
 
     @GetMapping("/album/{detail}/{id}")
-    public String detailList(@PathVariable("detail") String detail, @PathVariable Long id,  Model model) {
-        //album
-        log.info(detail);
+    public String detailList(@PathVariable("detail") String detail,
+                             @PathVariable("id") Long userId, Model model) {
+        // 앨범 상세 정보 조회
+        log.info("Detail: {}", detail);
         List<Album> albums = albumService.findByDetail(detail);
         model.addAttribute("albums", albums);
+
         if (!albums.isEmpty()) {
             model.addAttribute("firstAlbum", albums.get(0));
+
+            // 댓글 조회
+            List<Comment> myComments = commentService.comments(String.valueOf(albums.get(0).getId()));
+            model.addAttribute("comments", myComments);
         }
 
-        //comment
-        List<Comment> comments = commentService.comments(String.valueOf(albums.get(0).getId()));
-        model.addAttribute("comments", comments);
-
-        //user
-        MemberDTO memberDTO = memberService.findById(id);
-        model.addAttribute("member", memberDTO);
+        // 사용자 정보 조회
+        UserDTO userDTO = userService.getUserById(userId);
+        model.addAttribute("user", userDTO);
 
         return "album/album_detail";
     }

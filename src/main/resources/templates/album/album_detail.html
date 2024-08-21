@@ -12,6 +12,7 @@
             return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
         }
     </script>
+    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 </head>
 
 <body>
@@ -20,44 +21,30 @@
 <div th:if="${firstAlbum != null}">
     <h1 th:text="${firstAlbum.detail}"></h1>
     <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" width="300px">
-    <p th:text="${firstAlbum.music_artist_name}"></p>
+    <p th:text="${firstAlbum.musicArtistName}"></p>
     <p>followers: <span th:text="${firstAlbum.music_artist_followers}"></span></p>
     <p>artist genres: <span th:text="${firstAlbum.music_artist_genres}"></span></p>
 </div>
 <hr>
 
-<!--앨범에 해당되는 곡 목록-->
-<ul style="list-style-type: none;">
-    <li th:each="album, iterStat : ${albums}">
-        <div class="accordion_block">
-        <span th:text="${iterStat.index + 1} + '. ' + ${album.music_name}"></span>
-        <script th:inline="javascript">
-            var duration = /*[[${album.music_duration_ms}]]*/ '0';
-            document.write(formatDuration(duration));
-        </script>
-        <button class="accordion">:</button>
-        <div class="panel">
-            <button>좋아요</button>
-            <button>재생 목록에 추가</button>
-            <button>다음에 재생</button>
-            <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
-                <button>앨범 정보</button>
-            </a>
-            <button class="share-btn">공유</button>
-            <div class="share-menu" style="display: none;">
-                <button onclick="copyUrl()">URL 복사</button>
-                <button onclick="shareKakao()">카카오톡으로 전송</button>
-            </div>
-        </div>
-        </div>
+<!-- 앨범에 해당되는 곡 목록 -->
+<ul id="album-list" style="list-style-type: none;">
+    <li th:each="album, iterStat : ${albums}" data-music-url="${album.musicTrackHref}">
+        <span th:text="${iterStat.index + 1} + '. ' + ${album.musicName}"></span>
+        <button class="play-button" type="button">Play</button>
     </li>
 </ul>
+<hr>
+
+<!-- 전체 재생 버튼 -->
+<button id="play-all-button" type="button">전체 재생</button>
+
 <hr>
 
 <!--댓글 작성-->
 <h2>Comments</h2>
 <form>
-    <input type="hidden" name="userId" id="userId" th:value="${member.id}"/>
+    <input type="hidden" name="userId" id="userId" th:value="${user.id}"/>
     <input type="hidden" name="albumId" id="albumId" th:value="${firstAlbum.id}"/>
     <textarea name="comment" id="comment"></textarea>
     <button type="button" onclick="submitComment()">댓글 작성</button>
@@ -126,4 +113,168 @@
     });
 </script>
 
+<script th:inline="javascript">
+
+    function clip() {
+
+        // 현재 페이지의 URL을 클립보드에 복사
+        var url = window.document.location.href;
+
+        navigator.clipboard.writeText(url).then(function () {
+            alert("URL이 복사되었습니다.");
+        }).catch(function (error) {
+            console.error('클립보드에 복사할 수 없습니다:', error);
+            alert("URL 복사에 실패했습니다. 브라우저 설정을 확인해주세요.");
+        });
+
+    }
+
+    var thisUrl = document.URL;
+    var albumDetail = [[${firstAlbum.detail}]]; // Thymeleaf 구문을 사용하여 서버에서 이 부분을 대체
+    var snsTitle = "MiTi에서 듣는 " + albumDetail;
+
+    function shareTwitter() {
+        var url = "http://twitter.com/share?url=" + encodeURIComponent(thisUrl) + "&text=" + encodeURIComponent(snsTitle);
+        window.open(url, "tweetPop", "width=600, height=800,scrollbars=yes");
+    }
+
+    function shareFacebook() {
+        var url = "http://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(thisUrl);
+        window.open(url, "", "width=600, height=800");
+    }
+
+    function shareBand() {
+        var url = "http://www.band.us/plugin/share?body=" + encodeURIComponent(snsTitle) + "&route=" + encodeURIComponent(thisUrl);
+        window.open(url, "shareBand", "width=600, height=800, resizable=yes");
+    }
+
+    function shareKakao() {
+
+        // 사용할 앱의 JavaScript 키 설정
+        Kakao.init('c674475155401a14bdb7e23238b59868');
+
+        // 카카오링크 버튼 생성
+        Kakao.Link.createDefaultButton({
+            container: '#btnKakao', // 카카오공유버튼ID
+            objectType: 'feed',
+            content: {
+                title: snsTitle, // 동적으로 설정된 제목 사용
+                imageUrl: thisUrl, // 콘텐츠 URL (실제 URL로 변경)
+                link: {
+                    mobileWebUrl: thisUrl,
+                    webUrl: thisUrl
+                }
+            }
+        });
+    }
+</script>
+
+<!-- 앨범 트랙 재생 기능 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const playAllButton = document.getElementById('play-all-button');
+        const playButtons = document.querySelectorAll('.play-button');
+        const albumListItems = document.querySelectorAll('#album-list li');
+        let currentTrackIndex = 0;
+        let audio = new Audio();
+
+        // 개별 곡 재생 버튼 클릭 이벤트 처리
+        playButtons.forEach((button, index) => {
+            button.addEventListener('click', () => {
+                currentTrackIndex = index; // 현재 클릭한 곡의 인덱스를 설정
+                playTrack();
+            });
+        });
+
+        // 전체 재생 버튼 클릭 이벤트 처리
+        playAllButton.addEventListener('click', () => {
+            currentTrackIndex = 0; // 첫 번째 곡부터 재생
+            playTrack();
+        });
+
+        // 현재 트랙 재생 함수
+        function playTrack() {
+            if (currentTrackIndex >= albumListItems.length) {
+                console.log('All tracks finished');
+                return; // 모든 곡이 재생되었으면 종료
+            }
+
+            const trackElement = albumListItems[currentTrackIndex];
+            const trackUrl = trackElement.getAttribute('data-music-url');
+
+            if (trackUrl) {
+                audio.src = trackUrl;
+                audio.play();
+
+                audio.onended = () => {
+                    currentTrackIndex++; // 다음 트랙으로 이동
+                    playTrack(); // 다음 트랙 재생
+                };
+            } else {
+                console.error('Track URL is not available');
+            }
+        }
+
+        // 페이지를 벗어나면 재생 중지
+        window.addEventListener('beforeunload', function () {
+            if (audio) {
+                audio.pause();
+                audio.src = '';
+            }
+        });
+    });
+</script>
+
+<!-- 재생바 -->
+<div class="playback-bar">
+    <div class="track-info-container">
+        <img src="album_cover.jpg" alt="앨범 커버">
+        <div class="track-info">
+            <div>음악 제목</div>
+            <div>가수 이름</div>
+        </div>
+        <div class="control-buttons">
+            <button id="prevButton">⏮️</button> <!-- 이전 곡 버튼 -->
+            <button id="playPauseButton">⏯️</button> <!-- 재생/일시정지 버튼 -->
+            <button id="nextButton">⏭️</button> <!-- 다음 곡 버튼 -->
+        </div>
+        <button class="like-button" id="likeButton">♡</button>
+    </div>
+</div>
+
+<script>
+    // 좋아요 버튼 클릭 시 작동하는 JavaScript
+    document.getElementById('likeButton').addEventListener('click', function() {
+        this.classList.toggle('liked');
+        if (this.classList.contains('liked')) {
+            this.innerText = '♥'; // 하트 모양 변경
+        } else {
+            this.innerText = '♡'; // 기본 하트 모양
+        }
+    });
+
+    // 재생/일시정지 버튼 클릭 시 작동하는 JavaScript (예시)
+    document.getElementById('playPauseButton').addEventListener('click', function() {
+        // 여기서 실제 음악 재생/일시정지 기능을 구현하세요
+        if (this.innerText === '⏯️') {
+            this.innerText = '⏸️'; // 일시 정지 아이콘으로 변경
+        } else {
+            this.innerText = '⏯️'; // 재생 아이콘으로 변경
+        }
+    });
+
+    // 이전 곡 버튼 클릭 시 (예시)
+    document.getElementById('prevButton').addEventListener('click', function() {
+        // 이전 곡으로 이동하는 기능 구현
+        console.log("이전 곡으로 이동");
+    });
+
+    // 다음 곡 버튼 클릭 시 (예시)
+    document.getElementById('nextButton').addEventListener('click', function() {
+        // 다음 곡으로 이동하는 기능 구현
+        console.log("다음 곡으로 이동");
+    });
+</script>
+<div th:replace="play/under :: footer"></div>
+</body>
 </html>
