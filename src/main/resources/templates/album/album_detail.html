@@ -27,11 +27,45 @@
 </div>
 <hr>
 
-<!-- 앨범에 해당되는 곡 목록 -->
-<ul id="album-list" style="list-style-type: none;">
-    <li th:each="album, iterStat : ${albums}" data-music-url="${album.musicTrackHref}">
-        <span th:text="${iterStat.index + 1} + '. ' + ${album.musicName}"></span>
-        <button class="play-button" type="button">Play</button>
+<!--앨범에 해당되는 곡 목록-->
+<ul style="list-style-type: none;">
+    <li th:each="album, iterStat : ${albums}">
+        <div class="accordion_block">
+            <span th:text="${iterStat.index + 1} + '. ' + ${album.music_name}"></span>
+            <script th:inline="javascript">
+                var duration = /*[[${album.music_duration_ms}]]*/ '0';
+                document.write(formatDuration(duration));
+            </script>
+            <!--아코디언 메뉴-->
+            <button class="accordion">:</button>
+            <div class="panel">
+                <button>좋아요</button>
+                <button>재생 목록에 추가</button>
+                <button>다음에 재생</button>
+                <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
+                    <button>앨범 정보</button>
+                </a>
+                <button class="accordion">공유</button>
+                <div class="panel">
+                    <button>
+                        <a href="#" onclick="clip(); return false;">링크 복사</a>
+                    </button>
+                    <button>
+                        <a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a>
+                    </button>
+                    <button>
+                        <a href="javascript:shareTwitter();">트위터에 공유</a>
+                    </button>
+                    <button>
+                        <a href="javascript:shareFacebook();">페이스북에 공유</a>
+                    </button>
+                    <button>
+                        <a href="javascript:shareBand();">밴드에 공유</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </li>
 </ul>
 <hr>
@@ -169,6 +203,7 @@
     }
 </script>
 
+
 <!-- 앨범 트랙 재생 기능 -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -278,3 +313,4 @@
 <div th:replace="play/under :: footer"></div>
 </body>
 </html>
+

@@ -4,27 +4,33 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+
 @Entity
 @Getter
 @Setter
-@Table(name = "user_record")
+@Table(name = "user_genre")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class Record {
+public class Genre {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "album_id")
-    private String albumId;
-
     @Column(name = "user_id")
     private String userId;
 
+    @Column(name = "genre")
+    private String genre;
+
+    private String genre_image;
+
+/*
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Album album;
+
+ */
 }

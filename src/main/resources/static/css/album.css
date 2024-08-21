@@ -7,16 +7,13 @@
 
 .accordion {
     cursor: pointer;
-    top: -3px;
-    left: 20px;
-    width: 10px;
     border: none;
     text-align: left;
     outline: none;
     transition: 0.4s;
     font-size: 16px;
     position: relative;
-    height: 20px;
+    height: 35px;
     background-color: rgba(255, 255, 255, 0);
 }
 
@@ -24,20 +21,17 @@
     background-color: rgba(255, 255, 255, 0);
 }
 
-/* Show panel when accordion is active */
 .accordion.active + .panel {
     display: block;
 }
 
 .panel {
     position: relative;
-    top: 0;
-    left: 40px; /* Adjust the left position based on your design */
-    width: 120px; /* Adjust width as needed */
+    width: 120px;
     padding: 10px;
     background-color: rgba(255, 255, 255, 0);
     display: none;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* optional: add shadow for panel */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .panel button {
@@ -55,4 +49,3 @@
 .panel button:hover {
     background-color: #eee;
 }
-

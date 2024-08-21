@@ -6,11 +6,12 @@
 </head>
 <body>
 <div class="layout">
-    <button onclick="location.href='record'">음악 기록</button>
-    <button onclick="location.href='like'">좋아요</button>
-    <button onclick="location.href='user_genre'">선호 장르</button>
-    <button onclick="location.href='comment'">댓글</button>
-    <button onclick="location.href='user_playlist'">플레이리스트</button>
+    <button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${userId})}'|">음악 기록</button>
+    <button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${userId})}'|">좋아요</button>
+    <button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${userId})}'|">선호 장르</button>
+    <button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${userId})}'|">댓글</button>
+    <button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|">플레이리스트</button>
+
 </div>
 
 <table>
@@ -35,18 +36,18 @@
             <span th:text="${post.music_artist_name}"></span>
         </td>
         <td>
-            <span th:text="${post.music_duration_ms}"></span>
+            <span th:text="${post.formattedDuration}"></span>
         </td>
         <td>
-            <button onclick="deleteLike([[${post.user_id}]], [[${post.album_id}]])">삭제</button>
+            <button th:onclick="'deleteLike(' + ${post.id} + ')'" class="btn btn-danger">삭제</button>
         </td>
     </tr>
 </table>
 
 <script>
-    function deleteLike(user_id, album_id) {
-        console.log(`Deleting like for userId: ${user_id}, albumId: ${album_id}`);
-        fetch(`/mypage/like/${user_id}/${album_id}`, {
+    function deleteLike(id) {
+        console.log(`Deleting like for userId: ${id}`);
+        fetch(`/mypage/like/${id}`, {
             method: 'DELETE'
         })
             .then(response => response.text())
