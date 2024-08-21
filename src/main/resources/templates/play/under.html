@@ -1,0 +1,135 @@
+<!-- src/main/resources/templates/fragments/under.html -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>음악 플레이어</title>
+    <style>
+        /* 재생바 기본 스타일 */
+        .playback-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #222;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+            font-size: 14px;
+        }
+
+        .playback-bar .track-info-container {
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+
+        .playback-bar .track-info {
+            display: inline-block;
+            margin: 0 15px;
+            text-align: left;
+        }
+
+        .playback-bar .track-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+        }
+
+        .playback-bar .track-info div {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .playback-bar .control-buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .playback-bar .control-buttons button {
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+            background: none;
+            border: none;
+            outline: none;
+            margin: 0 5px;
+            transition: color 0.3s ease;
+        }
+
+        .playback-bar .like-button {
+            cursor: pointer;
+            font-size: 20px;
+            color: white;
+            background: none;
+            border: none;
+            outline: none;
+            margin-left: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .playback-bar .like-button.liked {
+            color: #ff0000; /* 좋아요 선택 시 하트 색상 빨간색으로 변경 */
+        }
+    </style>
+</head>
+<body>
+<!-- 재생바 정의 -->
+<div th:fragment="footer">
+    <div class="playback-bar">
+        <div class="track-info-container">
+            <img src="album_cover.jpg" alt="앨범 커버">
+            <div class="track-info">
+                <div>음악 제목</div>
+                <div>가수 이름</div>
+            </div>
+            <div class="control-buttons">
+                <button id="prevButton">⏮️</button> <!-- 이전 곡 버튼 -->
+                <button id="playPauseButton">⏯️</button> <!-- 재생/일시정지 버튼 -->
+                <button id="nextButton">⏭️</button> <!-- 다음 곡 버튼 -->
+            </div>
+            <button class="like-button" id="likeButton">♡</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 좋아요 버튼 클릭 시 작동하는 JavaScript
+    document.getElementById('likeButton').addEventListener('click', function() {
+        this.classList.toggle('liked');
+        if (this.classList.contains('liked')) {
+            this.innerText = '♥'; // 하트 모양 변경
+        } else {
+            this.innerText = '♡'; // 기본 하트 모양
+        }
+    });
+
+    // 재생/일시정지 버튼 클릭 시 작동하는 JavaScript (예시)
+    document.getElementById('playPauseButton').addEventListener('click', function() {
+        // 여기서 실제 음악 재생/일시정지 기능을 구현하세요
+        if (this.innerText === '⏯️') {
+            this.innerText = '⏸️'; // 일시 정지 아이콘으로 변경
+        } else {
+            this.innerText = '⏯️'; // 재생 아이콘으로 변경
+        }
+    });
+
+    // 이전 곡 버튼 클릭 시 (예시)
+    document.getElementById('prevButton').addEventListener('click', function() {
+        // 이전 곡으로 이동하는 기능 구현
+        console.log("이전 곡으로 이동");
+    });
+
+    // 다음 곡 버튼 클릭 시 (예시)
+    document.getElementById('nextButton').addEventListener('click', function() {
+        // 다음 곡으로 이동하는 기능 구현
+        console.log("다음 곡으로 이동");
+    });
+</script>
+</body>
+</html>
