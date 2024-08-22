@@ -31,8 +31,8 @@ public class MyCommentService {
                     .albumId(myComment.getAlbumId())
                     .comment(myComment.getComment())
                     .album_image(myComment.getAlbum().getAlbum_image())
-                    .music_name(myComment.getAlbum().getMusic_name())
-                    .music_artist_name(myComment.getAlbum().getMusic_artist_name())
+                    .music_name(myComment.getAlbum().getMusicName())
+                    .music_artist_name(myComment.getAlbum().getMusicArtistName())
                     .build();
             myCommentDtoList.add(myCommentDto);
         }
