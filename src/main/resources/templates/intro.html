@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/intro.css" rel="stylesheet">
+    <title>MITI</title>
+</head>
+<body>
+<div class="image-container">
+    <img src="/images/headset.png" alt="Expanding Image">
+    <div class="text-overlay">MITI</div>
+</div>
+
+<script>
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            document.querySelector('img').style.transform = 'scale(50)';
+        }, 1000); // 1초 후에 애니메이션 실행
+    });
+</script>
+
+
+<script>
+    setTimeout('move_page()', 3000); //4초 후 이동
+    function move_page() {
+        location.href = "/index"
+    }
+</script>
+</body>
+</html>
