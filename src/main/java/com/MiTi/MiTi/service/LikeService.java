@@ -30,8 +30,8 @@ public class LikeService {
                     .userId(like.getUserId())
                     .albumId(like.getAlbumId())
                     .album_image(like.getAlbum().getAlbum_image())
-                    .music_name(like.getAlbum().getMusic_name())
-                    .music_artist_name(like.getAlbum().getMusic_artist_name())
+                    .music_name(like.getAlbum().getMusicName())
+                    .music_artist_name(like.getAlbum().getMusicArtistName())
                     .music_duration_ms(like.getAlbum().getMusic_duration_ms())
                     .build();
             likeDtoList.add(likeDto);
