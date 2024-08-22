@@ -1,4 +1,4 @@
-package com.MiTi.MiTi.controller;
+package com.MiTi.MiTi.controller.mypage;
 
 import com.MiTi.MiTi.dto.MyCommentDto;
 import com.MiTi.MiTi.repository.MyCommentRepository;
@@ -26,7 +26,7 @@ public class MyCommentController {
         List<MyCommentDto> myCommentDtoList = myCommentService.getCommentListByUserId(String.valueOf(userId));
         model.addAttribute("commentList", myCommentDtoList);
         model.addAttribute("userId", userId);
-        return "mypage_comment";
+        return "mypage/mypage_comment";
     }
 
     // 댓글 수정 요청 처리

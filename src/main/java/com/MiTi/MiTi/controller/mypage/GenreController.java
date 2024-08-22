@@ -1,4 +1,4 @@
-package com.MiTi.MiTi.controller;
+package com.MiTi.MiTi.controller.mypage;
 
 import com.MiTi.MiTi.dto.GenreDto;
 import com.MiTi.MiTi.repository.GenreRepository;
@@ -25,7 +25,7 @@ public class GenreController {
         List<GenreDto> genreDtoList = genreService.getGenreListByUserId(String.valueOf(userId));
         model.addAttribute("postList", genreDtoList);
         model.addAttribute("userId", userId);
-        return "mypage_genre";
+        return "mypage/mypage_genre";
     }
 
     // 선호장르 삭제 (물리적 삭제)

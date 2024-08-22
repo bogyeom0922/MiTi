@@ -1,4 +1,4 @@
-package com.MiTi.MiTi.controller;
+package com.MiTi.MiTi.controller.user;
 
 import com.MiTi.MiTi.entity.Album;
 import com.MiTi.MiTi.service.AlbumService;

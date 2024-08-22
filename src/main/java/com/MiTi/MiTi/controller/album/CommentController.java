@@ -1,4 +1,4 @@
-package com.MiTi.MiTi.controller;
+package com.MiTi.MiTi.controller.album;
 
 import com.MiTi.MiTi.dto.CommentDto;
 import com.MiTi.MiTi.entity.Comment;

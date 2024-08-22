@@ -1,8 +1,6 @@
-package com.MiTi.MiTi.controller;
+package com.MiTi.MiTi.controller.mypage;
 
 import com.MiTi.MiTi.dto.LikeDto;
-import com.MiTi.MiTi.dto.RecordDto;
-import com.MiTi.MiTi.entity.Like;
 import com.MiTi.MiTi.repository.LikeRepository;
 import com.MiTi.MiTi.service.LikeService;
 import org.springframework.stereotype.Controller;
@@ -27,7 +25,7 @@ public class LikeController {
         List<LikeDto> likeDtoList = likeService.getLikeListByUserId(String.valueOf(userId));
         model.addAttribute("postList", likeDtoList);
         model.addAttribute("userId", userId);
-        return "mypage_like";
+        return "mypage/mypage_like";
     }
 
     // 게시글 삭제 (물리적 삭제)

@@ -1,4 +1,4 @@
-package com.MiTi.MiTi.controller;
+package com.MiTi.MiTi.controller.user;
 
 import com.MiTi.MiTi.dto.JoinRequest;
 import com.MiTi.MiTi.service.EmailService;
