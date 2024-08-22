@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,6 +32,7 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            padding-bottom: 60px; /* 하단바 공간 확보 */
         }
         #search {
             width: 100%;
@@ -60,6 +61,69 @@
             margin: 5px 0 0;
             color: #555;
         }
+        /* 재생바 스타일 */
+        .playback-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #222;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+            font-size: 14px;
+            z-index: 1000; /* 다른 요소 위에 표시 */
+        }
+        .playback-bar .track-info-container {
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+        .playback-bar .track-info {
+            display: inline-block;
+            margin: 0 15px;
+            text-align: left;
+        }
+        .playback-bar .track-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+        }
+        .playback-bar .track-info div {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .playback-bar .control-buttons {
+            display: flex;
+            align-items: center;
+        }
+        .playback-bar .control-buttons button {
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+            background: none;
+            border: none;
+            outline: none;
+            margin: 0 5px;
+            transition: color 0.3s ease;
+        }
+        .playback-bar .like-button {
+            cursor: pointer;
+            font-size: 20px;
+            color: white;
+            background: none;
+            border: none;
+            outline: none;
+            margin-left: 15px;
+            transition: color 0.3s ease;
+        }
+        .playback-bar .like-button.liked {
+            color: #ff0000; /* 좋아요 선택 시 하트 색상 빨간색으로 변경 */
+        }
     </style>
 </head>
 <body>
@@ -70,6 +134,7 @@
 <!-- 검색 결과를 표시할 div -->
 <div id="results"></div>
 
+<!-- 하단바 포함 -->
 <div th:replace="play/under :: footer"></div>
 </body>
 </html>
