@@ -34,6 +34,7 @@ dependencies {
 	implementation 'javax.servlet:javax.servlet-api:4.0.1'
 	implementation 'mysql:mysql-connector-java:8.0.33'
 
+
 	compileOnly 'org.projectlombok:lombok:1.18.26'
 	annotationProcessor 'org.projectlombok:lombok:1.18.26'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
