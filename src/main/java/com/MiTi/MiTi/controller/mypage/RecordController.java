@@ -1,4 +1,4 @@
-package com.MiTi.MiTi.controller;
+package com.MiTi.MiTi.controller.mypage;
 
 import com.MiTi.MiTi.dto.RecordDto;
 import com.MiTi.MiTi.service.RecordService;
@@ -23,6 +23,6 @@ public class RecordController {
         List<RecordDto> recordDtoList = recordService.getRecordListByUserId(String.valueOf(userId));
         model.addAttribute("postList", recordDtoList);
         model.addAttribute("userId", userId);
-        return "mypage_record";
+        return "mypage/mypage_record";
     }
 }

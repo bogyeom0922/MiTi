@@ -5,9 +5,7 @@
     <title>플레이리스트 노래 목록</title>
 </head>
 <body>
-
 <table>
-
     <tr th:each="album : ${albumList}" >
         <td th:text="${album.music_name}"></td>
         <td>
@@ -15,7 +13,6 @@
         </td>
         <td th:text="${album.music_artist_name}"></td>
     </tr>
-
 
 </table>
 </body>

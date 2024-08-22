@@ -1,4 +1,4 @@
-package com.MiTi.MiTi.controller;
+package com.MiTi.MiTi.controller.mypage;
 
 import com.MiTi.MiTi.dto.PlaylistDto;
 import com.MiTi.MiTi.repository.PlaylistRepository;
@@ -27,13 +27,13 @@ public class PlaylistController {
         List<PlaylistDto> playlistDtoList = playlistService.getPlaylistListByUserId(String.valueOf(userId));
         model.addAttribute("postList", playlistDtoList);
         model.addAttribute("userId", userId);
-        return "mypage_playlist";
+        return "mypage/mypage_playlist";
     }
 
     @GetMapping("/mypage/playlist/albums")
     public String getAlbumsByPlaylistName(@RequestParam String userPlaylistName, Model model) { // 수정된 파라미터 이름
         List<PlaylistDto> albumList = playlistService.getAlbumsByPlaylistName(userPlaylistName);
         model.addAttribute("albumList", albumList);
-        return "playlist_albums";
+        return "mypage/playlist_albums";
     }
 }

@@ -1,4 +1,4 @@
-package com.MiTi.MiTi.controller;
+package com.MiTi.MiTi.controller.user;
 
 import com.MiTi.MiTi.service.LikeService;
 import org.springframework.http.ResponseEntity;
