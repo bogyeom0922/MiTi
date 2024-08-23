@@ -280,15 +280,36 @@ a:hover {
     top: 60px;
     display: flex;
     align-items: center;
-    width: 40%;
+    width: 58%;
 }
 
 .album_img {
     position: relative;
-    width: 41%;
+    width: 25%;
+}
+
+.album_play_img {
+    position: relative;
+    left: 20%;
+    width: 10%;
 }
 
 .album_detail {
     position: relative;
     left: 5%;
 }
+
+.album_list {
+    display: flex;            /* Flexbox를 사용하여 정렬 */
+    justify-content: center;  /* 수평 가운데 정렬 */
+    position: relative;
+    top: 100px;
+}
+
+.album_list ul {
+    list-style: none;         /* 기본 리스트 스타일 제거 */
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
