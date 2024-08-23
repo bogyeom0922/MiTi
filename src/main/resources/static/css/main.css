@@ -273,3 +273,22 @@ a:hover {
 .panel2 button:hover {
     background-color: #eee;
 }
+
+.album {
+    margin: 0 auto;
+    position: relative;
+    top: 60px;
+    display: flex;
+    align-items: center;
+    width: 40%;
+}
+
+.album_img {
+    position: relative;
+    width: 41%;
+}
+
+.album_detail {
+    position: relative;
+    left: 5%;
+}

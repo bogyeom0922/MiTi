@@ -19,12 +19,14 @@
 
 <div th:replace="play/header :: header"></div>
 <!--앨범 기본 정보-->
-<div th:if="${firstAlbum != null}">
-    <h1 th:text="${firstAlbum.detail}"></h1>
-    <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" width="300px">
-    <p th:text="${firstAlbum.musicArtistName}"></p>
-    <p>followers: <span th:text="${firstAlbum.music_artist_followers}"></span></p>
-    <p>artist genres: <span th:text="${firstAlbum.music_artist_genres}"></span></p>
+<div th:if="${firstAlbum != null}" class="album">
+    <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" class="album_img">
+    <div class="album_detail">
+        <p th:text="${firstAlbum.detail}"></p>
+        <p th:text="${firstAlbum.musicArtistName}"></p>
+        <p>followers: <span th:text="${firstAlbum.music_artist_followers}"></span></p>
+        <p>artist genres: <span th:text="${firstAlbum.music_artist_genres}"></span></p>
+    </div>
 </div>
 <hr>
 
