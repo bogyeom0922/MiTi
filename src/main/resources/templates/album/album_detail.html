@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link href="/css/album.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
     <title>Album Detail</title>
     <!--음악 재생 시간 분:초 단위로 변경-->
     <script type="text/javascript">
@@ -17,62 +17,63 @@
 
 <body>
 
+<div th:replace="play/header :: header"></div>
 <!--앨범 기본 정보-->
-<div th:if="${firstAlbum != null}">
-    <h1 th:text="${firstAlbum.detail}"></h1>
-    <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" width="300px">
-    <p th:text="${firstAlbum.musicArtistName}"></p>
-    <p>followers: <span th:text="${firstAlbum.music_artist_followers}"></span></p>
-    <p>artist genres: <span th:text="${firstAlbum.music_artist_genres}"></span></p>
+<div th:if="${firstAlbum != null}" class="album">
+    <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" class="album_img">
+    <div class="album_detail">
+        <p th:text="${firstAlbum.detail}"></p>
+        <p th:text="${firstAlbum.musicArtistName}"></p>
+        <p>followers: <span th:text="${firstAlbum.music_artist_followers}"></span></p>
+        <p>artist genres: <span th:text="${firstAlbum.music_artist_genres}"></span></p>
+    </div>
+    <img src="/images/play.png" class="album_play_img">
+    <button id="play-all-button" type="button">이 재생버튼을 위 이미지 눌렀을 때 실행되도록 수정해야함</button>
 </div>
-<hr>
 
 <!--앨범에 해당되는 곡 목록-->
-<ul style="list-style-type: none;">
-    <li th:each="album, iterStat : ${albums}">
-        <div class="accordion_block">
-            <span th:text="${iterStat.index + 1} + '. ' + ${album.musicName}"></span>
-            <script th:inline="javascript">
-                var duration = /*[[${album.music_duration_ms}]]*/ '0';
-                document.write(formatDuration(duration));
-            </script>
-            <!--아코디언 메뉴-->
-            <button class="accordion">:</button>
-            <div class="panel">
-                <button>좋아요</button>
-                <button>재생 목록에 추가</button>
-                <button>다음에 재생</button>
-                <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
-                    <button>앨범 정보</button>
-                </a>
-                <button class="accordion">공유</button>
+<div class="album_list">
+    <ul style="list-style-type: none;">
+        <li th:each="album, iterStat : ${albums}">
+            <div class="accordion_block">
+                <span th:text="${iterStat.index + 1}" style="width: 20%"></span>
+                <span th:text="${album.musicName}" style="width: 70%"></span>
+                <script th:inline="javascript">
+                    var duration = /*[[${album.music_duration_ms}]]*/ '0';
+                    document.write(formatDuration(duration));
+                </script>
+                <!--아코디언 메뉴-->
+                <button class="accordion2" style="width: 10%">:</button>
                 <div class="panel">
-                    <button>
-                        <a href="#" onclick="clip(); return false;">링크 복사</a>
-                    </button>
-                    <button>
-                        <a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a>
-                    </button>
-                    <button>
-                        <a href="javascript:shareTwitter();">트위터에 공유</a>
-                    </button>
-                    <button>
-                        <a href="javascript:shareFacebook();">페이스북에 공유</a>
-                    </button>
-                    <button>
-                        <a href="javascript:shareBand();">밴드에 공유</a>
-                    </button>
+                    <button>좋아요</button>
+                    <button>재생 목록에 추가</button>
+                    <button>다음에 재생</button>
+                    <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
+                        <button>앨범 정보</button>
+                    </a>
+                    <button class="accordion3">공유</button>
+                    <div class="panel2">
+                        <button>
+                            <a href="#" onclick="clip(); return false;">링크 복사</a>
+                        </button>
+                        <button>
+                            <a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a>
+                        </button>
+                        <button>
+                            <a href="javascript:shareTwitter();">트위터에 공유</a>
+                        </button>
+                        <button>
+                            <a href="javascript:shareFacebook();">페이스북에 공유</a>
+                        </button>
+                        <button>
+                            <a href="javascript:shareBand();">밴드에 공유</a>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-
-    </li>
-</ul>
-<hr>
-
-<!-- 전체 재생 버튼 -->
-<button id="play-all-button" type="button">전체 재생</button>
-
+        </li>
+    </ul>
+</div>
 <hr>
 
 <!--댓글 작성-->
@@ -151,7 +152,22 @@
 <!--아코디언 메뉴-->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var acc = document.getElementsByClassName("accordion");
+        var acc = document.getElementsByClassName("accordion2");
+        for (var i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var acc = document.getElementsByClassName("accordion3");
         for (var i = 0; i < acc.length; i++) {
             acc[i].addEventListener("click", function () {
                 this.classList.toggle("active");
@@ -280,10 +296,9 @@
 </script>
 
 
-
 <script>
     // 좋아요 버튼 클릭 시 작동하는 JavaScript
-    document.getElementById('likeButton').addEventListener('click', function() {
+    document.getElementById('likeButton').addEventListener('click', function () {
         this.classList.toggle('liked');
         if (this.classList.contains('liked')) {
             this.innerText = '♥'; // 하트 모양 변경
@@ -293,7 +308,7 @@
     });
 
     // 재생/일시정지 버튼 클릭 시 작동하는 JavaScript (예시)
-    document.getElementById('playPauseButton').addEventListener('click', function() {
+    document.getElementById('playPauseButton').addEventListener('click', function () {
         // 여기서 실제 음악 재생/일시정지 기능을 구현하세요
         if (this.innerText === '⏯️') {
             this.innerText = '⏸️'; // 일시 정지 아이콘으로 변경
@@ -303,13 +318,13 @@
     });
 
     // 이전 곡 버튼 클릭 시 (예시)
-    document.getElementById('prevButton').addEventListener('click', function() {
+    document.getElementById('prevButton').addEventListener('click', function () {
         // 이전 곡으로 이동하는 기능 구현
         console.log("이전 곡으로 이동");
     });
 
     // 다음 곡 버튼 클릭 시 (예시)
-    document.getElementById('nextButton').addEventListener('click', function() {
+    document.getElementById('nextButton').addEventListener('click', function () {
         // 다음 곡으로 이동하는 기능 구현
         console.log("다음 곡으로 이동");
     });
