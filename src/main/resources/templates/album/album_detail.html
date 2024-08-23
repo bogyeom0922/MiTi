@@ -91,6 +91,25 @@
     </div>
 </div>
 
+<!-- 재생바 -->
+<div class="playback-bar">
+    <div class="track-info-container">
+        <img src="album_cover.jpg" alt="앨범 커버">
+        <div class="track-info">
+            <div>음악 제목</div>
+            <div>가수 이름</div>
+        </div>
+        <div class="control-buttons">
+            <button id="prevButton">⏮️</button> <!-- 이전 곡 버튼 -->
+            <button id="playPauseButton">⏯️</button> <!-- 재생/일시정지 버튼 -->
+            <button id="nextButton">⏭️</button> <!-- 다음 곡 버튼 -->
+        </div>
+        <button class="like-button" id="likeButton">♡</button>
+    </div>
+</div>
+
+<div th:replace="play/under :: footer"></div>
+
 </body>
 
 <!--댓글 생성 폼 json 형태로 전송-->
@@ -260,22 +279,7 @@
     });
 </script>
 
-<!-- 재생바 -->
-<div class="playback-bar">
-    <div class="track-info-container">
-        <img src="album_cover.jpg" alt="앨범 커버">
-        <div class="track-info">
-            <div>음악 제목</div>
-            <div>가수 이름</div>
-        </div>
-        <div class="control-buttons">
-            <button id="prevButton">⏮️</button> <!-- 이전 곡 버튼 -->
-            <button id="playPauseButton">⏯️</button> <!-- 재생/일시정지 버튼 -->
-            <button id="nextButton">⏭️</button> <!-- 다음 곡 버튼 -->
-        </div>
-        <button class="like-button" id="likeButton">♡</button>
-    </div>
-</div>
+
 
 <script>
     // 좋아요 버튼 클릭 시 작동하는 JavaScript
@@ -310,7 +314,5 @@
         console.log("다음 곡으로 이동");
     });
 </script>
-<div th:replace="play/under :: footer"></div>
-</body>
-</html>
 
+</html>

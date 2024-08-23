@@ -1,3 +1,9 @@
+body {
+    background-color: #d4e2d1ff;
+}
+
+
+
 /* accordion menu */
 .accordion_block {
     display: flex;

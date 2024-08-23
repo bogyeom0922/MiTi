@@ -66,6 +66,9 @@ public class AlbumController {
         UserDTO userDTO = userService.getUserById(userId);
         model.addAttribute("user", userDTO);
 
+        UserDTO memberDTO = userService.getUserById(userId);
+        model.addAttribute("member", memberDTO);
+
         return "album/album_detail";
     }
 }
