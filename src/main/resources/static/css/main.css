@@ -1,0 +1,168 @@
+body {
+    background-color: #d4e2d1ff;
+}
+
+div {
+    letter-spacing: 1px;
+}
+
+a {
+    text-decoration-line: none;
+    display: inline;
+}
+
+a:link {
+    color: black;
+}
+
+a:visited {
+    color: black;
+}
+
+a:hover {
+    color: black;
+}
+
+/*header*/
+.header {
+    position: relative;
+    height: 120px;
+    width: 100%;
+    top: 10px;
+}
+
+.logo {
+    position: relative;
+    top: 30px;
+    left: 11%;
+    width: 7%;
+    font-size: 40px;
+    font-weight: bolder;
+}
+
+.search {
+    position: relative;
+    top: -58px;
+    margin: 0 auto;
+    width: 40%;
+    height: 40px;
+    border: solid 1px rgba(177, 177, 177, 0.56);
+    display: flex;
+}
+
+.search_form {
+    height: 100%;
+    width: 100%;
+}
+
+.search_input {
+    width: 84%;
+    height: 100%;
+    border: 0;
+    outline: none;
+    font-size: 16px;
+    float: left;
+}
+
+.search_button {
+    height: 100%;
+    width: 15%;
+    border: 0;
+    background: #9eaa9a;
+    color: #1e1e1e;
+    font-size: 20px;
+    font-weight: bold;
+    float: right;
+}
+
+.search_button_img {
+    position: relative;
+    top: -10%;
+    width: 50%;
+    height: 120%;
+    margin: 0 auto;
+    opacity: 0.6;
+}
+
+.user {
+    font-size: 25px;
+    font-weight: bold;
+    cursor: pointer; /* 클릭 가능하게 설정 */
+}
+
+.accordion-container {
+    position: relative;
+    top: -90px;
+    left: 90%;
+    display: inline-block;
+    width: 7%;
+}
+
+.accordion-content {
+    width: 80%;
+    display: none;
+    position: absolute;
+    background-color: #9eaa9a;
+    border: solid 1px rgba(177, 177, 177, 0.56);
+    padding: 10px;
+    z-index: 1000;
+    margin-top: 10px;
+}
+
+.accordion-content a {
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+    color: #333;
+}
+
+.accordion-content a:hover {
+    background-color: rgba(221, 221, 221, 0.34);
+}
+
+/*main*/
+.recommend_title {
+    position: relative;
+    left: 8%;
+    top: 100px;
+    font-size: 25px;
+    font-weight: bolder;
+    margin-bottom: 50px;
+}
+
+.recommend {
+    color: rgba(34, 34, 34, 0.83);
+    display: flex;
+    position: relative;
+    top: 100px;
+    left: 3%;
+}
+
+.recommend_playlist {
+    width: 12%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left:5%;
+}
+
+.playlist_image {
+    width: 100%;
+}
+
+.playlist_name {
+    margin-top: 5px;
+    color: #1e1e1e;
+    font-size: 15px;
+}
+
+.album_ranking {
+    position: relative;
+    left: 8%;
+    top: 200px;
+    font-size: 25px;
+    font-weight: bolder;
+    margin-bottom: 50px;
+}

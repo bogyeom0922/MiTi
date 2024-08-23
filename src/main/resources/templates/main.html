@@ -1,11 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link href="/css/header.css" rel="stylesheet">
-    <title>MiTi</title>
+    <link href="/css/main.css" rel="stylesheet">
+    <title>Miti Main</title>
 </head>
 <body>
 <div th:replace="play/header :: header"></div>
+
+<div class="recommend_title">Recommended Playlist</div>
+<div class="recommend">
+    <div class="recommend_playlist">
+        <img src="/images/album.jpeg" class="playlist_image">
+        <p class="playlist_name">공부할 때 듣기 좋은 음악</p>
+    </div>
+    <div class="recommend_playlist">
+        <img src="/images/album.jpeg" class="playlist_image">
+        <p class="playlist_name">공부할 때 듣기 좋은 음악</p>
+    </div>
+    <div class="recommend_playlist">
+        <img src="/images/album.jpeg" class="playlist_image">
+        <p class="playlist_name">공부할 때 듣기 좋은 음악</p>
+    </div>
+    <div class="recommend_playlist">
+        <img src="/images/album.jpeg" class="playlist_image">
+        <p class="playlist_name">공부할 때 듣기 좋은 음악</p>
+    </div>
+    <div class="recommend_playlist">
+        <img src="/images/album.jpeg" class="playlist_image">
+        <p class="playlist_name">공부할 때 듣기 좋은 음악</p>
+    </div>
+</div>
+
+<div class="album_ranking">Today's Rankings</div>
+<div>
+    <!--    음악순위-->
+</div>
+
+<div th:replace="play/under :: footer"></div>
 </body>
 </html>
