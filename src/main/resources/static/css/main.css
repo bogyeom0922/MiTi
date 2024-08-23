@@ -157,3 +157,12 @@ a:hover {
     color: #1e1e1e;
     font-size: 15px;
 }
+
+.album_ranking {
+    position: relative;
+    left: 8%;
+    top: 200px;
+    font-size: 25px;
+    font-weight: bolder;
+    margin-bottom: 50px;
+}
