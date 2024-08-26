@@ -1,5 +1,7 @@
 body {
     background-color: #d4e2d1ff;
+    margin: 0;
+    padding: 0;
 }
 
 div {
@@ -46,7 +48,7 @@ a:hover {
     margin: 0 auto;
     width: 40%;
     height: 40px;
-    border: solid 1px rgba(177, 177, 177, 0.56);
+    border: solid 2px rgba(177, 177, 177, 0.56);
     display: flex;
 }
 
@@ -145,7 +147,7 @@ a:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-left:5%;
+    margin-left: 5%;
 }
 
 .playlist_image {
@@ -170,24 +172,24 @@ a:hover {
 /* accordion menu */
 .accordion_block {
     display: flex;
-    justify-content: left;
-    margin-bottom: 20px;
+    justify-content: space-between;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
 }
 
 .accordion2 {
     cursor: pointer;
     top: -3px;
     left: 20px;
-    width: 20px; /* Adjusted width for a smaller button */
-    height: 20px; /* Adjusted height for a smaller button */
     border: none;
     text-align: center;
     outline: none;
     transition: 0.4s;
-    font-size: 12px; /* Reduced font size */
     position: relative;
-    background-color: rgba(255, 255, 255, 0);
     padding: 0; /* Removed padding for a tighter button */
+    background-color: rgba(0, 0, 0, 0);
 }
 
 .accordion2:hover, .accordion2.active {
@@ -277,39 +279,175 @@ a:hover {
 .album {
     margin: 0 auto;
     position: relative;
-    top: 60px;
+    top: 80px;
     display: flex;
     align-items: center;
-    width: 58%;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.43);
+    height: 500px;
+    /* Flexbox를 사용하여 자식 요소들을 중앙 정렬 */
+    justify-content: space-between; /* 자식 요소들을 좌우로 배치 */
 }
 
 .album_img {
-    position: relative;
-    width: 25%;
+    position: absolute; /* 절대 위치를 사용하여 정확한 위치 설정 */
+    left: 15%; /* 화면 왼쪽에서 20% 떨어진 위치 */
+    width: 22%; /* 너비 설정 */
+    height: 360px; /* 높이 설정 */
 }
 
 .album_play_img {
-    position: relative;
-    left: 20%;
-    width: 10%;
+    position: absolute; /* 절대 위치를 사용하여 정확한 위치 설정 */
+    right: 15%; /* 화면 오른쪽에서 20% 떨어진 위치 */
+    width: 10%; /* 너비 설정 */
 }
 
 .album_detail {
-    position: relative;
-    left: 5%;
+    position: absolute; /* 절대 위치를 사용하여 정확한 위치 설정 */
+    left: 55%; /* 화면의 중앙에 위치 */
+    transform: translateX(-50%); /* 수평으로 중앙 정렬 */
+    width: 25%;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgba(53, 57, 53, 0.83);
+    line-height: 0.8;
 }
+
+.album_name {
+    font-size: 40px;
+    font-weight: bolder;
+    color: #234723;
+    margin-bottom: 15px;
+}
+
+.album_artist {
+    font-size: 22px;
+    font-weight: bolder;
+    color: black;
+    margin-bottom: 50px;
+}
+
 
 .album_list {
-    display: flex;            /* Flexbox를 사용하여 정렬 */
-    justify-content: center;  /* 수평 가운데 정렬 */
+    display: flex; /* Flexbox를 사용하여 정렬 */
+    justify-content: center; /* 수평 가운데 정렬 */
     position: relative;
-    top: 100px;
-}
-
-.album_list ul {
-    list-style: none;         /* 기본 리스트 스타일 제거 */
+    top: 150px;
+    font-size: 20px;
+    width: 40%;
+    left: 30%;
+    white-space: nowrap;
     padding: 0;
     margin: 0;
-    text-align: center;
+    line-height: 1.6;
+    border-collapse: collapse; /* 테이블 경계선의 겹침 제거 */
 }
 
+.album_list table {
+    width: 100%; /* 테이블 너비 설정 */
+}
+
+.album_list td {
+    padding: 10px; /* 셀 패딩 설정 */
+    border: 1px solid #ddd; /* 셀 경계선 설정 */
+    vertical-align: middle; /* 수직 정렬 가운데 */
+}
+
+.number {
+    width: 10%; /* 10% 너비 */
+}
+
+.name {
+    width: 70%; /* 70% 너비 */
+}
+
+.duration {
+    width: 15%; /* 15% 너비 */
+}
+
+.menu {
+    width: 5%; /* 5% 너비 */
+}
+
+/* 기존 패널 스타일 유지 */
+.panel {
+    display: none; /* 기본적으로 패널 숨김 */
+}
+
+.album_comments {
+    position: relative;
+    top: 300px;
+    display: flex; /* Flexbox를 사용하여 자식 요소들을 정렬 */
+    flex-direction: column; /* 자식 요소들을 수직으로 정렬 */
+    justify-content: center; /* 세로 중앙 정렬 */
+    align-items: center; /* 가로 중앙 정렬 */
+    width: 100%; /* 전체 너비 */
+    height: auto; /* 내용에 따라 높이 조정 */
+    margin-bottom: 500px;
+}
+
+
+.album_comments_form {
+    margin: 0;
+    display: flex; /* Flexbox 레이아웃을 사용 */
+    align-items: center; /* 자식 요소들을 세로로 중앙 정렬 */
+    justify-content: center; /* 자식 요소들을 가로로 중앙 정렬 (선택 사항) */
+    width: 100%;
+    padding: 0;
+}
+
+.album_comments_form p {
+    font-weight: bolder;
+    font-size: 30px;
+}
+
+.album_comments_form form {
+    margin-left: 50px;
+}
+
+.album_comments_form textarea {
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    border-bottom: solid 2px rgba(129, 136, 129, 0.56);
+    width: 750px;
+    outline: none; /* 포커스 시 기본 테두리 제거 */
+    resize: none;
+    font-size: 18px;
+}
+
+.album_comments_form button {
+    background-color: rgba(255, 255, 255, 0);
+    font-weight: bold;
+    font-size: 20px;
+    border: none;
+    position: relative;
+    top: -10px;
+    color: rgba(53, 57, 53, 0.83);
+    margin-left: 20px;
+}
+
+.album_comments_list {
+    position: relative;
+    top: 20px;
+    width: 710px;
+    left: 40px;
+    display: flex; /* Flexbox를 사용하여 자식 요소들을 수평으로 정렬 */
+    align-items: center; /* 자식 요소들을 세로로 중앙 정렬 */
+    justify-content: center; /* 자식 요소들을 가로로 중앙 정렬 (필요에 따라 조정 가능) */
+    line-height: 2.5;
+}
+
+.album_comments_list p {
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+}
+
+.comments_userid {
+    width: 20%;
+    font-weight: bold;
+}
+
+.comments_body {
+    width: 80%;
+}
