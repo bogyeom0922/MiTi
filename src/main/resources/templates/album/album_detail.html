@@ -28,7 +28,7 @@
         <p>artist genres: <span th:text="${firstAlbum.music_artist_genres}"></span></p>
     </div>
     <img src="/images/play.png" class="album_play_img">
-<!--    <button id="play-all-button" type="button">이 재생버튼을 위 이미지 눌렀을 때 실행되도록 수정해야함</button>-->
+    <!--    <button id="play-all-button" type="button">이 재생버튼을 위 이미지 눌렀을 때 실행되도록 수정해야함</button>-->
 </div>
 
 <!--앨범에 해당되는 곡 목록-->
@@ -82,18 +82,19 @@
 <div class="album_comments">
     <!--댓글 작성-->
     <div class="album_comments_form">
-        <h2>Comments</h2>
+        <p>Comments</p>
         <form>
             <input type="hidden" name="userId" id="userId" th:value="${user.id}"/>
             <input type="hidden" name="albumId" id="albumId" th:value="${firstAlbum.id}"/>
             <textarea name="comment" id="comment"></textarea>
-            <button type="button" onclick="submitComment()">댓글 작성</button>
+            <button type="button" onclick="submitComment()">post</button>
         </form>
     </div>
     <!--댓글 목록-->
-    <div th:if="${comments != null}" class="album_comments_list">
-        <div th:each="comment : ${comments}">
-            <p th:text="${comment.userId} + ' : ' + ${comment.comment}"></p>
+    <div th:if="${comments != null}">
+        <div th:each="comment : ${comments}" class="album_comments_list">
+            <p th:text="${comment.userId}" class="comments_userid"></p>
+            <p th:text="${comment.comment}" class="comments_body"></p>
         </div>
     </div>
 </div>
