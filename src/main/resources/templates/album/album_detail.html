@@ -33,57 +33,61 @@
 
 <!--앨범에 해당되는 곡 목록-->
 <div class="album_list">
-    <ul style="list-style-type: none;">
-        <li th:each="album, iterStat : ${albums}">
-            <div class="accordion_block">
-                <span th:text="${iterStat.index + 1}" style="width: 20%"></span>
-                <span th:text="${album.musicName}" style="width: 70%"></span>
+    <table>
+        <tbody>
+        <tr th:each="album, iterStat : ${albums}">
+            <td class="number" th:text="${iterStat.index + 1}"></td>
+            <td class="name" th:text="${album.musicName}"></td>
+            <td class="duration">
                 <script th:inline="javascript">
                     var duration = /*[[${album.music_duration_ms}]]*/ '0';
                     document.write(formatDuration(duration));
                 </script>
-                <!--아코디언 메뉴-->
-                <button class="accordion2" style="width: 10%">:</button>
-                <div class="panel">
-                    <button>좋아요</button>
-                    <button>재생 목록에 추가</button>
-                    <button>다음에 재생</button>
-                    <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
-                        <button>앨범 정보</button>
-                    </a>
-                    <button class="accordion3">공유</button>
-                    <div class="panel2">
-                        <button>
-                            <a href="#" onclick="clip(); return false;">링크 복사</a>
-                        </button>
-                        <button>
-                            <a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a>
-                        </button>
-                        <button>
-                            <a href="javascript:shareTwitter();">트위터에 공유</a>
-                        </button>
-                        <button>
-                            <a href="javascript:shareFacebook();">페이스북에 공유</a>
-                        </button>
-                        <button>
-                            <a href="javascript:shareBand();">밴드에 공유</a>
-                        </button>
-                    </div>
+            </td>
+            <td class="menu">
+                <button class="accordion2">:</button>
+            </td>
+            <div class="panel">
+                <button>좋아요</button>
+                <button>재생 목록에 추가</button>
+                <button>다음에 재생</button>
+                <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
+                    <button>앨범 정보</button>
+                </a>
+                <button class="accordion3">공유</button>
+                <div class="panel2">
+                    <button>
+                        <a href="#" onclick="clip(); return false;">링크 복사</a>
+                    </button>
+                    <button>
+                        <a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a>
+                    </button>
+                    <button>
+                        <a href="javascript:shareTwitter();">트위터에 공유</a>
+                    </button>
+                    <button>
+                        <a href="javascript:shareFacebook();">페이스북에 공유</a>
+                    </button>
+                    <button>
+                        <a href="javascript:shareBand();">밴드에 공유</a>
+                    </button>
                 </div>
             </div>
-        </li>
-    </ul>
+        </tr>
+        </tbody>
+    </table>
 </div>
-<hr>
 
 <!--댓글 작성-->
-<h2>Comments</h2>
-<form>
-    <input type="hidden" name="userId" id="userId" th:value="${user.id}"/>
-    <input type="hidden" name="albumId" id="albumId" th:value="${firstAlbum.id}"/>
-    <textarea name="comment" id="comment"></textarea>
-    <button type="button" onclick="submitComment()">댓글 작성</button>
-</form>
+<div class="album_comments">
+    <h2>Comments</h2>
+    <form>
+        <input type="hidden" name="userId" id="userId" th:value="${user.id}"/>
+        <input type="hidden" name="albumId" id="albumId" th:value="${firstAlbum.id}"/>
+        <textarea name="comment" id="comment"></textarea>
+        <button type="button" onclick="submitComment()">댓글 작성</button>
+    </form>
+</div>
 
 <!--댓글 목록-->
 <div th:if="${comments != null}">
@@ -95,7 +99,7 @@
 <!-- 재생바 -->
 <div class="playback-bar">
     <div class="track-info-container">
-        <img src="album_cover.jpg" alt="앨범 커버">
+        <!--        <img th:src="@{${firstAlbum.album_image}}" alt="앨범 커버">-->
         <div class="track-info">
             <div>음악 제목</div>
             <div>가수 이름</div>
