@@ -45,34 +45,35 @@
                 </script>
             </td>
             <td class="menu">
-                <button class="accordion2">:</button>
-            </td>
-            <div class="panel">
-                <button>좋아요</button>
-                <button>재생 목록에 추가</button>
-                <button>다음에 재생</button>
-                <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
-                    <button>앨범 정보</button>
-                </a>
-                <button class="accordion3">공유</button>
-                <div class="panel2">
-                    <button>
-                        <a href="#" onclick="clip(); return false;">링크 복사</a>
-                    </button>
-                    <button>
-                        <a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a>
-                    </button>
-                    <button>
-                        <a href="javascript:shareTwitter();">트위터에 공유</a>
-                    </button>
-                    <button>
-                        <a href="javascript:shareFacebook();">페이스북에 공유</a>
-                    </button>
-                    <button>
-                        <a href="javascript:shareBand();">밴드에 공유</a>
-                    </button>
+                <div class="accordion_container">
+                    <button class="accordion2">:</button>
+                    <div class="panel">
+                    <button>좋아요</button>
+                    <button>재생 목록에 추가</button>
+                    <button>다음에 재생</button>
+                    <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
+                        <button>앨범 정보</button>
+                    </a>
+                    <button class="accordion3">공유</button>
+                    <div class="panel2">
+                        <button>
+                            <a href="#" onclick="clip(); return false;">링크 복사</a>
+                        </button>
+                        <button>
+                            <a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a>
+                        </button>
+                        <button>
+                            <a href="javascript:shareTwitter();">트위터에 공유</a>
+                        </button>
+                        <button>
+                            <a href="javascript:shareFacebook();">페이스북에 공유</a>
+                        </button>
+                        <button>
+                            <a href="javascript:shareBand();">밴드에 공유</a>
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -164,14 +165,17 @@
             acc[i].addEventListener("click", function () {
                 this.classList.toggle("active");
                 var panel = this.nextElementSibling;
-                if (panel.style.display === "block") {
-                    panel.style.display = "none";
-                } else {
-                    panel.style.display = "block";
+                if (panel && panel.classList.contains('panel')) {
+                    if (panel.style.display === "block") {
+                        panel.style.display = "none";
+                    } else {
+                        panel.style.display = "block";
+                    }
                 }
             });
         }
     });
+
 
     document.addEventListener('DOMContentLoaded', function () {
         var acc = document.getElementsByClassName("accordion3");
