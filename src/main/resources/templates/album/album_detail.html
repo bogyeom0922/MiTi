@@ -22,13 +22,13 @@
 <div th:if="${firstAlbum != null}" class="album">
     <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" class="album_img">
     <div class="album_detail">
-        <p th:text="${firstAlbum.detail}"></p>
-        <p th:text="${firstAlbum.musicArtistName}"></p>
+        <p th:text="${firstAlbum.detail}" class="album_name"></p>
+        <p th:text="${firstAlbum.musicArtistName}" class="album_artist"></p>
         <p>followers: <span th:text="${firstAlbum.music_artist_followers}"></span></p>
         <p>artist genres: <span th:text="${firstAlbum.music_artist_genres}"></span></p>
     </div>
     <img src="/images/play.png" class="album_play_img">
-    <button id="play-all-button" type="button">이 재생버튼을 위 이미지 눌렀을 때 실행되도록 수정해야함</button>
+<!--    <button id="play-all-button" type="button">이 재생버튼을 위 이미지 눌렀을 때 실행되도록 수정해야함</button>-->
 </div>
 
 <!--앨범에 해당되는 곡 목록-->
@@ -78,21 +78,23 @@
     </table>
 </div>
 
-<!--댓글 작성-->
+<!--댓글-->
 <div class="album_comments">
-    <h2>Comments</h2>
-    <form>
-        <input type="hidden" name="userId" id="userId" th:value="${user.id}"/>
-        <input type="hidden" name="albumId" id="albumId" th:value="${firstAlbum.id}"/>
-        <textarea name="comment" id="comment"></textarea>
-        <button type="button" onclick="submitComment()">댓글 작성</button>
-    </form>
-</div>
-
-<!--댓글 목록-->
-<div th:if="${comments != null}">
-    <div th:each="comment : ${comments}">
-        <p th:text="${comment.userId} + ' : ' + ${comment.comment}"></p>
+    <!--댓글 작성-->
+    <div class="album_comments_form">
+        <h2>Comments</h2>
+        <form>
+            <input type="hidden" name="userId" id="userId" th:value="${user.id}"/>
+            <input type="hidden" name="albumId" id="albumId" th:value="${firstAlbum.id}"/>
+            <textarea name="comment" id="comment"></textarea>
+            <button type="button" onclick="submitComment()">댓글 작성</button>
+        </form>
+    </div>
+    <!--댓글 목록-->
+    <div th:if="${comments != null}" class="album_comments_list">
+        <div th:each="comment : ${comments}">
+            <p th:text="${comment.userId} + ' : ' + ${comment.comment}"></p>
+        </div>
     </div>
 </div>
 
@@ -186,6 +188,7 @@
     });
 </script>
 
+<!--공유-->
 <script th:inline="javascript">
 
     function clip() {
@@ -242,7 +245,6 @@
     }
 </script>
 
-
 <!-- 앨범 트랙 재생 기능 -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -298,7 +300,6 @@
         });
     });
 </script>
-
 
 <script>
     // 좋아요 버튼 클릭 시 작동하는 JavaScript

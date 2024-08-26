@@ -147,7 +147,7 @@ a:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-left:5%;
+    margin-left: 5%;
 }
 
 .playlist_image {
@@ -284,30 +284,53 @@ a:hover {
     align-items: center;
     width: 100%;
     background-color: rgba(255, 255, 255, 0.43);
-    height: 450px;
+    height: 500px;
+    /* Flexbox를 사용하여 자식 요소들을 중앙 정렬 */
+    justify-content: space-between; /* 자식 요소들을 좌우로 배치 */
 }
 
 .album_img {
-    position: relative;
-    width: 20%;
-    left: 20%;
-    height: 330px;
+    position: absolute; /* 절대 위치를 사용하여 정확한 위치 설정 */
+    left: 15%; /* 화면 왼쪽에서 20% 떨어진 위치 */
+    width: 22%; /* 너비 설정 */
+    height: 360px; /* 높이 설정 */
 }
 
 .album_play_img {
-    position: relative;
-    left: 20%;
-    width: 10%;
+    position: absolute; /* 절대 위치를 사용하여 정확한 위치 설정 */
+    right: 15%; /* 화면 오른쪽에서 20% 떨어진 위치 */
+    width: 10%; /* 너비 설정 */
 }
 
 .album_detail {
-    position: relative;
-    left: 25%;
+    position: absolute; /* 절대 위치를 사용하여 정확한 위치 설정 */
+    left: 55%; /* 화면의 중앙에 위치 */
+    transform: translateX(-50%); /* 수평으로 중앙 정렬 */
+    width: 25%;
+    font-size: 20px;
+    font-weight: bold;
+    color: rgba(53, 57, 53, 0.83);
+    line-height: 0.8;
 }
 
+.album_name {
+    font-size: 40px;
+    font-weight: bolder;
+    color: black;
+    margin-bottom: 15px;
+}
+
+.album_artist {
+    font-size: 22px;
+    font-weight: bolder;
+    color: black;
+    margin-bottom:50px;
+}
+
+
 .album_list {
-    display: flex;            /* Flexbox를 사용하여 정렬 */
-    justify-content: center;  /* 수평 가운데 정렬 */
+    display: flex; /* Flexbox를 사용하여 정렬 */
+    justify-content: center; /* 수평 가운데 정렬 */
     position: relative;
     top: 150px;
     font-size: 20px;
@@ -354,4 +377,9 @@ a:hover {
 .album_comments {
     position: relative;
     top: 150px;
+    margin-bottom: 300px;
+    display: flex; /* Flexbox를 사용하여 자식 요소들을 중앙 정렬 */
+    justify-content: center; /* 가로 중앙 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    width: 100%; /* 전체 너비 */
 }
