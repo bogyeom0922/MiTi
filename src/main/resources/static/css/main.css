@@ -179,6 +179,10 @@ a:hover {
     padding: 0;
 }
 
+.accordion_container {
+    position: relative; /* 패널을 버튼에 상대적으로 배치하기 위한 설정 */
+}
+
 .accordion2 {
     cursor: pointer;
     top: -3px;
@@ -223,13 +227,12 @@ a:hover {
 }
 
 .panel {
-    position: relative;
-    top: 10px; /* Adjusted top position so the panel appears below the button */
-    left: 10px; /* Adjusted left position based on your design */
-    width: auto; /* Adjusted width to fit content */
-    padding: 5px; /* Reduced padding */
+    display: none; /* 기본적으로 패널 숨김 */
+    position: absolute; /* 버튼에 상대적인 위치 설정 */
+    left: 40px; /* 버튼의 오른쪽에 위치하도록 설정 */
+    top: 0; /* 버튼과 같은 높이로 설정 */
+    padding: 10px; /* 패딩 설정 */
     background-color: #f9f9f9; /* Added background color for better visibility */
-    display: none;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Added shadow for better visibility */
     z-index: 1000; /* Ensure the panel is on top */
 }
@@ -251,13 +254,15 @@ a:hover {
 }
 
 .panel2 {
-    position: relative;
     width: auto; /* Adjusted width to fit content */
     padding: 5px; /* Reduced padding */
     background-color: #f9f9f9; /* Added background color for better visibility */
-    display: none;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Added shadow for better visibility */
     z-index: 1000; /* Ensure the panel is on top */
+    display: none; /* 기본적으로 패널 숨김 */
+    position: absolute; /* 버튼에 상대적인 위치 설정 */
+    left: 100%; /* 버튼의 오른쪽에 위치하도록 설정 */
+    top: 78%; /* 버튼과 같은 높이로 설정 */
 }
 
 .panel2 button {
@@ -370,9 +375,7 @@ a:hover {
 }
 
 /* 기존 패널 스타일 유지 */
-.panel {
-    display: none; /* 기본적으로 패널 숨김 */
-}
+
 
 .album_comments {
     position: relative;
