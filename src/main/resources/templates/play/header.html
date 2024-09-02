@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Header</title>
+</head>
+<body>
+<div th:fragment="header">
+    <div class="header">
+        <p class="logo" th:onclick="'window.location.href=\'/main/' + ${user.id} + '\''">MITI</p>
+        <!--음악 검색-->
+        <div class="search">
+            <form class="search_form">
+                <label>
+                    <input class="search_input" type="text">
+                </label>
+                <button class="search_button"><img src="/images/search.png" class="search_button_img"></button>
+            </form>
+        </div>
+
+        <div class="accordion-container">
+            <!-- 스팬 태그로 사용자 이름 표시 -->
+            <span th:text="${user.userName}" class="user" onclick="toggleAccordion()"></span>
+
+            <!-- 아코디언 메뉴 콘텐츠 -->
+            <div class="accordion-content">
+                <a href="/logout">로그아웃</a>
+                <a href="/history">재생기록</a>
+                <a href="/mypage">마이페이지</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion() {
+            var content = document.querySelector('.accordion-content');
+            var isVisible = content.style.display === 'block';
+
+            // 모든 아코디언 콘텐츠를 숨기기
+            document.querySelectorAll('.accordion-content').forEach(function (item) {
+                item.style.display = 'none';
+            });
+
+            // 클릭한 아코디언 콘텐츠를 토글
+            content.style.display = isVisible ? 'none' : 'block';
+        }
+    </script>
+</div>
+</body>
+</html>
+
