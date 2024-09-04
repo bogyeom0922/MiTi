@@ -34,22 +34,24 @@
             }
         </script>
     </div>
+
     <div class="my_left">
-        <div>
-            <button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${userId})}'|" class="my_category">음악
+        <p class="my_logo" th:onclick="'window.location.href=\'/main/' + ${user.id} + '\''">MITI</p>
+        <div class="my_category">
+            <div th:onclick="|location.href='@{/mypage/record/{userId}(userId=${userId})}'|" class="my_shortcuts">음악
                 기록
-            </button>
-            <button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${userId})}'|" class="my_category">좋아요
-            </button>
-            <button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${userId})}'|" class="my_category">선호
+            </div>
+            <div th:onclick="|location.href='@{/mypage/like/{userId}(userId=${userId})}'|" class="my_shortcuts">좋아요
+            </div>
+            <div th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${userId})}'|" class="my_shortcuts">선호
                 장르
-            </button>
-            <button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${userId})}'|" class="my_category">
+            </div>
+            <div th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${userId})}'|" class="userinfo_current">
                 댓글
-            </button>
-            <button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|" class="my_category">
+            </div>
+            <div th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|" class="my_shortcuts">
                 플레이리스트
-            </button>
+            </div>
         </div>
     </div>
 
