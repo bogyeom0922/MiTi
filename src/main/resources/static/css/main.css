@@ -505,17 +505,6 @@ a:hover {
     height: 50px;
 }
 
-.my_current {
-    position: relative;
-    margin: 0;
-    background-color: rgba(90, 108, 90, 0.58);
-    text-align: left;
-    display: flex;
-    align-items: center;
-    padding-left: 10%;
-    height: 50px;
-}
-
 .my_username {
     position: relative;
     z-index: 501;
@@ -561,7 +550,7 @@ a:hover {
 
 .my_body {
     position: relative;
-    left: 20%;
+    left: 11%;
     width: 65%;
 }
 
@@ -569,8 +558,9 @@ a:hover {
     font-weight: 900;
     font-size: 26px;
     position: relative;
-    top: 130px;
+    top: 170px;
     left: 5%;
+    margin: 0;
 }
 
 .my_table {
@@ -578,8 +568,8 @@ a:hover {
     font-weight: 600;
     font-size: 18px;
     position: relative;
-    top: 160px;
-    left: 5%;
+    top: 200px;
+    left: 18%;
     color: rgba(49, 55, 49, 0.77);
 }
 
@@ -606,4 +596,64 @@ a:hover {
 .my_table_comment {
     font-weight: 900;
     color: rgba(0, 0, 0, 0.8);
+}
+
+.my_record {
+    position: relative;
+    float: left;
+    top: 265px;
+    left: 2.5%;
+    margin: 0;
+    background-color: rgba(90, 108, 90, 0.42);
+    width: 9%;
+    height: 50px;
+    z-index: 501;
+}
+
+.my_like {
+    position: relative;
+    float: left;
+    top: 315px;
+    left: 2.5%;
+    margin: 0;
+    background-color: rgba(90, 108, 90, 0.42);
+    width: 9%;
+    height: 50px;
+    z-index: 501;
+}
+
+.my_genre {
+    position: relative;
+    float: left;
+    top: 365px;
+    left: 2.5%;
+    margin: 0;
+    background-color: rgba(90, 108, 90, 0.42);
+    width: 9%;
+    height: 50px;
+    z-index: 501;
+}
+
+.my_comment {
+    position: relative;
+    float: left;
+    top: 415px;
+    left: 2.5%;
+    margin: 0;
+    background-color: rgba(90, 108, 90, 0.42);
+    width: 9%;
+    height: 50px;
+    z-index: 501;
+}
+
+.my_playlist {
+    position: relative;
+    float: left;
+    top: 465px;
+    left: 2.5%;
+    margin: 0;
+    background-color: rgba(90, 108, 90, 0.42);
+    width: 9%;
+    height: 50px;
+    z-index: 501;
 }
