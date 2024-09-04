@@ -9,18 +9,7 @@
 <div th:replace="layout/mypage :: mypage"></div>
 
 <div class="my_body">
-<table>
-    <tr>
-        <th>댓글</th>
-    </tr>
-    <tr>
-        <th>앨범 이미지</th>
-        <th>음악 이름</th>
-        <th>가수</th>
-        <th>댓글</th>
-        <th>수정</th>
-        <th>삭제</th>
-    </tr>
+<table class="my_table">
     <tr th:each="comment : ${commentList}">
         <td>
             <img th:src="@{${comment.album_image}}" width="100">

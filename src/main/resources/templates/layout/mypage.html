@@ -36,6 +36,7 @@
     </div>
 
     <div class="my_left">
+        <img src="/images/logoimg.png" class="my_logo_img" alt="로고 이미지" th:onclick="'window.location.href=\'/main/' + ${user.id} + '\''">
         <p class="my_logo" th:onclick="'window.location.href=\'/main/' + ${user.id} + '\''">MITI</p>
         <div class="my_category">
             <div th:onclick="|location.href='@{/mypage/record/{userId}(userId=${userId})}'|" class="my_shortcuts">음악
