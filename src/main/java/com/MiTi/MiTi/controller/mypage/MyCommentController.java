@@ -26,10 +26,13 @@ public class MyCommentController {
     }
 
     @GetMapping("/mypage/comment/{userId}")
-    public String list(@PathVariable String userId, Model model) {
+    public String list(@PathVariable String userId, Model model, @PathVariable ("userId") Long user) {
         List<MyCommentDto> myCommentDtoList = myCommentService.getCommentListByUserId(String.valueOf(userId));
         model.addAttribute("commentList", myCommentDtoList);
         model.addAttribute("userId", userId);
+
+        UserDTO userDTO = userService.getUserById(user);
+        model.addAttribute("user", userDTO);
         return "mypage/mypage_comment";
     }
 

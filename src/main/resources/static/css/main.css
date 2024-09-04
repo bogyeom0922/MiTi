@@ -462,6 +462,9 @@ a:hover {
     width: 15%;
     background-color: black;
     color: white;
+    z-index: 500;
+    top: 0;
+    margin: 0;
 }
 
 .my_category {
@@ -477,4 +480,47 @@ a:hover {
     position: relative;
     left: 15%;
     width: 80%;
+}
+
+.my_username {
+    position: relative;
+    z-index: 501;
+    left: 90%;
+}
+
+.my_user {
+    font-size: 25px;
+    font-weight: bold;
+    cursor: pointer; /* 클릭 가능하게 설정 */
+}
+
+.my_accordion-container {
+    position: relative;
+    z-index: 501;
+    left: 90%;
+    top: 92px;
+    display: inline-block;
+    width: 7%;
+}
+
+.my_accordion-content {
+    width: 80%;
+    display: none;
+    position: absolute;
+    background-color: #9eaa9a;
+    border: solid 1px rgba(177, 177, 177, 0.56);
+    padding: 10px;
+    z-index: 1000;
+    margin-top: 10px;
+}
+
+.my_accordion-content a {
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+    color: #333;
+}
+
+.my_accordion-content a:hover {
+    background-color: rgba(221, 221, 221, 0.34);
 }

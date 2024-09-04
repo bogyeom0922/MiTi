@@ -8,17 +8,52 @@
     <title>Header</title>
 </head>
 <body>
-<div th:fragment="left">
+<div th:fragment="mypage">
+    <div class="my_accordion-container">
+        <!-- 스팬 태그로 사용자 이름 표시 -->
+        <span th:text="${user.userName}" class="my_user" onclick="toggleAccordion()"></span>
+
+        <!-- 아코디언 메뉴 콘텐츠 -->
+        <div class="my_accordion-content">
+            <a href="/logout">로그아웃</a>
+            <a href="/history">재생기록</a>
+            <a href="/mypage">마이페이지</a>
+        </div>
+        <script>
+            function toggleAccordion() {
+                var content = document.querySelector('.my_accordion-content');
+                var isVisible = content.style.display === 'block';
+
+                // 모든 아코디언 콘텐츠를 숨기기
+                document.querySelectorAll('.my_accordion-content').forEach(function (item) {
+                    item.style.display = 'none';
+                });
+
+                // 클릭한 아코디언 콘텐츠를 토글
+                content.style.display = isVisible ? 'none' : 'block';
+            }
+        </script>
+    </div>
     <div class="my_left">
         <div>
-            <button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${userId})}'|" class="my_category">음악 기록</button>
-            <button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${userId})}'|" class="my_category">좋아요</button>
-            <button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${userId})}'|" class="my_category">선호 장르</button>
-            <button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${userId})}'|" class="my_category">댓글</button>
-            <button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|" class="my_category">플레이리스트</button>
+            <button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${userId})}'|" class="my_category">음악
+                기록
+            </button>
+            <button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${userId})}'|" class="my_category">좋아요
+            </button>
+            <button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${userId})}'|" class="my_category">선호
+                장르
+            </button>
+            <button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${userId})}'|" class="my_category">
+                댓글
+            </button>
+            <button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|" class="my_category">
+                플레이리스트
+            </button>
         </div>
     </div>
 
 </div>
 </body>
+
 </html>
