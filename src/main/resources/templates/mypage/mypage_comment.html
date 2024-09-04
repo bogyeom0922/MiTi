@@ -2,18 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>유저 댓글 기록</title>
+    <title>MyPage_Comment</title>
+    <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
-<div class="layout">
-    <button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${userId})}'|">음악 기록</button>
-    <button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${userId})}'|">좋아요</button>
-    <button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${userId})}'|">선호 장르</button>
-    <button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${userId})}'|">댓글</button>
-    <button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|">플레이리스트</button>
+<div th:replace="layout/mypage :: left"></div>
 
-</div>
 
+
+<div class="my_body">
 <table>
     <tr>
         <th>댓글</th>
@@ -118,6 +115,6 @@
             });
     }
 </script>
-
+</div>
 </body>
 </html>

@@ -1,8 +1,10 @@
 package com.MiTi.MiTi.controller.mypage;
 
 import com.MiTi.MiTi.dto.MyCommentDto;
+import com.MiTi.MiTi.dto.UserDTO;
 import com.MiTi.MiTi.repository.MyCommentRepository;
 import com.MiTi.MiTi.service.MyCommentService;
+import com.MiTi.MiTi.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,10 +17,12 @@ public class MyCommentController {
 
     private final MyCommentService myCommentService;
     private final MyCommentRepository myCommentRepository;
+    private final UserService userService;
 
-    public MyCommentController(MyCommentService myCommentService, MyCommentRepository myCommentRepository) {
+    public MyCommentController(MyCommentService myCommentService, MyCommentRepository myCommentRepository, UserService userService) {
         this.myCommentService = myCommentService;
         this.myCommentRepository = myCommentRepository;
+        this.userService = userService;
     }
 
     @GetMapping("/mypage/comment/{userId}")

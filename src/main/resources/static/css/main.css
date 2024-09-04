@@ -454,3 +454,27 @@ a:hover {
 .comments_body {
     width: 80%;
 }
+
+/*my page*/
+.my_left {
+    position: fixed;
+    height: 100%;
+    width: 15%;
+    background-color: black;
+    color: white;
+}
+
+.my_category {
+    border: 0;
+    font-size: 20px;
+    font-weight: bold;
+    float: right;
+    background-color: rgba(255, 255, 255, 0);
+    color: white;
+}
+
+.my_body {
+    position: relative;
+    left: 15%;
+    width: 80%;
+}
