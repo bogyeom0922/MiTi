@@ -17,7 +17,7 @@
 
 <body>
 
-<div th:replace="play/header :: header"></div>
+<div th:replace="layout/header :: header"></div>
 <!--앨범 기본 정보-->
 <div th:if="${firstAlbum != null}" class="album">
     <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" class="album_img">
