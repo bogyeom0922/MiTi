@@ -50,7 +50,7 @@ public class AlbumController {
     }
 
     @GetMapping("/album/{detail}/{id}")
-    public String detailList(@PathVariable("detail") String detail, @PathVariable ("id") Long userId, Model model) {
+    public String detailList(@PathVariable("detail") String detail, @PathVariable ("id") Long id, Model model) {
         log.info("Detail: {}", detail);
 
         List<Album> albums = albumService.findByDetail(detail);
@@ -63,10 +63,10 @@ public class AlbumController {
             model.addAttribute("comments", myComments);
         }
 
-        UserDTO userDTO = userService.getUserById(userId);
+        UserDTO userDTO = userService.getUserById(id);
         model.addAttribute("user", userDTO);
 
-        UserDTO memberDTO = userService.getUserById(userId);
+        UserDTO memberDTO = userService.getUserById(id);
         model.addAttribute("member", memberDTO);
 
         return "album/album_detail";

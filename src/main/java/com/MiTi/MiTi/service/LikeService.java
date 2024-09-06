@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LikeService {
@@ -21,20 +22,21 @@ public class LikeService {
         this.albumRepository = albumRepository;
     }
 
+    // Long 타입의 albumId를 처리하는 오버로딩 메서드 추가
     @Transactional
-    public boolean addLike(String userId, Long trackId) {
-        // Long 타입의 trackId를 String으로 변환
-        String albumId = String.valueOf(trackId);
+    public boolean addLike(String userId, Long albumId) {
+        return addLike(userId, String.valueOf(albumId));
+    }
 
-        // 이미 좋아요를 눌렀는지 확인
+    @Transactional
+    public boolean addLike(String userId, String albumId) {
         if (likeRepository.existsByUserIdAndAlbumId(userId, albumId)) {
             return false; // 이미 좋아요가 존재함
         }
-
-        // 앨범 정보 가져오기
-        Album album = albumRepository.findById(trackId).orElseThrow(() -> new IllegalArgumentException("앨범을 찾을 수 없습니다."));
-
-        // 새로운 좋아요 엔티티 생성 및 저장
+//앨범 정보 가져오기
+        Album album = albumRepository.findById(Long.parseLong(albumId))
+                .orElseThrow(() -> new IllegalArgumentException("앨범을 찾을 수 없습니다."));
+// 새로운 좋아요 엔티티 생성 및 저장
         Like like = Like.builder()
                 .userId(userId)
                 .albumId(albumId)
@@ -42,6 +44,23 @@ public class LikeService {
                 .build();
         likeRepository.save(like);
         return true;
+    }
+
+    @Transactional
+    public void deleteLike(Long id) {
+        likeRepository.deleteById(id);
+    }
+
+    @Transactional
+    public boolean toggleLike(String userId, String albumId) {
+        Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(userId, albumId);
+
+        if (existingLike.isPresent()) {
+            likeRepository.delete(existingLike.get());
+            return false; // 좋아요 취소
+        } else {
+            return addLike(userId, albumId); // 좋아요 추가
+        }
     }
 
     @Transactional
@@ -62,10 +81,5 @@ public class LikeService {
             likeDtoList.add(likeDto);
         }
         return likeDtoList;
-    }
-
-    @Transactional
-    public void deleteLike(Long id) {
-        likeRepository.deleteById(id);
     }
 }

@@ -28,8 +28,14 @@ public class LikeController {
         return "mypage/mypage_like";
     }
 
-    // 게시글 삭제 (물리적 삭제)
+    @PostMapping("/mypage/like/toggle")
+    @ResponseBody
+    public String toggleLike(@RequestParam("userId") String userId, @RequestParam("albumId") String albumId) {
+        boolean isLiked = likeService.toggleLike(userId, albumId);
+        return isLiked ? "liked" : "unliked";
+    }
 
+    // 게시글 삭제(물리적 삭제)
     @DeleteMapping("/mypage/like/{id}")
     @ResponseBody
     public String deleteLike(@PathVariable Long id) {
@@ -41,5 +47,11 @@ public class LikeController {
         }
     }
 
-
+    // 수록곡에 대한 좋아요 토글 기능 추가
+    @PostMapping("/mypage/like/track/toggle")
+    @ResponseBody
+    public String toggleTrackLike(@RequestParam("userId") String userId, @RequestParam("trackId") Long trackId) {
+        boolean isLiked = likeService.toggleTrackLike(userId, trackId);
+        return isLiked ? "liked" : "unliked";
+    }
 }
