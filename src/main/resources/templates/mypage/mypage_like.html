@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MyPage_Comment</title>
+    <title>MyPage_Like</title>
     <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
@@ -10,28 +10,18 @@
 <div class="my_like"></div>
 <div class="my_body">
     <p class="my_body_title">좋아요 누른 음악</p>
-    <table>
-        <tr>
-            <th>앨범 이미지</th>
-            <th>음악 이름</th>
-            <th>가수</th>
-            <th>음악 길이</th>
-            <th>좋아요 취소</th>
-        </tr>
+    <table class="my_table_like">
         <tr th:each="post : ${postList}">
-            <td>
+            <td style="width: 8%">
                 <img th:src="@{${post.album_image}}" width="50">
             </td>
-            <td>
+            <td style="width: 44%"  class="my_table_padding my_table_body">
                 <span th:text="${post.music_name}"></span>
             </td>
-            <td>
+            <td style="width: 30%">
                 <span th:text="${post.music_artist_name}"></span>
             </td>
-            <td>
-                <span th:text="${post.formattedDuration}"></span>
-            </td>
-            <td>
+            <td style="width: 8%">
                 <button th:onclick="'deleteLike(' + ${post.id} + ')'" class="btn btn-danger">삭제</button>
             </td>
         </tr>

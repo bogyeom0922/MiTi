@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MyPage_Comment</title>
+    <title>MyPage_Genre</title>
     <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
@@ -10,20 +10,23 @@
 <div class="my_genre"></div>
 <div class="my_body">
     <p class="my_body_title">선택한 선호 장르</p>
-    <table>
+    <table class="my_table_genre">
         <tr th:each="post : ${postList}">
-            <td>
-                <img th:src="@{${post.genre_image}}" width="50">
+            <td style="width: 30%">
+                <img th:src="@{${post.genre_image}}">
+            </td>
+            <td style="width: 50%" class="my_table_padding my_table_body">
                 <span th:text="${post.genre}"></span>
             </td>
-            <td>
+            <td style="width: 20%">
                 <button th:onclick="'deleteGenre(' + ${post.id} + ')'" class="btn btn-danger">삭제</button>
             </td>
         </tr>
-
-        <td>
-            <button onclick="showAddGenreList()" class="btn btn-danger">장르 추가</button>
-        </td>
+        <tr>
+            <td>
+                <button onclick="showAddGenreList()" class="btn btn-danger">장르 추가</button>
+            </td>
+        </tr>
     </table>
 
     <!-- 사용자가 선택하지 않은 장르를 표시할 영역 -->

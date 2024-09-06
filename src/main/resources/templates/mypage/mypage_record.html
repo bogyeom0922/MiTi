@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MyPage_Comment</title>
+    <title>MyPage_Record</title>
     <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
@@ -10,25 +10,16 @@
 <div class="my_record"></div>
 <div class="my_body">
     <p class="my_body_title">재생했던 음악</p>
-    <table>
-        <tr>
-            <th>앨범 이미지</th>
-            <th>음악 이름</th>
-            <th>가수</th>
-            <th>음악 길이</th>
-        </tr>
+    <table class="my_table_record">
         <tr th:each="post : ${postList}">
-            <td>
+            <td style="width: 10%">
                 <img th:src="@{${post.album_image}}" width="50">
             </td>
-            <td>
+            <td style="width: 50%" class="my_table_padding my_table_body">
                 <span th:text="${post.music_name}"></span>
             </td>
-            <td>
+            <td style="width: 40%">
                 <span th:text="${post.music_artist_name}"></span>
-            </td>
-            <td>
-                <span th:text="${post.formattedDuration}"></span>
             </td>
         </tr>
     </table>

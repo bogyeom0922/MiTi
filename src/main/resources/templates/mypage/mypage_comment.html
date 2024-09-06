@@ -10,22 +10,22 @@
 <div class="my_comment"></div>
 <div class="my_body">
     <p class="my_body_title">작성한 댓글</p>
-    <table class="my_table">
+    <table class="my_table_comment">
         <tr th:each="comment : ${commentList}">
             <td style="width: 7%">
                 <img th:src="@{${comment.album_image}}">
             </td>
-            <td style="width: 30%" class="my_table_music_name">
+            <td style="width: 30%" class="my_table_padding">
                 <span th:text="${comment.music_name}"></span>
             </td>
-            <td style="width:46%" class="my_table_comment">
+            <td style="width:46%" class="my_table_body">
                 <span id="comment-text-${comment.id}" th:text="${comment.comment}"></span>
             </td>
             <td style="width: 8%">
                 <button th:onclick="'editComment(' + ${comment.id}+ ')'" class="btn btn-warning">수정</button>
             </td>
             <td style="width: 8%">
-                <button th:onclick="'deleteGenre(' + ${comment.id} + ')'" class="btn btn-danger">삭제</button>
+                <button th:onclick="'deleteComment(' + ${comment.id} + ')'" class="btn btn-danger">삭제</button>
             </td>
         </tr>
     </table>
@@ -61,7 +61,7 @@
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({comment}),
+                body: JSON.stringify({ comment }),
             })
                 .then(response => {
                     if (response.ok) {
