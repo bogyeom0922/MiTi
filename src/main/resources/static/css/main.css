@@ -559,11 +559,11 @@ a:hover {
     font-size: 26px;
     position: relative;
     top: 170px;
-    left: 5%;
+    left: 18%;
     margin: 0;
 }
 
-.my_table {
+.my_table_comment {
     width: 100%;
     font-weight: 600;
     font-size: 18px;
@@ -573,15 +573,15 @@ a:hover {
     color: rgba(49, 55, 49, 0.77);
 }
 
-.my_table img {
+.my_table_comment img {
     width: 100%;
 }
 
-.my_table tr {
+.my_table_comment tr {
     height: 60px;
 }
 
-.my_table button {
+.my_table_comment button {
     font-weight: 600;
     font-size: 18px;
     border: none;
@@ -589,19 +589,123 @@ a:hover {
     color: rgba(49, 55, 49, 0.77);
 }
 
-.my_table_music_name {
+.my_table_padding {
     padding-left: 20px;
 }
 
-.my_table_comment {
+.my_table_body {
     font-weight: 900;
     color: rgba(0, 0, 0, 0.8);
 }
 
-.my_record {
+.my_table_genre {
+    width: 50%;
+    font-weight: 600;
+    font-size: 18px;
     position: relative;
+    top: 200px;
+    left: 18%;
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_genre img {
+    width: 100%;
+}
+
+.my_table_genre tr {
+    height: 60px;
+}
+
+.my_table_genre button {
+    font-weight: 600;
+    font-size: 18px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_like {
+    width: 80%;
+    font-weight: 600;
+    font-size: 18px;
+    position: relative;
+    top: 200px;
+    left: 18%;
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_like img {
+    width: 100%;
+}
+
+.my_table_like tr {
+    height: 60px;
+}
+
+.my_table_like button {
+    font-weight: 600;
+    font-size: 18px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_playlist {
+    width: 40%;
+    font-weight: 600;
+    font-size: 18px;
+    position: relative;
+    top: 200px;
+    left: 18%;
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_playlist img {
+    width: 100%;
+}
+
+.my_table_playlist tr {
+    height: 60px;
+}
+
+.my_table_playlist button {
+    font-weight: 600;
+    font-size: 18px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_record {
+    width: 70%;
+    font-weight: 600;
+    font-size: 18px;
+    position: relative;
+    top: 200px;
+    left: 18%;
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_record img {
+    width: 100%;
+}
+
+.my_table_record tr {
+    height: 60px;
+}
+
+.my_table_record button {
+    font-weight: 600;
+    font-size: 18px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_record {
+    position: fixed;
     float: left;
-    top: 265px;
+    top: 310px;
     left: 2.5%;
     margin: 0;
     background-color: rgba(90, 108, 90, 0.42);
@@ -611,9 +715,9 @@ a:hover {
 }
 
 .my_like {
-    position: relative;
+    position: fixed;
     float: left;
-    top: 315px;
+    top: 360px;
     left: 2.5%;
     margin: 0;
     background-color: rgba(90, 108, 90, 0.42);
@@ -623,9 +727,9 @@ a:hover {
 }
 
 .my_genre {
-    position: relative;
+    position: fixed;
     float: left;
-    top: 365px;
+    top: 410px;
     left: 2.5%;
     margin: 0;
     background-color: rgba(90, 108, 90, 0.42);
@@ -635,9 +739,9 @@ a:hover {
 }
 
 .my_comment {
-    position: relative;
+    position: fixed;
     float: left;
-    top: 415px;
+    top: 460px;
     left: 2.5%;
     margin: 0;
     background-color: rgba(90, 108, 90, 0.42);
@@ -647,9 +751,9 @@ a:hover {
 }
 
 .my_playlist {
-    position: relative;
+    position: fixed;
     float: left;
-    top: 465px;
+    top: 510px;
     left: 2.5%;
     margin: 0;
     background-color: rgba(90, 108, 90, 0.42);

@@ -37,10 +37,13 @@ public class PlaylistController {
         return "mypage/mypage_playlist";
     }
 
-    @GetMapping("/mypage/playlist/albums")
-    public String getAlbumsByPlaylistName(@RequestParam String userPlaylistName, Model model) { // 수정된 파라미터 이름
+    @GetMapping("/mypage/playlist/albums/{userId}")
+    public String getAlbumsByPlaylistName(@RequestParam String userPlaylistName, Model model, @PathVariable ("userId") Long user) { // 수정된 파라미터 이름
         List<PlaylistDto> albumList = playlistService.getAlbumsByPlaylistName(userPlaylistName);
         model.addAttribute("albumList", albumList);
+
+        UserDTO userDTO = userService.getUserById(user);
+        model.addAttribute("user", userDTO);
         return "mypage/playlist_albums";
     }
 }
