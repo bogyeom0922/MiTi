@@ -13,7 +13,7 @@
     <table class="my_table_record">
         <tr th:each="post : ${postList}">
             <td style="width: 10%">
-                <img th:src="@{${post.album_image}}" width="50">
+                <img th:src="@{${post.album_image}}">
             </td>
             <td style="width: 50%" class="my_table_padding my_table_body">
                 <span th:text="${post.music_name}"></span>
