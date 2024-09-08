@@ -32,11 +32,31 @@
     </div>
 </div>
 
-<div class="album_ranking">Today's Rankings</div>
-<div>
-    <!--    음악순위-->
-</div>
+<!-- 인기차트 섹션 -->
+<div class="chart_title">Popular Chart</div>
+<div class="chart">
+    <!-- 왼쪽 열 -->
+    <div class="chart_column">
+        <div class="chart_item" th:each="album, stat : ${albums}" th:if="${stat.index < 5}">
+            <img th:src="@{${album.album_image}}" alt="Album Cover">
+            <div class="chart_info">
+                <p class="chart_name" th:text="${album.musicName}"></p>
+                <p th:text="${album.musicArtistName}"></p>
+            </div>
+        </div>
+    </div>
 
+    <!-- 오른쪽 열 -->
+    <div class="chart_column">
+        <div class="chart_item" th:each="album, stat : ${albums}" th:if="${stat.index >= 5 && stat.index < 10}">
+            <img th:src="@{${album.album_image}}" alt="Album Cover">
+            <div class="chart_info">
+                <p class="chart_name" th:text="${album.musicName}"></p>
+                <p th:text="${album.musicArtistName}"></p>
+            </div>
+        </div>
+    </div>
+</div>
 <div th:replace="play/under :: footer"></div>
 </body>
 </html>

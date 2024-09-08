@@ -25,4 +25,3 @@ public class AlbumDto {
 
     // getters and setters
 }
-
