@@ -21,8 +21,8 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: #222;
-            color: white;
+            background-color: #fff; /* 배경색을 흰색으로 변경 */
+            color: #222; /* 텍스트 색상을 어두운 색으로 변경 */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -64,7 +64,7 @@
         .playback-bar .control-buttons button {
             cursor: pointer;
             font-size: 16px;
-            color: white;
+            color: #222; /* 버튼 색상을 어두운 색으로 변경 */
             background: none;
             border: none;
             outline: none;
@@ -72,10 +72,14 @@
             transition: color 0.3s ease;
         }
 
+        .playback-bar .control-buttons button:hover {
+            color: #555; /* 버튼에 마우스 오버 시 색상을 조금 더 밝게 */
+        }
+
         .playback-bar .like-button {
             cursor: pointer;
             font-size: 20px;
-            color: white;
+            color: #222; /* 버튼 색상을 어두운 색으로 변경 */
             background: none;
             border: none;
             outline: none;

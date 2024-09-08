@@ -3,6 +3,8 @@ package com.MiTi.MiTi.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity(name = "album")
@@ -45,4 +47,10 @@ public class Album {
     private String music_track_href;
     private String music_type;
     private String music_uri;
+
+    @Column(name = "is_liked")
+    private Boolean isLiked;
+
+    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL)
+    private List<Track> tracks;
 }

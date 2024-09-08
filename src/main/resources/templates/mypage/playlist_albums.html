@@ -1,19 +1,31 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">>
 <head>
     <meta charset="UTF-8">
-    <title>플레이리스트 노래 목록</title>
+    <title>MyPage_Playlist</title>
+    <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
-<table>
-    <tr th:each="album : ${albumList}" >
-        <td th:text="${album.music_name}"></td>
-        <td>
-            <img th:src="@{${album.album_image}}" width="50" alt="앨범 이미지"/>
-        </td>
-        <td th:text="${album.music_artist_name}"></td>
-    </tr>
+<div th:replace="layout/mypage :: mypage"></div>
+<div th:replace="~{play/under :: footer}"></div>
+<div class="my_playlist"></div>
+<div class="my_body">
+    <p class="my_body_title">내 플레이리스트</p>
+    <table class="my_table_playlist">
+        <tr th:each="album : ${albumList}" >
+            <td  style="width: 10%">
+                <img th:src="@{${album.album_image}}" width="50" alt="앨범 이미지"/>
+            </td>
+            <td  style="width: 50%" class="my_table_padding my_table_body">
+                <span th:text="${album.music_name}"></span>
+            </td>
+            <td style="width: 40%">
+                <span th:text="${album.music_artist_name}"></span>
+            </td>
+        </tr>
 
-</table>
+    </table>
+</div>
+<div th:replace="play/under :: footer"></div>
 </body>
 </html>

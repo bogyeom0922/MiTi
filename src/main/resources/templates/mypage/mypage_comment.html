@@ -2,122 +2,107 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>유저 댓글 기록</title>
+    <title>MyPage_Comment</title>
+    <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
-<div class="layout">
-    <button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${userId})}'|">음악 기록</button>
-    <button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${userId})}'|">좋아요</button>
-    <button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${userId})}'|">선호 장르</button>
-    <button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${userId})}'|">댓글</button>
-    <button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|">플레이리스트</button>
+<div th:replace="layout/mypage :: mypage"></div>
+<div th:replace="~{play/under :: footer}"></div>
+<div class="my_comment"></div>
+<div class="my_body">
+    <p class="my_body_title">작성한 댓글</p>
+    <table class="my_table_comment">
+        <tr th:each="comment : ${commentList}">
+            <td style="width: 7%">
+                <img th:src="@{${comment.album_image}}">
+            </td>
+            <td style="width: 30%" class="my_table_padding">
+                <span th:text="${comment.music_name}"></span>
+            </td>
+            <td style="width:46%" class="my_table_body">
+                <span id="comment-text-${comment.id}" th:text="${comment.comment}"></span>
+            </td>
+            <td style="width: 8%">
+                <button th:onclick="'editComment(' + ${comment.id}+ ')'" class="btn btn-warning">수정</button>
+            </td>
+            <td style="width: 8%">
+                <button th:onclick="'deleteComment(' + ${comment.id} + ')'" class="btn btn-danger">삭제</button>
+            </td>
+        </tr>
+    </table>
 
-</div>
+    <!-- 댓글 수정 모달 (팝업) -->
+    <div id="editModal" style="display:none;">
+        <h2>댓글 수정</h2>
+        <input type="hidden" id="editCommentId">
+        <textarea id="editCommentText"></textarea>
+        <button onclick="saveComment()">저장</button>
+        <button onclick="closeEditModal()">취소</button>
+    </div>
 
-<table>
-    <tr>
-        <th>댓글</th>
-    </tr>
-    <tr>
-        <th>앨범 이미지</th>
-        <th>음악 이름</th>
-        <th>가수</th>
-        <th>댓글</th>
-        <th>수정</th>
-        <th>삭제</th>
-    </tr>
-    <tr th:each="comment : ${commentList}">
-        <td>
-            <img th:src="@{${comment.album_image}}" width="100">
-        </td>
-        <td>
-            <span th:text="${comment.music_name}"></span>
-        </td>
-        <td>
-            <span th:text="${comment.music_artist_name}"></span>
-        </td>
-        <td>
-            <span id="comment-text-${comment.id}" th:text="${comment.comment}"></span>
-        </td>
-        <td>
-            <button th:onclick="'editComment(' + ${comment.id}+ ')'" class="btn btn-warning">수정</button>
-        </td>
-        <td>
-            <button th:onclick="'deleteGenre(' + ${comment.id} + ')'" class="btn btn-danger">삭제</button>
-        </td>
-    </tr>
-</table>
+    <script>
+        function editComment(id) {
+            const commentTextElement = document.getElementById(`comment-text-${id}`);
+            const commentText = commentTextElement ? commentTextElement.innerText : '';
+            document.getElementById('editCommentId').value = id;
+            document.getElementById('editCommentText').value = commentText;
+            document.getElementById('editModal').style.display = 'block';
+        }
 
-<!-- 댓글 수정 모달 (팝업) -->
-<div id="editModal" style="display:none;">
-    <h2>댓글 수정</h2>
-    <input type="hidden" id="editCommentId">
-    <textarea id="editCommentText"></textarea>
-    <button onclick="saveComment()">저장</button>
-    <button onclick="closeEditModal()">취소</button>
-</div>
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
 
-<script>
-    function editComment(id) {
-        const commentTextElement = document.getElementById(`comment-text-${id}`);
-        const commentText = commentTextElement ? commentTextElement.innerText : '';
-        document.getElementById('editCommentId').value = id;
-        document.getElementById('editCommentText').value = commentText;
-        document.getElementById('editModal').style.display = 'block';
-    }
+        function saveComment() {
+            const id = document.getElementById('editCommentId').value;
+            const comment = document.getElementById('editCommentText').value;
 
-    function closeEditModal() {
-        document.getElementById('editModal').style.display = 'none';
-    }
-
-    function saveComment() {
-        const id = document.getElementById('editCommentId').value;
-        const comment = document.getElementById('editCommentText').value;
-
-        fetch(`/comment/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ comment }),
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.text();
-                } else {
-                    throw new Error('Failed to update comment');
-                }
+            fetch(`/comment/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ comment }),
             })
-            .then(result => {
-                if (result === 'Comment updated successfully') {
-                    location.reload();
-                } else {
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('Failed to update comment');
+                    }
+                })
+                .then(result => {
+                    if (result === 'Comment updated successfully') {
+                        location.reload();
+                    } else {
+                        alert('수정 실패');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                     alert('수정 실패');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('수정 실패');
-            });
-    }
+                });
+        }
 
-    function deleteComment(id) {
-        fetch(`/mypage/comment/${id}`, {
-            method: 'DELETE'
-        })
-            .then(response => response.text())
-            .then(result => {
-                if (result === 'success') {
-                    location.reload();
-                } else {
-                    alert('삭제 실패');
-                }
+        function deleteComment(id) {
+            fetch(`/mypage/comment/${id}`, {
+                method: 'DELETE'
             })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-</script>
+                .then(response => response.text())
+                .then(result => {
+                    if (result === 'success') {
+                        location.reload();
+                    } else {
+                        alert('삭제 실패');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</div>
 
+<div th:replace="play/under :: footer"></div>
 </body>
 </html>

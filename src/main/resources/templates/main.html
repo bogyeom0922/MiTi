@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="/css/main.css" rel="stylesheet">
+    <title>Miti Main</title>
+</head>
+<body>
+<div th:replace="layout/header :: header"></div>
+
+<div class="recommend_title">Recommended Playlist</div>
+<div class="recommend">
+    <div class="recommend_playlist">
+        <img src="/images/album.jpeg" class="playlist_image">
+        <p class="playlist_name">공부할 때 듣기 좋은 음악</p>
+    </div>
+    <div class="recommend_playlist">
+        <img src="/images/album.jpeg" class="playlist_image">
+        <p class="playlist_name">공부할 때 듣기 좋은 음악</p>
+    </div>
+    <div class="recommend_playlist">
+        <img src="/images/album.jpeg" class="playlist_image">
+        <p class="playlist_name">공부할 때 듣기 좋은 음악</p>
+    </div>
+    <div class="recommend_playlist">
+        <img src="/images/album.jpeg" class="playlist_image">
+        <p class="playlist_name">공부할 때 듣기 좋은 음악</p>
+    </div>
+    <div class="recommend_playlist">
+        <img src="/images/album.jpeg" class="playlist_image">
+        <p class="playlist_name">공부할 때 듣기 좋은 음악</p>
+    </div>
+</div>
+
+<!-- 인기차트 섹션 -->
+<div class="chart_title">Popular Chart</div>
+<div class="chart">
+    <!-- 왼쪽 열 -->
+    <div class="chart_column">
+        <div class="chart_item" th:each="album, stat : ${albums}" th:if="${stat.index < 5}">
+            <img th:src="@{${album.album_image}}" alt="Album Cover">
+            <div class="chart_info">
+                <p class="chart_name" th:text="${album.musicName}"></p>
+                <p th:text="${album.musicArtistName}"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 오른쪽 열 -->
+    <div class="chart_column">
+        <div class="chart_item" th:each="album, stat : ${albums}" th:if="${stat.index >= 5 && stat.index < 10}">
+            <img th:src="@{${album.album_image}}" alt="Album Cover">
+            <div class="chart_info">
+                <p class="chart_name" th:text="${album.musicName}"></p>
+                <p th:text="${album.musicArtistName}"></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="play/under :: footer"></div>
+</body>
+</html>

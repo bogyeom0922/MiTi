@@ -1,32 +1,29 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>사용자 플레이 리스트</title>
+    <title>MyPage_Playlist</title>
+    <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
-<div class="layout">
-    <button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${userId})}'|">음악 기록</button>
-    <button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${userId})}'|">좋아요</button>
-    <button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${userId})}'|">선호 장르</button>
-    <button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${userId})}'|">댓글</button>
-    <button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|">플레이리스트</button>
-
+<div th:replace="layout/mypage :: mypage"></div>
+<div th:replace="~{play/under :: footer}"></div>
+<div class="my_playlist"></div>
+<div class="my_body">
+    <p class="my_body_title">내 플레이리스트</p>
+    <table class="my_table_playlist">
+        <tr th:each="post : ${postList}">
+            <td style="width: 40%">
+                <a th:href="@{'/mypage/playlist/albums/' + ${user.id} + '?userPlaylistName=' + ${post.userPlaylistName}}" target="_blank">
+                    <img th:src="@{${post.userPlaylistImage}}" width="50">
+                </a>
+            </td>
+            <td style="width: 60%" class="my_table_padding my_table_body">
+                <span th:text="${post.userPlaylistName}"></span>
+            </td>
+        </tr>
+    </table>
 </div>
-
-<table>
-    <tr>
-        <th>플레이 리스트</th>
-    </tr>
-
-    <tr th:each="post : ${postList}">
-        <td>
-            <a th:href="@{'/mypage/playlist/albums?userPlaylistName=' + ${post.userPlaylistName}}" target="_blank">
-                <img th:src="@{${post.userPlaylistImage}}" width="50">
-            </a>
-            <span th:text="${post.userPlaylistName}"></span>
-        </td>
-    </tr>
-</table>
+<div th:replace="play/under :: footer"></div>
 </body>
 </html>

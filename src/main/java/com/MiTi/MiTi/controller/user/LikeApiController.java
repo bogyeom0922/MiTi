@@ -19,10 +19,10 @@ public class LikeApiController {
 
     @PostMapping("/{musicId}")
     public ResponseEntity<Map<String, Object>> likeTrack(
-            @PathVariable Long musicId,
+            @PathVariable Long musicId,  // Long 타입으로 musicId를 받음
             @RequestParam String username) {
-        // 사용자 이름과 음악 ID를 사용해 좋아요 처리
-        boolean success = likeService.addLike(username, musicId);
+        // musicId(Long)를 String으로 변환
+        boolean success = likeService.addLike(username, String.valueOf(musicId));
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         return ResponseEntity.ok(response);
@@ -30,10 +30,10 @@ public class LikeApiController {
 
     @DeleteMapping("/{musicId}")
     public ResponseEntity<Map<String, Object>> unlikeTrack(
-            @PathVariable Long musicId,
+            @PathVariable Long musicId,  // Long 타입으로 musicId를 받음
             @RequestParam String username) {
-        // 사용자 이름과 음악 ID를 사용해 좋아요 취소 처리
-        likeService.deleteLike(musicId);
+        // 좋아요 취소 처리 (String으로 변환된 musicId 사용)
+        likeService.deleteLike(musicId);  // 이 메서드에서 Long 타입을 받아도 괜찮다면 그대로 둡니다
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         return ResponseEntity.ok(response);

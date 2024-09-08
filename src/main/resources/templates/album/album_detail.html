@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <link href="/css/main.css" rel="stylesheet">
     <title>Album Detail</title>
-    <!--음악 재생 시간 분:초 단위로 변경-->
     <script type="text/javascript">
         function formatDuration(ms) {
             var minutes = Math.floor(ms / 60000);
@@ -17,21 +16,27 @@
 
 <body>
 
-<div th:replace="play/header :: header"></div>
-<!--앨범 기본 정보-->
+<div th:replace="~{layout/header :: header}"></div>
+<div th:replace="~{play/under :: footer}"></div>
+
+<!-- 앨범 기본 정보 -->
 <div th:if="${firstAlbum != null}" class="album">
     <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" class="album_img">
     <div class="album_detail">
         <p th:text="${firstAlbum.detail}" class="album_name"></p>
-        <button id="albumHeartButton" class="like-button">♡</button> <!-- 앨범 이름 옆에 하트 모양 버튼 추가 -->
         <p th:text="${firstAlbum.musicArtistName}" class="album_artist"></p>
         <p>followers: <span th:text="${firstAlbum.music_artist_followers}"></span></p>
         <p>artist genres: <span th:text="${firstAlbum.music_artist_genres}"></span></p>
+
+        <!-- 앨범 전체 좋아요 버튼 (하트만 표시) -->
+        <button class="albumHeartButton" data-album-id="[[${firstAlbum.id}]]">
+            [[${firstAlbum.isLiked != null && firstAlbum.isLiked ? '♥' : '♡'}]]
+        </button>
     </div>
     <img src="/images/play.png" class="album_play_img">
 </div>
 
-<!--앨범에 해당되는 곡 목록-->
+<!-- 앨범에 해당되는 곡 목록 -->
 <div class="album_list">
     <table>
         <tbody>
@@ -47,51 +52,44 @@
             <td class="menu">
                 <div class="accordion_container">
                     <button class="accordion2">:</button>
-                    <div class="panel">
-                        <button class="like-button" onclick="toggleTrackLike(this, '${album.id}')">좋아요</button> <!-- 수록곡 좋아요 버튼 추가 -->
+                    <div class="panel" style="display: none;">
+                        <!-- 수록곡 좋아요 버튼 -->
+                        <button class="like-button" data-track-id="[[${album.id}]]">
+                            [[${album.isLiked != null ? (album.isLiked ? '♥' : '♡') : '♡'}]]
+                        </button>
+
                         <button>재생 목록에 추가</button>
                         <button>다음에 재생</button>
                         <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
                             <button>앨범 정보</button>
                         </a>
                         <button class="accordion3">공유</button>
-                        <div class="panel2">
-                            <button>
-                                <a href="#" onclick="clip(); return false;">링크 복사</a>
-                            </button>
-                            <button>
-                                <a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a>
-                            </button>
-                            <button>
-                                <a href="javascript:shareTwitter();">트위터에 공유</a>
-                            </button>
-                            <button>
-                                <a href="javascript:shareFacebook();">페이스북에 공유</a>
-                            </button>
-                            <button>
-                                <a href="javascript:shareBand();">밴드에 공유</a>
-                            </button>
+                        <div class="panel2" style="display: none;">
+                            <button><a href="#" onclick="clip(); return false;">링크 복사</a></button>
+                            <button><a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a></button>
+                            <button><a href="javascript:shareTwitter();">트위터에 공유</a></button>
+                            <button><a href="javascript:shareFacebook();">페이스북에 공유</a></button>
+                            <button><a href="javascript:shareBand();">밴드에 공유</a></button>
                         </div>
                     </div>
+                </div>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
 
-<!--댓글-->
+<!-- 댓글 -->
 <div class="album_comments">
-    <!--댓글 작성-->
+    <!-- 댓글 작성 -->
     <div class="album_comments_form">
         <p>Comments</p>
         <form>
-            <input type="hidden" name="userId" id="userId" th:value="${user.id}"/>
-            <input type="hidden" name="albumId" id="albumId" th:value="${firstAlbum.id}"/>
             <textarea name="comment" id="comment"></textarea>
             <button type="button" onclick="submitComment()">post</button>
         </form>
     </div>
-    <!--댓글 목록-->
+    <!-- 댓글 목록 -->
     <div th:if="${comments != null}">
         <div th:each="comment : ${comments}" class="album_comments_list">
             <p th:text="${comment.userId}" class="comments_userid"></p>
@@ -100,123 +98,97 @@
     </div>
 </div>
 
-<!-- 재생바 -->
-<div class="playback-bar">
-    <div class="track-info-container">
-        <div class="track-info">
-            <div>음악 제목</div>
-            <div>가수 이름</div>
-        </div>
-        <div class="control-buttons">
-            <button id="prevButton">⏮️</button> <!-- 이전 곡 버튼 -->
-            <button id="playPauseButton">⏯️</button> <!-- 재생/일시정지 버튼 -->
-            <button id="nextButton">⏭️</button> <!-- 다음 곡 버튼 -->
-        </div>
-        <button class="like-button" id="likeButton">♡</button> <!-- 전체 좋아요 버튼 -->
-    </div>
-</div>
-
-<div th:replace="play/under :: footer"></div>
-
-</body>
-
-<!--좋아요 기능-->
-<script>
-    function toggleTrackLike(button, trackId) {
-        const userId = document.getElementById('userId').value;
-
-        fetch('/api/like/' + trackId, {
-            method: button.classList.contains('liked') ? 'DELETE' : 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `username=${userId}`
-        }).then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    if (button.classList.contains('liked')) {
-                        button.classList.remove('liked');
-                        button.innerText = '좋아요';
-                    } else {
-                        button.classList.add('liked');
-                        button.innerText = '♥';
-                    }
-                }
-            });
-    }
-
-    <!--댓글 생성 폼-->
-    function submitComment() {
-        var userId = document.getElementById('userId').value;
-        var albumId = document.getElementById('albumId').value;
-        var comment = document.getElementById('comment').value;
-
-        // 데이터를 JSON 형태로 만들어 서버로 전송
-        var data = {
-            userId: userId,
-            albumId: albumId,
-            comment: comment
-        };
-
-        // 서버로 데이터 전송하는 로직
-        fetch('/submitComment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }).then(function (response) {
-            //응답처리
-            if (response.ok) {
-                console.log('Comment submitted successfully');
-                location.reload();
-            } else {
-                console.error('Failed to submit comment');
-            }
-        }).catch(function (error) {
-            console.error('Error submitting comment:', error);
-        });
-    }
-</script>
-
-<!--아코디언 메뉴-->
-<script>
+<!-- 좋아요 기능 -->
+<script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function () {
-        var acc = document.getElementsByClassName("accordion2");
-        for (var i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function () {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
-                if (panel && panel.classList.contains('panel')) {
-                    if (panel.style.display === "block") {
-                        panel.style.display = "none";
-                    } else {
-                        panel.style.display = "block";
-                    }
-                }
+        // 앨범에 대한 좋아요 버튼
+        const albumHeartButton = document.querySelector('.albumHeartButton');
+        if (albumHeartButton) {
+            albumHeartButton.addEventListener('click', function () {
+                const albumId = /*[[${firstAlbum.id}]]*/ 'null'; // Thymeleaf 변수를 JS로 렌더링
+
+                fetch(`/mypage/like/album/toggle?albumId=${albumId}`, {
+                    method: 'POST',
+                })
+                    .then(response => response.text())
+                    .then(result => {
+                        const isLiked = result === "liked";
+                        if (isLiked) {
+                            this.innerText = '♥'; // 좋아요 상태일 때 채워진 하트로 변경
+                            alert("모든 곡이 좋아요 표시되었습니다."); // 알림 유지
+                        } else {
+                            this.innerText = '♡'; // 좋아요 취소 시 빈 하트로 변경
+                            alert("모든 곡의 좋아요가 취소되었습니다."); // 알림 유지
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error toggling like:', error);
+                        alert("좋아요 처리 중 오류가 발생했습니다.");
+                    });
             });
         }
-    });
 
+        // 곡에 대한 개별 좋아요 처리
+        const trackHeartButtons = document.querySelectorAll('.like-button');
+
+        trackHeartButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const trackId = this.getAttribute('data-track-id');
+
+                fetch(`/mypage/like/track/toggle?trackId=${trackId}`, {
+                    method: 'POST',
+                })
+                    .then(response => response.text())
+                    .then(result => {
+                        const isLiked = result === "liked";
+                        if (isLiked) {
+                            this.innerText = '♥'; // 좋아요 상태일 때 채워진 하트로 변경
+                        } else {
+                            this.innerText = '♡'; // 좋아요 취소 시 빈 하트로 변경
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error toggling like:', error);
+                        alert("좋아요 처리 중 오류가 발생했습니다.");
+                    });
+            });
+        });
+    });
+</script>
+
+<!-- 아코디언 메뉴 -->
+<script>
     document.addEventListener('DOMContentLoaded', function () {
-        var acc = document.getElementsByClassName("accordion3");
-        for (var i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function () {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
+        // 기본 아코디언 메뉴
+        const acc = document.querySelectorAll(".accordion2");
+        acc.forEach(button => {
+            button.addEventListener("click", function () {
+                const panel = this.nextElementSibling;
                 if (panel.style.display === "block") {
                     panel.style.display = "none";
                 } else {
                     panel.style.display = "block";
                 }
             });
-        }
+        });
+
+        // 공유 버튼의 아코디언 메뉴
+        const acc3 = document.querySelectorAll(".accordion3");
+        acc3.forEach(button => {
+            button.addEventListener("click", function () {
+                const panel2 = this.nextElementSibling;
+                if (panel2.style.display === "block") {
+                    panel2.style.display = "none";
+                } else {
+                    panel2.style.display = "block";
+                }
+            });
+        });
     });
 </script>
 
-<!--공유-->
+<!-- 공유 기능 -->
 <script th:inline="javascript">
-
     function clip() {
         var url = window.document.location.href;
 
@@ -229,7 +201,7 @@
     }
 
     var thisUrl = document.URL;
-    var albumDetail = [[${firstAlbum.detail}]];
+    var albumDetail = /*[[${firstAlbum.detail}]]*/ "";
     var snsTitle = "MiTi에서 듣는 " + albumDetail;
 
     function shareTwitter() {
@@ -265,92 +237,5 @@
     }
 </script>
 
-<!-- 앨범 트랙 재생 기능 -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const playAllButton = document.getElementById('play-all-button');
-        const playButtons = document.querySelectorAll('.play-button');
-        const albumListItems = document.querySelectorAll('#album-list li');
-        let currentTrackIndex = 0;
-        let audio = new Audio();
-
-        playButtons.forEach((button, index) => {
-            button.addEventListener('click', () => {
-                currentTrackIndex = index;
-                playTrack();
-            });
-        });
-
-        playAllButton.addEventListener('click', () => {
-            currentTrackIndex = 0;
-            playTrack();
-        });
-
-        function playTrack() {
-            if (currentTrackIndex >= albumListItems.length) {
-                console.log('All tracks finished');
-                return;
-            }
-
-            const trackElement = albumListItems[currentTrackIndex];
-            const trackUrl = trackElement.getAttribute('data-music-url');
-
-            if (trackUrl) {
-                audio.src = trackUrl;
-                audio.play();
-
-                audio.onended = () => {
-                    currentTrackIndex++;
-                    playTrack();
-                };
-            } else {
-                console.error('Track URL is not available');
-            }
-        }
-
-        window.addEventListener('beforeunload', function () {
-            if (audio) {
-                audio.pause();
-                audio.src = '';
-            }
-        });
-    });
-</script>
-
-<!-- 앨범 전체 좋아요 기능 -->
-<script>
-    document.getElementById('albumHeartButton').addEventListener('click', function () {
-        const userId = document.getElementById('userId').value;
-        const albumId = document.getElementById('albumId').value;
-
-        fetch('/mypage/like/toggle', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `userId=${userId}&albumId=${albumId}`
-        }).then(response => response.text())
-            .then(result => {
-                const isLiked = result === "liked";
-                if (isLiked) {
-                    document.querySelectorAll('.album_list .like-button').forEach(button => {
-                        button.classList.add('liked');
-                        button.innerText = '♥';
-                    });
-                    this.classList.add('liked');
-                    this.innerText = '♥';
-                    alert("앨범의 모든 곡에 좋아요를 눌렀습니다!");
-                } else {
-                    document.querySelectorAll('.album_list .like-button').forEach(button => {
-                        button.classList.remove('liked');
-                        button.innerText = '♡';
-                    });
-                    this.classList.remove('liked');
-                    this.innerText = '♡';
-                    alert("앨범의 모든 곡에 대한 좋아요를 취소했습니다!");
-                }
-            });
-    });
-</script>
-
+</body>
 </html>
