@@ -806,3 +806,48 @@ a:hover {
     padding: 0;
     opacity: 0.6;
 }
+
+.add_genre_list {
+    position: fixed;
+    left: 62%;
+    top: 200px;
+    display: none;
+    width: 20%;
+}
+
+.add_genre {
+    font-weight: 600;
+    font-size: 20px;
+    color: #616161;
+}
+
+#nonSelectedGenreList {
+    list-style-type: none;
+    padding-left: 0;
+    font-weight: 400;
+    font-size: 18px;
+    color: #4a4a4a;
+}
+
+#nonSelectedGenreList li {
+    display: flex; /* flexbox 사용 */
+    align-items: center; /* 수직 가운데 정렬 */
+    margin-bottom: 10px; /* 항목 간 간격 */
+}
+
+#nonSelectedGenreList img {
+    margin-right: 20px; /* 이미지와 텍스트 간 간격 */
+}
+
+#nonSelectedGenreList span {
+    margin-right: 10px; /* 텍스트와 버튼 간 간격 */
+}
+
+#nonSelectedGenreList button {
+    margin-left: auto; /* 버튼을 오른쪽으로 정렬 */
+    background-color: rgba(255, 255, 255, 0);
+    font-weight: 400;
+    font-size: 18px;
+    color: #4a4a4a;
+    border: none;
+}
