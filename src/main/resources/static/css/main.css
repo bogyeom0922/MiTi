@@ -851,3 +851,17 @@ a:hover {
     color: #4a4a4a;
     border: none;
 }
+
+.my_comment_modal {
+    display: none;
+    background-color: #9e9e9e;
+    position: fixed; /* 화면에 고정 */
+    top: 50%; /* 화면의 세로 중앙에 위치 */
+    left: 50%; /* 화면의 가로 중앙에 위치 */
+    transform: translate(-50%, -50%);
+    width: 30%;
+    height: 300px;
+    border-radius: 1%;
+    color: white;
+    font-weight: bolder;
+}
