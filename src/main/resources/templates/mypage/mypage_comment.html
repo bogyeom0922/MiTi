@@ -31,12 +31,12 @@
     </table>
 
     <!-- 댓글 수정 모달 (팝업) -->
-    <div id="editModal" style="display:none;">
-        <h2>댓글 수정</h2>
+    <div id="editModal" class="my_comment_modal">
+        <p class="my_comment_modal_title">댓글 수정</p>
         <input type="hidden" id="editCommentId">
-        <textarea id="editCommentText"></textarea>
-        <button onclick="saveComment()">저장</button>
-        <button onclick="closeEditModal()">취소</button>
+        <textarea id="editCommentText" class="my_comment_modal_textarea"></textarea>
+        <button onclick="saveComment()" class="my_comment_modal_save">저장하기</button>
+        <button onclick="closeEditModal()" class="my_comment_modal_close">X</button>
     </div>
 
     <script>
@@ -45,7 +45,7 @@
             const commentText = commentTextElement ? commentTextElement.innerText : '';
             document.getElementById('editCommentId').value = id;
             document.getElementById('editCommentText').value = commentText;
-            document.getElementById('editModal').style.display = 'block';
+            document.getElementById('editModal').style.display = 'flex';
         }
 
         function closeEditModal() {
