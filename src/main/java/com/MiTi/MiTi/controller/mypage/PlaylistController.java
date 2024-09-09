@@ -42,8 +42,12 @@ public class PlaylistController {
         List<PlaylistDto> albumList = playlistService.getAlbumsByPlaylistName(userPlaylistName);
         model.addAttribute("albumList", albumList);
 
+        // 선택한 플레이리스트 이름 모델 추가
+        model.addAttribute("userPlaylistName", userPlaylistName);
+
         UserDTO userDTO = userService.getUserById(user);
         model.addAttribute("user", userDTO);
         return "mypage/playlist_albums";
     }
+
 }

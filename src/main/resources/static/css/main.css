@@ -550,7 +550,7 @@ a:hover {
 
 .my_body {
     position: relative;
-    left: 11%;
+    left: 12%;
     width: 65%;
 }
 
@@ -559,7 +559,7 @@ a:hover {
     font-size: 26px;
     position: relative;
     top: 170px;
-    left: 18%;
+    left: 18.5%;
     margin: 0;
 }
 
@@ -651,7 +651,7 @@ a:hover {
 }
 
 .my_table_playlist {
-    width: 40%;
+    width: 80%;
     font-weight: 600;
     font-size: 18px;
     position: relative;
@@ -674,6 +674,41 @@ a:hover {
     border: none;
     background-color: rgba(255, 255, 255, 0);
     color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_playlist_albums {
+    width: 80%;
+    font-weight: 600;
+    font-size: 18px;
+    position: relative;
+    top: 140px;
+    left: 18%;
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_playlist_albums img {
+    width: 100%;
+}
+
+.my_table_playlist_albums tr {
+    height: 60px;
+}
+
+.my_table_playlist_albums button {
+    font-weight: 600;
+    font-size: 18px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_body_title_playlist_albums {
+    font-weight: 900;
+    font-size: 26px;
+    position: relative;
+    top: 110px;
+    left: 18.5%;
+    margin: 0;
 }
 
 .my_table_record {
@@ -760,4 +795,14 @@ a:hover {
     width: 9%;
     height: 50px;
     z-index: 501;
+}
+
+.my_playlist_back {
+    position: relative;
+    width: 3%;
+    top: 145px;
+    left: 12%;
+    margin: 0;
+    padding: 0;
+    opacity: 0.6;
 }
