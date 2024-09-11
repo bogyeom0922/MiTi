@@ -85,17 +85,5 @@ public class AlbumController {
             return "album/album_detail";
         }
     */
-    @GetMapping("/streaming/{albumId}")
-    public String streaming(@PathVariable Long albumId, Model model) {
-        Optional<Album> albumOpt = albumRepository.findById(albumId);
 
-        if (albumOpt.isPresent()) {
-            Album album = albumOpt.get();
-            model.addAttribute("musicName", album.getMusic_name());
-            model.addAttribute("musicUri", album.getMusic_uri());
-            model.addAttribute("albumImage", album.getAlbum_image());
-        }
-
-        return "index"; // index.html로 이동
-    }
 }
