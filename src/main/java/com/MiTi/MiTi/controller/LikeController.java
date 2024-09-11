@@ -5,6 +5,7 @@ import com.MiTi.MiTi.dto.RecordDto;
 import com.MiTi.MiTi.entity.Like;
 import com.MiTi.MiTi.repository.LikeRepository;
 import com.MiTi.MiTi.service.LikeService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,19 @@ public class LikeController {
             return "failure";
         }
     }
+
+    //스트리밍에 필요함
+    @GetMapping("api/music/{id}")
+    public ResponseEntity<LikeDto> getMusicById(@PathVariable Long id) {
+        LikeDto likeDto = likeService.getLikeDtoById(id);
+        if (likeDto != null) {
+            return ResponseEntity.ok(likeDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 
 
 }

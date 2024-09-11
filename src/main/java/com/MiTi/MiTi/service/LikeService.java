@@ -19,6 +19,24 @@ public class LikeService {
         this.likeRepository = likeRepository;
     }
 
+    //스트리밍에 필요함
+    @Transactional
+    public LikeDto getLikeDtoById(Long id) {
+        return likeRepository.findById(id)
+                .map(like -> LikeDto.builder()
+                        .id(like.getId())
+                        .userId(like.getUserId())
+                        .albumId(like.getAlbumId())
+                        .album_image(like.getAlbum().getAlbum_image())
+                        .music_name(like.getAlbum().getMusic_name())
+                        .music_artist_name(like.getAlbum().getMusic_artist_name())
+                        .music_duration_ms(like.getAlbum().getMusic_duration_ms())
+                        .music_uri(like.getAlbum().getMusic_uri())
+                        .build())
+                .orElse(null);
+    }
+
+
     @Transactional
     public List<LikeDto> getLikeListByUserId(String userId) {
         List<Like> likeList = likeRepository.findByUserId(userId);
@@ -33,6 +51,7 @@ public class LikeService {
                     .music_name(like.getAlbum().getMusic_name())
                     .music_artist_name(like.getAlbum().getMusic_artist_name())
                     .music_duration_ms(like.getAlbum().getMusic_duration_ms())
+                    .music_uri(like.getAlbum().getMusic_uri())
                     .build();
             likeDtoList.add(likeDto);
         }
@@ -45,6 +64,10 @@ public class LikeService {
     public void deleteLike(Long id) {
         likeRepository.deleteById(id);
     }
+
+
+
+
 }
 
 

@@ -1,12 +1,14 @@
 package com.MiTi.MiTi.repository;
 
-
-import com.MiTi.MiTi.entity.MemberEntity;
+import com.MiTi.MiTi.entity.Member;
+import com.MiTi.MiTi.entity.MemberId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+@Repository
+public interface MemberRepository extends JpaRepository<Member, MemberId> {
 
-public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
-    // 이메일로 회원 정보 조회 (select * from member_table where member_email=?)
-    Optional<MemberEntity> findByMemberEmail(String memberEmail);
+    // Optional<Member> findByEmail(String email);  // 예시: 이메일을 기반으로 사용자 조회
+
+    // Optional<Member> findByIdAndProvider(String id, OAuth2Provider provider);  // 예시: id와 provider를 기반으로 사용자 조회
 }
