@@ -5,7 +5,7 @@ import com.MiTi.MiTi.entity.Album;
 import com.MiTi.MiTi.entity.Like;
 import com.MiTi.MiTi.repository.AlbumRepository;
 import com.MiTi.MiTi.repository.LikeRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,84 +15,84 @@ import java.util.Optional;
 @Service
 public class LikeService {
 
-    private final LikeRepository likeRepository;
-    private final AlbumRepository albumRepository;
+    @Autowired
+    private LikeRepository likeRepository;
 
-    public LikeService(LikeRepository likeRepository, AlbumRepository albumRepository) {
-        this.likeRepository = likeRepository;
-        this.albumRepository = albumRepository;
+    @Autowired
+    private AlbumRepository albumRepository;
+
+    // 특정 사용자(userId)와 앨범(albumId)에 대한 좋아요 여부 확인
+    public boolean isAlbumLikedByUser(String userId, String albumId) {
+        Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(userId, albumId);
+        return existingLike.isPresent();
     }
 
-    // 앨범에 대한 좋아요 추가 (빌더 패턴 사용)
-    @Transactional
-    public boolean addLike(String userId, String albumId) {
-        if (likeRepository.existsByUserIdAndAlbumId(userId, albumId)) {
-            return false; // 이미 좋아요가 존재함
+    // albumId를 기반으로 좋아요 상태를 토글하는 메서드 (userId 없이)
+    public boolean toggleAlbumLike(String albumId) {
+        Optional<Like> existingLike = likeRepository.findByAlbumId(albumId);
+
+        if (existingLike.isPresent()) {
+            likeRepository.delete(existingLike.get());
+            return false; // 좋아요 취소
+        } else {
+            Album album = albumRepository.findById(albumId)
+                    .orElseThrow(() -> new RuntimeException("해당 곡을 찾을 수 없습니다: " + albumId));
+
+            Like newLike = Like.builder()
+                    .albumId(albumId)
+                    .album(album)
+                    .build();
+            likeRepository.save(newLike);
+            return true; // 좋아요 추가
         }
-
-        Album album = albumRepository.findById(Long.parseLong(albumId))
-                .orElseThrow(() -> new IllegalArgumentException("해당 앨범을 찾을 수 없습니다: " + albumId));
-
-        Like like = Like.builder()
-                .userId(userId)
-                .albumId(albumId)
-                .album(album)
-                .build();
-        likeRepository.save(like);
-        return true;
     }
 
-    // 좋아요 삭제
-    @Transactional
-    public void deleteLike(Long id) {
-        likeRepository.deleteById(id);
-    }
-
-    // 앨범에 대한 좋아요 토글
-    @Transactional
-    public boolean toggleAlbumLike(String userId, String albumId) {
+    // 특정 사용자(userId)와 앨범(albumId)에 대한 좋아요 상태를 토글하는 메서드
+    public boolean toggleTrackLike(String userId, String albumId) {
         Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(userId, albumId);
 
         if (existingLike.isPresent()) {
             likeRepository.delete(existingLike.get());
-            return false;
+            return false; // 좋아요 취소
         } else {
-            return addLike(userId, albumId);
-        }
-    }
+            Album album = albumRepository.findById(albumId)
+                    .orElseThrow(() -> new RuntimeException("해당 곡을 찾을 수 없습니다: " + albumId));
 
-    // 수록곡에 대한 좋아요 토글
-    @Transactional
-    public boolean toggleTrackLike(String userId, String trackId) {
-        Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(userId, trackId);
-
-        if (existingLike.isPresent()) {
-            likeRepository.delete(existingLike.get());
-            return false;
-        } else {
             Like newLike = Like.builder()
                     .userId(userId)
-                    .albumId(trackId)
+                    .albumId(albumId)
+                    .album(album)
                     .build();
             likeRepository.save(newLike);
-            return true;
+            return true; // 좋아요 추가
         }
     }
 
-    // 앨범 좋아요 여부 확인
-    @Transactional
-    public boolean isAlbumLikedByUser(String userId, String albumId) {
-        return likeRepository.existsByUserIdAndAlbumId(userId, albumId);
+    // 특정 트랙에 대해 좋아요 추가 메서드
+    public boolean addLike(String username, String musicId) {
+        Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(username, musicId);
+        if (existingLike.isPresent()) {
+            return false; // 이미 좋아요가 되어 있음
+        }
+
+        Album album = albumRepository.findById(musicId)
+                .orElseThrow(() -> new RuntimeException("해당 곡을 찾을 수 없습니다: " + musicId));
+
+        Like newLike = Like.builder()
+                .userId(username)
+                .albumId(musicId)
+                .album(album)
+                .build();
+        likeRepository.save(newLike);
+        return true; // 좋아요 추가됨
     }
 
-    // 트랙 좋아요 여부 확인
-    @Transactional
-    public boolean isTrackLikedByUser(String userId, String trackId) {
-        return likeRepository.existsByUserIdAndAlbumId(userId, trackId);
+    // 좋아요 취소 메서드
+    public void deleteLike(Long musicId) {
+        likeRepository.deleteByAlbumId(musicId.toString());
     }
 
-    // 사용자 ID로 좋아요 리스트 조회
-    @Transactional
+    // 사용자가 좋아요한 앨범 목록 조회
     public List<LikeDto> getLikeListByUserId(String userId) {
         List<Like> likeList = likeRepository.findByUserId(userId);
         List<LikeDto> likeDtoList = new ArrayList<>();
@@ -102,13 +102,14 @@ public class LikeService {
                     .id(like.getId())
                     .userId(like.getUserId())
                     .albumId(like.getAlbumId())
-                    .album_image(like.getAlbum().getAlbum_image())
-                    .music_name(like.getAlbum().getMusicName())
-                    .music_artist_name(like.getAlbum().getMusicArtistName())
-                    .music_duration_ms(like.getAlbum().getMusic_duration_ms())
+                    .musicName(like.getAlbum().getMusicName())
+                    .albumImage(like.getAlbum().getAlbum_image())  // 직접 정의한 getAlbum_image() 사용
+                    .musicArtistName(like.getAlbum().getMusicArtistName())
+                    .musicDurationMs(like.getAlbum().getMusic_duration_ms())  // 직접 정의한 getMusic_duration_ms() 사용
                     .build();
             likeDtoList.add(likeDto);
         }
+
         return likeDtoList;
     }
 }

@@ -47,8 +47,8 @@ public class AlbumController {
 
         model.addAttribute("details", details);
 
-        UserDTO memberDTO = userService.getUserById(userId);
-        model.addAttribute("member", memberDTO);
+        UserDTO userDTO = userService.getUserById(userId);
+        model.addAttribute("user", userDTO);
 
         return "album/album_list";
     }
@@ -57,29 +57,32 @@ public class AlbumController {
     public String detailList(@PathVariable("detail") String detail, @PathVariable("id") Long id, Model model, @RequestParam(value = "userId", required = false) String userId) {
         log.info("Detail: {}", detail);
 
+        // 앨범과 곡 목록 가져오기
         List<Album> albums = albumService.findByDetail(detail);
         model.addAttribute("albums", albums);
 
         if (!albums.isEmpty()) {
             model.addAttribute("firstAlbum", albums.get(0));
 
-            List<Comment> myComments = commentService.comments(String.valueOf(albums.get(0).getId()));
-            model.addAttribute("comments", myComments);
-
-            // 좋아요 상태 확인 코드 (로그인 체크 없이 동작)
+            // 각 곡에 대한 좋아요 상태를 설정 (사용자별)
             if (userId != null) {
-                // albumId를 String으로 변환하여 전달
+                for (Album album : albums) {
+                    boolean isLiked = likeService.isAlbumLikedByUser(userId, String.valueOf(album.getId()));
+                    album.setIsLiked(isLiked); // 앨범 객체에 좋아요 상태 설정
+                }
+
+                // 첫 번째 앨범에 대한 좋아요 상태 설정
                 boolean isLikedAlbum = likeService.isAlbumLikedByUser(userId, String.valueOf(albums.get(0).getId()));
                 model.addAttribute("isLikedAlbum", isLikedAlbum);
             }
+
         }
 
         UserDTO userDTO = userService.getUserById(id);
         model.addAttribute("user", userDTO);
 
-        UserDTO memberDTO = userService.getUserById(id);
-        model.addAttribute("member", memberDTO);
-
         return "album/album_detail";
     }
+
+
 }
