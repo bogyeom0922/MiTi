@@ -14,9 +14,7 @@
     </script>
     <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 </head>
-
 <body>
-
 <div th:replace="layout/header :: header"></div>
 <!--앨범 기본 정보-->
 <div th:if="${firstAlbum != null}" class="album">
@@ -48,29 +46,30 @@
                 <div class="accordion_container">
                     <button class="accordion2">:</button>
                     <div class="panel">
-                    <button>좋아요</button>
-                    <button>재생 목록에 추가</button>
-                    <button>다음에 재생</button>
-                    <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
-                        <button>앨범 정보</button>
-                    </a>
-                    <button class="accordion3">공유</button>
-                    <div class="panel2">
-                        <button>
-                            <a href="#" onclick="clip(); return false;">링크 복사</a>
-                        </button>
-                        <button>
-                            <a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a>
-                        </button>
-                        <button>
-                            <a href="javascript:shareTwitter();">트위터에 공유</a>
-                        </button>
-                        <button>
-                            <a href="javascript:shareFacebook();">페이스북에 공유</a>
-                        </button>
-                        <button>
-                            <a href="javascript:shareBand();">밴드에 공유</a>
-                        </button>
+                        <button>좋아요</button>
+                        <button>재생 목록에 추가</button>
+                        <button>다음에 재생</button>
+                        <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
+                            <button>앨범 정보</button>
+                        </a>
+                        <button class="accordion3">공유</button>
+                        <div class="panel2">
+                            <button>
+                                <a href="#" onclick="clip(); return false;">링크 복사</a>
+                            </button>
+                            <button>
+                                <a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a>
+                            </button>
+                            <button>
+                                <a href="javascript:shareTwitter();">트위터에 공유</a>
+                            </button>
+                            <button>
+                                <a href="javascript:shareFacebook();">페이스북에 공유</a>
+                            </button>
+                            <button>
+                                <a href="javascript:shareBand();">밴드에 공유</a>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </td>

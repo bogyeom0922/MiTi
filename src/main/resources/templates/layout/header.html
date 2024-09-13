@@ -10,7 +10,7 @@
 <body>
 <div th:fragment="header">
     <div class="header">
-        ㅇ
+        <p class="logo" th:onclick="'window.location.href=\'/main/' + ${user.id} + '\''">MITI</p>
         <!--음악 검색-->
         <div class="search">
             <form class="search_form">
