@@ -1,9 +1,9 @@
 package com.MiTi.MiTi.service;
 
 import com.MiTi.MiTi.entity.Album;
-import com.MiTi.MiTi.entity.Track;
+import com.MiTi.MiTi.entity.Like;
 import com.MiTi.MiTi.repository.AlbumRepository;
-import com.MiTi.MiTi.repository.TrackRepository;
+import com.MiTi.MiTi.repository.LikeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,43 +17,83 @@ public class AlbumService {
     private AlbumRepository albumRepository;
 
     @Autowired
-    private TrackRepository trackRepository;
+    private LikeRepository likeRepository;
 
-    // 앨범 ID로 앨범 가져오기
-    public Album getAlbumById(Long albumId) {
-        return albumRepository.findById(albumId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 앨범을 찾을 수 없습니다: " + albumId));
-    }
-
-    // 상세 정보로 앨범 검색
+    // 상세 정보(detail)를 통해 앨범 목록 검색
     public List<Album> findByDetail(String detail) {
         return albumRepository.findByDetail(detail);
     }
 
-    // 음악 이름 또는 아티스트 이름으로 앨범 검색
+    // 앨범에 속한 모든 곡을 좋아요/좋아요 취소 처리
+    public boolean toggleAlbumLike(String userId, String detail) {
+        List<Album> albums = albumRepository.findByDetail(detail); // 앨범에 속한 곡들을 조회
+        boolean isLiked = false;
+
+        // 각 앨범(실제 곡들)에 대해 좋아요/좋아요 취소 처리
+        for (Album album : albums) {
+            Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(userId, album.getId().toString());
+
+            if (existingLike.isPresent()) {
+                // 이미 좋아요가 되어 있으면 좋아요 취소
+                likeRepository.delete(existingLike.get());
+            } else {
+                // 좋아요 추가
+                Like newLike = Like.builder()
+                        .userId(userId)
+                        .albumId(album.getId().toString())  // albumId로 곡을 구분
+                        .album(album)
+                        .build();
+                likeRepository.save(newLike);
+                isLiked = true; // 하나라도 좋아요가 추가되면 true로 변경
+            }
+        }
+        return isLiked; // 좋아요가 추가된 경우 true 반환
+    }
+
+    // 개별 곡에 대해 좋아요/취소 처리
+    public boolean toggleTrackLike(String userId, String albumId) {
+        Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(userId, albumId);
+
+        if (existingLike.isPresent()) {
+            // 이미 좋아요가 되어 있으면 좋아요 취소
+            likeRepository.delete(existingLike.get());
+            return false; // 좋아요 취소됨
+        } else {
+            // 좋아요 추가
+            Album album = albumRepository.findById(albumId)
+                    .orElseThrow(() -> new RuntimeException("해당 곡을 찾을 수 없습니다: " + albumId));
+
+            Like newLike = Like.builder()
+                    .userId(userId)
+                    .albumId(albumId)  // albumId로 곡을 구분
+                    .album(album)
+                    .build();
+            likeRepository.save(newLike);
+            return true; // 좋아요 추가됨
+        }
+    }
+
+    // 특정 앨범에 대해 좋아요 처리 (likeAlbum 메서드 추가)
+    public void likeAlbum(String albumId, Boolean isLiked, String userId) {
+        if (isLiked) {
+            // 좋아요 추가
+            Album album = albumRepository.findById(albumId)
+                    .orElseThrow(() -> new RuntimeException("해당 앨범을 찾을 수 없습니다: " + albumId));
+
+            Like newLike = Like.builder()
+                    .userId(userId)
+                    .albumId(albumId)
+                    .album(album)
+                    .build();
+            likeRepository.save(newLike);
+        } else {
+            // 좋아요 취소
+            likeRepository.deleteByUserIdAndAlbumId(userId, albumId);
+        }
+    }
+
+    // 새롭게 추가된 findByMusicNameOrArtistName 메서드
     public List<Album> findByMusicNameOrArtistName(String musicName, String artistName) {
         return albumRepository.findByMusicNameContainingIgnoreCaseOrMusicArtistNameContainingIgnoreCase(musicName, artistName);
-    }
-
-    // 앨범 ID로 찾기
-    public Optional<Album> findById(Long albumId) {
-        return albumRepository.findById(albumId);
-    }
-
-    // 앨범 및 모든 수록곡 좋아요 상태 업데이트
-    public void likeAlbum(Long albumId, Boolean isLiked) {
-        // 앨범 찾기
-        Album album = albumRepository.findById(albumId)
-                .orElseThrow(() -> new RuntimeException("앨범을 찾을 수 없습니다."));
-
-        // 앨범의 좋아요 상태 설정
-        album.setIsLiked(isLiked);
-        albumRepository.save(album);
-
-        // 해당 앨범의 모든 수록곡의 좋아요 상태 업데이트
-        for (Track track : album.getTracks()) {
-            track.setIsLiked(isLiked);
-            trackRepository.save(track);
-        }
     }
 }

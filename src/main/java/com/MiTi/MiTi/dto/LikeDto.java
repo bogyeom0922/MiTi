@@ -13,10 +13,10 @@ public class LikeDto {
     private Long id;
     private String userId;
     private String albumId;
-    private String music_name;
-    private String album_image;
-    private String music_artist_name;
-    private String music_duration_ms;
+    private String musicName;
+    private String albumImage;
+    private String musicArtistName;
+    private String musicDurationMs;
 
     public Like toEntity() {
         return Like.builder()
@@ -27,23 +27,23 @@ public class LikeDto {
     }
 
     @Builder
-    public LikeDto(Long id, String userId, String albumId, String music_name, String album_image, String music_artist_name, String music_duration_ms) {
+    public LikeDto(Long id, String userId, String albumId, String musicName, String albumImage, String musicArtistName, String musicDurationMs) {
         this.id=id;
         this.userId = userId;
         this.albumId = albumId;
-        this.music_name = music_name;
-        this.album_image = album_image;
-        this.music_artist_name = music_artist_name;
-        this.music_duration_ms = music_duration_ms;
+        this.musicName = musicName;
+        this.albumImage = albumImage;
+        this.musicArtistName = musicArtistName;
+        this.musicDurationMs = musicDurationMs;
     }
 
     public String getFormattedDuration() {
-        if (music_duration_ms == null) {
+        if (musicDurationMs == null) {
             return "00:00"; // 기본값 반환 (혹은 다른 처리)
         }
 
-        long minutes = Integer.parseInt(music_duration_ms) / 60000;
-        long seconds = (Integer.parseInt(music_duration_ms) % 60000) / 1000;
+        long minutes = Integer.parseInt(musicDurationMs) / 60000;
+        long seconds = (Integer.parseInt(musicDurationMs) % 60000) / 1000;
         return String.format("%d:%02d", minutes, seconds);
     }
 

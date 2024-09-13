@@ -29,8 +29,10 @@
         <p>artist genres: <span th:text="${firstAlbum.music_artist_genres}"></span></p>
 
         <!-- 앨범 전체 좋아요 버튼 (하트만 표시) -->
-        <button class="albumHeartButton" data-album-id="[[${firstAlbum.id}]]">
-            [[${firstAlbum.isLiked != null && firstAlbum.isLiked ? '♥' : '♡'}]]
+        <button class="albumHeartButton"
+                th:data-album-id="${firstAlbum.id}"
+                th:data-user-id="${user.id}">
+            <span th:text="${firstAlbum.isLiked != null && firstAlbum.isLiked ? '♥' : '♡'}"></span>
         </button>
     </div>
     <img src="/images/play.png" class="album_play_img">
@@ -54,13 +56,16 @@
                     <button class="accordion2">:</button>
                     <div class="panel" style="display: none;">
                         <!-- 수록곡 좋아요 버튼 -->
-                        <button class="like-button" data-track-id="[[${album.id}]]">
-                            [[${album.isLiked != null ? (album.isLiked ? '♥' : '♡') : '♡'}]]
+                        <button class="like-button"
+                                th:data-album-id="${album.id}"
+                                th:data-user-id="${user.id}">
+                            <!-- isLiked 상태에 따른 하트 렌더링 -->
+                            <span th:text="${album.isLiked != null ? (album.isLiked ? '♥' : '♡') : '♡'}"></span>
                         </button>
 
                         <button>재생 목록에 추가</button>
                         <button>다음에 재생</button>
-                        <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
+                        <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${user.id})}">
                             <button>앨범 정보</button>
                         </a>
                         <button class="accordion3">공유</button>
@@ -105,20 +110,33 @@
         const albumHeartButton = document.querySelector('.albumHeartButton');
         if (albumHeartButton) {
             albumHeartButton.addEventListener('click', function () {
-                const albumId = /*[[${firstAlbum.id}]]*/ 'null'; // Thymeleaf 변수를 JS로 렌더링
+                const albumId = this.getAttribute('data-album-id');
+                const userId = this.getAttribute('data-user-id');  // userId 추가
 
-                fetch(`/mypage/like/album/toggle?albumId=${albumId}`, {
+                fetch(`/mypage/like/album/toggle?albumId=${albumId}&userId=${userId}`, {
                     method: 'POST',
                 })
                     .then(response => response.text())
                     .then(result => {
                         const isLiked = result === "liked";
                         if (isLiked) {
-                            this.innerText = '♥'; // 좋아요 상태일 때 채워진 하트로 변경
-                            alert("모든 곡이 좋아요 표시되었습니다."); // 알림 유지
+                            this.querySelector('span').innerText = '♥'; // 좋아요 상태일 때 채워진 하트로 변경
+                            alert("앨범과 모든 곡의 좋아요를 눌렀습니다!");
+
+                            // 모든 곡의 좋아요 상태도 변경
+                            const trackHeartButtons = document.querySelectorAll('.like-button span');
+                            trackHeartButtons.forEach(button => {
+                                button.innerText = '♥'; // 개별 곡 하트도 채워진 하트로 변경
+                            });
                         } else {
-                            this.innerText = '♡'; // 좋아요 취소 시 빈 하트로 변경
-                            alert("모든 곡의 좋아요가 취소되었습니다."); // 알림 유지
+                            this.querySelector('span').innerText = '♡'; // 좋아요 취소 시 빈 하트로 변경
+                            alert("앨범과 모든 곡의 좋아요를 취소했습니다!");
+
+                            // 모든 곡의 좋아요 상태도 취소
+                            const trackHeartButtons = document.querySelectorAll('.like-button span');
+                            trackHeartButtons.forEach(button => {
+                                button.innerText = '♡'; // 개별 곡 하트도 빈 하트로 변경
+                            });
                         }
                     })
                     .catch(error => {
@@ -130,21 +148,23 @@
 
         // 곡에 대한 개별 좋아요 처리
         const trackHeartButtons = document.querySelectorAll('.like-button');
-
         trackHeartButtons.forEach(button => {
             button.addEventListener('click', function () {
-                const trackId = this.getAttribute('data-track-id');
+                console.log('Track like button clicked');  // 이 줄 추가
+                const albumId = this.getAttribute('data-album-id');
+                const userId = this.getAttribute('data-user-id');  // userId 추가
 
-                fetch(`/mypage/like/track/toggle?trackId=${trackId}`, {
+                fetch(`/mypage/like/album/toggleTrack?albumId=${albumId}&userId=${userId}`, {
                     method: 'POST',
+                    cache: 'no-cache'  // 캐시 방지 추가
                 })
                     .then(response => response.text())
                     .then(result => {
                         const isLiked = result === "liked";
                         if (isLiked) {
-                            this.innerText = '♥'; // 좋아요 상태일 때 채워진 하트로 변경
+                            this.querySelector('span').innerText = '♥'; // 좋아요 상태일 때 채워진 하트로 변경
                         } else {
-                            this.innerText = '♡'; // 좋아요 취소 시 빈 하트로 변경
+                            this.querySelector('span').innerText = '♡'; // 좋아요 취소 시 빈 하트로 변경
                         }
                     })
                     .catch(error => {

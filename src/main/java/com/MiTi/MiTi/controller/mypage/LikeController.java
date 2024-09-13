@@ -2,8 +2,6 @@ package com.MiTi.MiTi.controller.mypage;
 
 import com.MiTi.MiTi.dto.LikeDto;
 import com.MiTi.MiTi.dto.UserDTO;
-import com.MiTi.MiTi.entity.Album;
-import com.MiTi.MiTi.repository.LikeRepository;
 import com.MiTi.MiTi.service.AlbumService;
 import com.MiTi.MiTi.service.LikeService;
 import com.MiTi.MiTi.service.UserService;
@@ -17,13 +15,11 @@ import java.util.List;
 public class LikeController {
 
     private final LikeService likeService;
-    private final LikeRepository likeRepository;
     private final UserService userService;
     private final AlbumService albumService;
 
-    public LikeController(LikeService likeService, LikeRepository likeRepository, UserService userService, AlbumService albumService) {
+    public LikeController(LikeService likeService, UserService userService, AlbumService albumService) {
         this.likeService = likeService;
-        this.likeRepository = likeRepository;
         this.userService = userService;
         this.albumService = albumService;
     }
@@ -40,51 +36,21 @@ public class LikeController {
         return "mypage/mypage_like";
     }
 
+    // 앨범 전체에 좋아요/좋아요 취소
     @PostMapping("/mypage/like/album/toggle")
     @ResponseBody
-    public String toggleAlbumLike(@RequestParam("userId") String userId, @RequestParam("albumId") Long albumId) {
-        boolean isLiked = likeService.toggleAlbumLike(userId, String.valueOf(albumId)); // Long을 String으로 변환
+    public String toggleAlbumLike(@RequestParam("albumId") String albumId, @RequestParam("userId") String userId) {
+        // albumId는 곡의 ID를 나타내므로, albumId를 통해 곡을 좋아요/취소
+        boolean isLiked = albumService.toggleAlbumLike(userId, albumId);
         return isLiked ? "liked" : "unliked";
     }
 
-    @DeleteMapping("/mypage/like/{id}")
-    @ResponseBody
-    public String deleteLike(@PathVariable Long id) {
-        try {
-            likeService.deleteLike(id);
-            return "success";
-        } catch (Exception e) {
-            return "failure";
-        }
-    }
 
-    @PostMapping("/mypage/like/track/toggle")
+    @PostMapping("/mypage/like/album/toggleTrack")
     @ResponseBody
-    public String toggleTrackLike(@RequestParam("userId") String userId, @RequestParam("trackId") Long trackId) {
-        boolean isLiked = likeService.toggleTrackLike(userId, String.valueOf(trackId)); // Long을 String으로 변환
+    public String toggleTrackLike(@RequestParam("albumId") String albumId, @RequestParam("userId") String userId) {
+        boolean isLiked = albumService.toggleTrackLike(userId, albumId);
         return isLiked ? "liked" : "unliked";
     }
 
-    @GetMapping("/mypage/like/check")
-    @ResponseBody
-    public boolean isLiked(@RequestParam("userId") String userId, @RequestParam("albumId") Long albumId) {
-        return likeService.isAlbumLikedByUser(userId, String.valueOf(albumId)); // Long을 String으로 변환
-    }
-
-    @GetMapping("/mypage/like/track/check")
-    @ResponseBody
-    public boolean isTrackLiked(@RequestParam("userId") String userId, @RequestParam("trackId") Long trackId) {
-        return likeService.isTrackLikedByUser(userId, String.valueOf(trackId)); // Long을 String으로 변환
-    }
-
-    @GetMapping("/album/{albumId}")
-    public String getAlbumDetail(@PathVariable Long albumId, @RequestParam("userId") String userId, Model model) {
-        Album album = albumService.getAlbumById(albumId);
-        model.addAttribute("firstAlbum", album);
-
-        boolean isLikedAlbum = likeService.isAlbumLikedByUser(userId, String.valueOf(albumId)); // Long을 String으로 변환
-        model.addAttribute("isLikedAlbum", isLikedAlbum);
-
-        return "album/album_detail";
-    }
 }
