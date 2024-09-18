@@ -25,7 +25,7 @@ public class PlaylistController {
     @GetMapping("/mypage/playlist/{userId}")
     public String list(@PathVariable String userId, Model model) {
         List<PlaylistDto> playlistDtoList = playlistService.getPlaylistListByUserId(String.valueOf(userId));
-        model.addAttribute("postList", playlistDtoList);
+        model.addAttribute("playlistList", playlistDtoList);
         model.addAttribute("userId", userId);
         return "mypage_playlist";
     }

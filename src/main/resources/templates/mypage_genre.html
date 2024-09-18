@@ -18,10 +18,10 @@
         <th>선호 장르</th>
     </tr>
 
-    <tr th:each="post : ${postList}">
+    <tr th:each="genre : ${genreList}">
         <td>
-            <img th:src="@{${post.genre_image}}" width="50">
-            <span th:text="${post.genre}"></span>
+            <img th:src="@{${genre.genre_image}}" width="50">
+            <span th:text="${genre.genre}"></span>
         </td>
         <td>
             <button th:onclick="'deleteGenre(' + ${post.id} + ')'" class="btn btn-danger">삭제</button>

@@ -26,7 +26,7 @@ public class LikeController {
     @GetMapping("/mypage/like/{userId}")
     public String list(@PathVariable String userId, Model model) {
         List<LikeDto> likeDtoList = likeService.getLikeListByUserId(String.valueOf(userId));
-        model.addAttribute("postList", likeDtoList);
+        model.addAttribute("likeList", likeDtoList);
         model.addAttribute("userId", userId);
         return "mypage_like";
     }
@@ -54,7 +54,6 @@ public class LikeController {
             return ResponseEntity.notFound().build();
         }
     }
-
 
 
 

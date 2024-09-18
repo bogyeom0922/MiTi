@@ -35,4 +35,14 @@ public class RecordService {
         }
         return recordDtoList;
     }
+
+    @Transactional
+    public void recordMusic(RecordDto recordDto) {  //스트리밍 시 음악 기록하기
+        System.out.println("Recording music for albumId: " + recordDto.getAlbumId());
+        Record record = Record.builder()
+                .userId(recordDto.getUserId())
+                .albumId(recordDto.getAlbumId())
+                .build();
+        recordRepository.save(record);
+    }
 }

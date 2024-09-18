@@ -25,21 +25,21 @@
         <th>음악 길이</th>
         <th>좋아요 취소</th>
     </tr>
-    <tr th:each="post : ${postList}">
+    <tr th:each="like : ${likeList}">
         <td>
-            <img th:src="@{${post.album_image}}" width="50">
+            <img th:src="@{${like.album_image}}" width="50">
         </td>
         <td>
-            <span th:text="${post.music_name}"></span>
+            <span th:text="${like.music_name}"></span>
         </td>
         <td>
-            <span th:text="${post.music_artist_name}"></span>
+            <span th:text="${like.music_artist_name}"></span>
         </td>
         <td>
-            <span th:text="${post.formattedDuration}"></span>
+            <span th:text="${like.formattedDuration}"></span>
         </td>
         <td>
-            <button th:onclick="'deleteLike(' + ${post.id} + ')'" class="btn btn-danger">삭제</button>
+            <button th:onclick="'deleteLike(' + ${like.id} + ')'" class="btn btn-danger">삭제</button>
         </td>
     </tr>
 </table>

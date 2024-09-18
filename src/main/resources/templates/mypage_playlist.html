@@ -19,12 +19,12 @@
         <th>플레이 리스트</th>
     </tr>
 
-    <tr th:each="post : ${postList}">
+    <tr th:each="playlist : ${playlistList}">
         <td>
-            <a th:href="@{'/mypage/playlist/albums?userPlaylistName=' + ${post.userPlaylistName}}" target="_blank">
-                <img th:src="@{${post.userPlaylistImage}}" width="50">
+            <a th:href="@{'/mypage/playlist/albums?userPlaylistName=' + ${playlist.userPlaylistName}}" target="_blank">
+                <img th:src="@{${playlist.userPlaylistImage}}" width="50">
             </a>
-            <span th:text="${post.userPlaylistName}"></span>
+            <span th:text="${playlist.userPlaylistName}"></span>
         </td>
     </tr>
 </table>

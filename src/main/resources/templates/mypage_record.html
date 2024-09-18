@@ -24,18 +24,18 @@
         <th>가수</th>
         <th>음악 길이</th>
     </tr>
-    <tr th:each="post : ${postList}">
+    <tr th:each="record : ${recordList}">
         <td>
-            <img th:src="@{${post.album_image}}" width="50">
+            <img th:src="@{${record.album_image}}" width="50">
         </td>
         <td>
-            <span th:text="${post.music_name}"></span>
+            <span th:text="${record.music_name}"></span>
         </td>
         <td>
-            <span th:text="${post.music_artist_name}"></span>
+            <span th:text="${record.music_artist_name}"></span>
         </td>
         <td>
-            <span th:text="${post.formattedDuration}"></span>
+            <span th:text="${record.formattedDuration}"></span>
         </td>
     </tr>
 </table>

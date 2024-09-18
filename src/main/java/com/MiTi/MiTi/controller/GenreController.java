@@ -23,7 +23,7 @@ public class GenreController {
     @GetMapping("/mypage/genre/{userId}")
     public String list(@PathVariable String userId, Model model) {
         List<GenreDto> genreDtoList = genreService.getGenreListByUserId(String.valueOf(userId));
-        model.addAttribute("postList", genreDtoList);
+        model.addAttribute("genreList", genreDtoList);
         model.addAttribute("userId", userId);
         return "mypage_genre";
     }
