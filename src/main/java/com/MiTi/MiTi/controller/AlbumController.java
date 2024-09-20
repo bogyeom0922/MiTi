@@ -1,24 +1,15 @@
 package com.MiTi.MiTi.controller;
 
-import com.MiTi.MiTi.dto.MemberDTO;
-import com.MiTi.MiTi.entity.Album;
-import com.MiTi.MiTi.entity.MyComment;
 import com.MiTi.MiTi.repository.AlbumRepository;
-import com.MiTi.MiTi.repository.MemberRepository;
+import com.MiTi.MiTi.repository.UserRepository;
 import com.MiTi.MiTi.service.AlbumService;
-import com.MiTi.MiTi.service.MemberService;
+import com.MiTi.MiTi.service.UserService;
 import com.MiTi.MiTi.service.MyCommentService;
 //import com.MiTi.MiTi.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -33,9 +24,9 @@ public class AlbumController {
     @Autowired
     private MyCommentService myCommentService;
     @Autowired
-    private MemberRepository memberRepository;
+    private UserRepository userRepository;
     @Autowired
-    private MemberService memberService;
+    private UserService userService;
 
     @GetMapping("/albums")
     public String home() {

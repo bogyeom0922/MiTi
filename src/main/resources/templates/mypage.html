@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Music Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin: 50px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .music-records {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .music-records th, .music-records td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .music-records th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>My Music Records</h1>
+    <!-- 고유 ID인지 확인 -->
+    <p>Welcome, [[${userId}]]!</p>
+    <p>Email: [[${email}]]</p>
+
+    <h2>Your Liked Songs</h2>
+    <table class="music-records">
+        <thead>
+        <tr>
+            <th>Album Cover</th>
+            <th>Track Name</th>
+            <th>Artist</th>
+            <th>Played On</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="music : ${likedMusic}">
+            <td><img th:src="${music.albumCover}" alt="Album Cover" width="50"></td>
+            <td th:text="${music.trackName}"></td>
+            <td th:text="${music.artistName}"></td>
+            <td th:text="${music.playedOn}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

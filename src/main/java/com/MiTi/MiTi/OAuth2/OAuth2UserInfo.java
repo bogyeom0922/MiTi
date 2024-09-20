@@ -2,6 +2,8 @@ package com.MiTi.MiTi.OAuth2;
 
 import java.util.Map;
 
+//유저 정보 저장
+// 공통적인 인터페이스와 기본 동작을 제공
 public abstract class OAuth2UserInfo {
 
     protected Map<String, Object> attributes;

@@ -57,10 +57,15 @@
 </head>
 <body>
 
-<button th:onclick="|location.href='@{/mypage/record/1}'|">음악 기록</button>
+<button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${userId})}'|">음악 기록</button>
+<button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${userId})}'|">좋아요</button>
+<button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${userId})}'|">선호 장르</button>
+<button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${userId})}'|">댓글</button>
+<button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|">플레이리스트</button>
+
 
 <div class="container">
-    <div id="root"></div> <!-- Spotify player will be rendered here -->
+    <div id="root" th:data-user-id="${userId}"></div> <!--userId 전달하기 위한 코드-->
 
     <div class="liked-music-list">
         <h2>좋아요 한 음악</h2>
@@ -99,12 +104,16 @@
 
 <!-- JSX and React Code -->
 <script type="text/babel">
-    const SpotifyPlayer = ({ musicName, musicUri, albumImage, albumId, userId, onNextTrack, onPrevTrack }) => {
+
+    const SpotifyPlayer = ({ musicInfo, userId, onNextTrack, onPrevTrack }) => {
+        const { musicName, musicUri, albumImage } = musicInfo;
         const { useState, useEffect } = React;
         const [paused, setPaused] = useState(true);
         const [player, setPlayer] = useState(null);
         const [accessToken, setAccessToken] = useState(null);
 
+
+        //엑세스 토큰 받아오기
         const fetchAccessToken = async () => {
             try {
                 const response = await fetch('/api/get-token');
@@ -120,6 +129,8 @@
         };
 
         useEffect(() => {
+
+            //음악 재생
             const loadSpotifySDK = () => {
                 if (!window.Spotify) {
                     const script = document.createElement('script');
@@ -139,6 +150,7 @@
                 }
             };
 
+            //엑세스 토큰 확인을 통해 음악 스트리밍 구현
             const initializePlayer = () => {
                 if (window.Spotify && accessToken) {
                     const playerInstance = new window.Spotify.Player({
@@ -172,8 +184,12 @@
             });
         }, [musicUri, accessToken]);
 
+
+
+        //음악 uri 공백문자 제거
         const sanitizeUri = (uri) => uri.trim().replace(/\r?\n|\r/g, '');
 
+        //음악 재생
         const playTrack = (device_id, trackUri) => {
             const sanitizedTrackUri = sanitizeUri(trackUri);
 
@@ -192,25 +208,30 @@
                         });
                     }
                     console.log('Track played successfully');
-                    recordMusicPlay(userId, albumId); // 음악 재생 시 기록
+                    if (musicInfo.albumId) { // albumId가 있는 경우에만 기록
+                        recordMusicPlay(userId, musicInfo.albumId);
+                    } else {
+                        console.warn('albumId is null, not recording music play.');
+                    }
                 })
                 .catch(error => {
                     console.error('Error playing track:', error.message);
                 });
         };
 
+        //일시정지
         const togglePlayPause = () => {
             if (!player) return;
             if (paused) {
                 player.resume().then(() => {
                     setPaused(false);
-                    recordMusicPlay(userId, albumId); // Music play 시 기록
                 });
             } else {
                 player.pause().then(() => setPaused(true));
             }
         };
 
+        //음악 기록
         const recordMusicPlay = async (userId, albumId) => {
             try {
                 const response = await fetch('/api/record', {
@@ -220,9 +241,11 @@
                     },
                     body: JSON.stringify({ userId, albumId }),
                 });
+                const responseText = await response.text(); // 응답을 텍스트로 읽어오기
+                console.log('Server response:', responseText); // 서버 응답 로그 확인
+
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(`Error recording music: ${errorData.message}`);
+                    throw new Error(`Error recording music: ${responseData.message || response.statusText}`);
                 }
                 console.log('Music recorded successfully');
             } catch (error) {
@@ -230,6 +253,9 @@
             }
         };
 
+
+
+        //ui
         return (
             <div className="player-container">
                 <h3>Spotify Player</h3>
@@ -247,11 +273,16 @@
     };
 
 
+
+    //서버와 연결 및 곡 재생
     const App = () => {
         const { useState, useEffect } = React;
         const [musicId, setMusicId] = useState(1);
         const [musicInfo, setMusicInfo] = useState({ musicName: "", musicUri: "", albumImage: "", albumId: "" });
-        const userId = 1; // 예시로 고정된 userId. 실제로는 사용자 인증을 통해 얻어야 함.
+
+        // `userId`를 HTML에서 data 속성으로 가져오기 (userId 전달하기 위한 코드)
+        const userId = document.getElementById('root').getAttribute('data-user-id');
+
 
         const fetchMusicInfo = async (id) => {
             try {
@@ -262,7 +293,7 @@
                         musicName: data.music_name,
                         musicUri: data.music_uri,
                         albumImage: data.album_image,
-                        albumId: data.id,
+                        albumId: data.albumId,
                     });
                 } else {
                     throw new Error('No music info found');
@@ -273,8 +304,11 @@
         };
 
         useEffect(() => {
-            fetchMusicInfo(musicId);
-        }, [musicId]);
+            if (userId && musicId) {
+                fetchMusicInfo(musicId);
+            }
+        }, [musicId, userId]);
+
 
         const handleNextTrack = () => {
             setMusicId(prevId => prevId + 1); // Move to the next track
@@ -292,15 +326,13 @@
 
         return (
             <SpotifyPlayer
-                musicName={musicInfo.musicName}
-                musicUri={musicInfo.musicUri}
-                albumImage={musicInfo.albumImage}
-                albumId={musicInfo.albumId}
+                musicInfo={musicInfo} // musicInfo를 넘김
                 userId={userId}
                 onNextTrack={handleNextTrack}
                 onPrevTrack={handlePrevTrack}
             />
         );
+
     };
 
 
@@ -309,5 +341,3 @@
 </script>
 </body>
 </html>
-
-

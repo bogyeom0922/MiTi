@@ -23,12 +23,13 @@ public class RecordController {
     }
 
     @GetMapping("/mypage/record/{userId}")
-    public String list(@PathVariable Integer userId, Model model) {
+    public String list(@PathVariable String userId, Model model) {
         List<RecordDto> recordDtoList = recordService.getRecordListByUserId(String.valueOf(userId));
         model.addAttribute("recordList", recordDtoList);
         model.addAttribute("userId", userId);
         return "mypage_record";
     }
+
 
 
     @PostMapping("/api/record")

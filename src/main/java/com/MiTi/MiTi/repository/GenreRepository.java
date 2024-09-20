@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface GenreRepository extends JpaRepository<Genre, Long> {
 
-    List<Genre> findByUserId(String userID);
+    List<Genre> findByUserId(String userId);
     void deleteById(Long id);
 
 }

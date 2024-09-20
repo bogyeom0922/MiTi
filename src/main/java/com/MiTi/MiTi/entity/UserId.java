@@ -14,7 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberId implements Serializable {
+public class UserId implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private OAuth2Provider provider;

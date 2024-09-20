@@ -2,6 +2,8 @@ package com.MiTi.MiTi.OAuth2;
 
 import java.util.Map;
 
+
+//구체적으로 구현하여 Spotify 사용자 정보를 처리하는 역할
 public class SpotifyUserInfo extends OAuth2UserInfo {
 
     public SpotifyUserInfo(Map<String, Object> attributes) {
