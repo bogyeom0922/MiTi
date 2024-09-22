@@ -18,27 +18,37 @@ public class UserService {
     private final UserRepository userRepository;
 
     // 회원 정보 가져오기
-    public Optional<UserDTO> getMemberById(String provider, String providerId) {
-        UserId userId = UserId.builder()
-                .provider(OAuth2Provider.valueOf(provider))  // OAuth2Provider 열거형의 적절한 값을 사용
-                .providerId(providerId)
-                .build();
-
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            UserDTO userDTO = UserDTO.builder()
-                    .provider(user.getId().getProvider().name())
-                    .providerId(user.getId().getProviderId())
-                    .name(user.getName())
-                    .email(user.getEmail())
-                    .image(user.getImage())
-                    .role(user.getRole().name())
+    // 회원 정보 가져오기
+    public Optional<UserDTO> getUserById(String providerId) {
+        try {
+            // 고정된 provider 값 사용
+            OAuth2Provider oAuth2Provider = OAuth2Provider.SPOTIFY; // 예시로 SPOTIFY 사용
+            UserId userId = UserId.builder()
+                    .provider(oAuth2Provider)  // 고정된 provider
+                    .providerId(providerId)
                     .build();
-            return Optional.of(userDTO);
+
+            Optional<User> userOpt = userRepository.findById(userId);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                UserDTO userDTO = UserDTO.builder()
+                        .provider(user.getId().getProvider().name())
+                        .providerId(user.getId().getProviderId())
+                        .name(user.getName())
+                        .email(user.getEmail())
+                        .image(user.getImage())
+                        .role(user.getRole().name())
+                        .build();
+                return Optional.of(userDTO);
+            }
+        } catch (IllegalArgumentException e) {
+            // provider가 유효하지 않을 때 예외 처리
+            System.out.println("Invalid provider");
         }
         return Optional.empty();
     }
+
+
 
     // 회원 정보 저장하기
     public UserDTO saveUser(UserDTO userDTO) {

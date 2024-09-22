@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class LikeController {
@@ -27,10 +28,10 @@ public class LikeController {
     @GetMapping("/mypage/like/{userId}")
     public String list(@PathVariable String userId, Model model) {
         List<LikeDto> likeDtoList = likeService.getLikeListByUserId(userId);
-        model.addAttribute("postList", likeDtoList);
+        model.addAttribute("likeList", likeDtoList);
         model.addAttribute("userId", userId);
 
-        UserDTO userDTO = userService.getUserById(Long.parseLong(userId));
+        Optional<UserDTO> userDTO = userService.getUserById(userId);
         model.addAttribute("user", userDTO);
 
         return "mypage/mypage_like";

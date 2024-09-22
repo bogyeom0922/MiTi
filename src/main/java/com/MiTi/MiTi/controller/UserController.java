@@ -17,9 +17,9 @@ public class UserController {
     private final UserService userService;
 
     // 회원 정보 가져오기
-    @GetMapping("/{provider}/{providerId}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable String provider, @PathVariable String providerId) {
-        Optional<UserDTO> memberDTO = userService.getMemberById(provider, providerId);
+    @GetMapping("/{providerId}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable String providerId) {
+        Optional<UserDTO> memberDTO = userService.getUserById(providerId);
         if (memberDTO.isPresent()) {
             return new ResponseEntity<>(memberDTO.get(), HttpStatus.OK);
         }

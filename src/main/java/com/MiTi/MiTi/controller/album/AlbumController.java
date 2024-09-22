@@ -1,20 +1,23 @@
 package com.MiTi.MiTi.controller.album;
 
-import com.MiTi.MiTi.dto.UserDTO;
+import com.MiTi.MiTi.dto.AlbumDto;
 import com.MiTi.MiTi.entity.Album;
-import com.MiTi.MiTi.entity.Comment;
 import com.MiTi.MiTi.repository.AlbumRepository;
 import com.MiTi.MiTi.service.AlbumService;
 import com.MiTi.MiTi.service.CommentService;
 import com.MiTi.MiTi.service.LikeService;
 import com.MiTi.MiTi.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,8 +50,8 @@ public class AlbumController {
 
         model.addAttribute("details", details);
 
-        UserDTO userDTO = userService.getUserById(userId);
-        model.addAttribute("user", userDTO);
+       //UserDTO userDTO = userService.getUserById(userId);
+        //model.addAttribute("user", userDTO);
 
         return "album/album_list";
     }
@@ -78,11 +81,37 @@ public class AlbumController {
 
         }
 
-        UserDTO userDTO = userService.getUserById(id);
-        model.addAttribute("user", userDTO);
+        //UserDTO userDTO = userService.getUserById(id);
+        //model.addAttribute("user", userDTO);
 
         return "album/album_detail";
     }
+
+    //스트리밍에 필요함
+    @GetMapping("api/music/{id}")
+    public ResponseEntity<AlbumDto> getMusicById(@PathVariable String id) {
+        AlbumDto albumDto = albumService.getAlbumDtoById(id);
+        if (albumDto != null) {
+            return ResponseEntity.ok(albumDto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/album/list")
+    public String getAlbumList(@RequestParam(defaultValue = "0") int page, Model model) {
+        int pageSize = 6;  // 한 페이지에 6개의 앨범만 표시
+        Pageable pageable = (Pageable) PageRequest.of(page, pageSize);  // 페이지네이션 설정
+        Page<AlbumDto> albumPage = albumService.getAlbumList(pageable);  // 페이지네이션된 앨범 리스트 가져오기
+
+        model.addAttribute("albumList", albumPage.getContent());  // 현재 페이지의 앨범 리스트 추가
+        model.addAttribute("totalPages", albumPage.getTotalPages());  // 총 페이지 수 추가
+        model.addAttribute("currentPage", page);  // 현재 페이지 번호 추가
+
+        return "albumList";  // albumList.html로 이동
+    }
+
+
 
 
 }
