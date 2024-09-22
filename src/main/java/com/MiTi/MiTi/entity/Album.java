@@ -2,6 +2,8 @@ package com.MiTi.MiTi.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import javax.sound.midi.Track;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,14 +14,18 @@ import lombok.*;
 public class Album {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    private String music_name;
+    @Column(name = "music_name")
+    private String musicName;
     private String music_id;
     private String music_popularity;
+    @Column(name = "album_image")
     private String album_image;
+    @Column(name = "detail")
     private String detail;
-    private String music_artist_name;
+    @Column(name = "music_artist_name")
+    private String musicArtistName;
     private String music_artist_id;
     private String music_artist_popularity;
     private String music_genre;
@@ -27,6 +33,7 @@ public class Album {
     private String music_artist_followers;
     private String music_analysis_url;
     private String music_key;
+    @Column(name = "music_duration_ms")
     private String music_duration_ms;
     private String music_instrumentalness;
     private String music_acousticness;
@@ -43,6 +50,15 @@ public class Album {
     private String music_type;
     private String music_uri;
 
+    @Column(name = "is_liked")
+    private Boolean isLiked;
 
+    // 직접 getter 메서드를 정의
+    public String getAlbum_image() {
+        return album_image;
+    }
 
+    public String getMusic_duration_ms() {
+        return music_duration_ms;
+    }
 }

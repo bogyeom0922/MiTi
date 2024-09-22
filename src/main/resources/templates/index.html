@@ -63,16 +63,15 @@
 <button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${userId})}'|">댓글</button>
 <button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|">플레이리스트</button>
 
-
 <div class="container">
     <div id="root" th:data-user-id="${userId}"></div> <!--userId 전달하기 위한 코드-->
 
     <div class="liked-music-list">
         <h2>좋아요 한 음악</h2>
-        <div th:if="${#lists.isEmpty(likeList)}"> <!-- 리스트 음악 유무 확인 -->
+        <div th:if="${#lists.isEmpty(albumList)}"> <!-- 리스트 음악 유무 확인 -->
             <p>좋아요 한 음악이 없습니다.</p>
         </div>
-        <table th:if="${!#lists.isEmpty(likeList)}">
+        <table th:if="${!#lists.isEmpty(albumList)}">
             <thead>
             <tr>
                 <th>앨범 이미지</th>
@@ -82,14 +81,30 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="like : ${likeList}" th:onclick="|handleMusicClick(${like.id})|" class="music-item">
-                <td><img th:src="${like.album_image}" width="50" alt="앨범 이미지"></td>
-                <td><span th:text="${like.music_name}"></span></td>
-                <td><span th:text="${like.music_artist_name}"></span></td>
-                <td><span th:text="${like.formattedDuration}"></span></td>
+            <tr th:each="album : ${albumList}" th:onclick="|handleMusicClick(${album.id})|" class="music-item">
+                <td><img th:src="${album.albumImage}" width="50" alt="앨범 이미지"></td>
+                <td><span th:text="${album.musicName}"></span></td>
+                <td><span th:text="${album.musicArtistName}"></span></td>
+                <td><span th:text="${album.music_duration_ms}"></span></td>
             </tr>
             </tbody>
         </table>
+        <!-- 페이지네이션 UI -->
+        <div>
+        <span th:if="${currentPage > 0}">
+            <a th:href="@{/album/list(page=${currentPage - 1})}">이전</a>
+        </span>
+
+            <span th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
+            <a th:href="@{/album/list(page=${pageNum})}"
+               th:text="${pageNum + 1}"
+               th:classappend="${pageNum == currentPage ? 'current' : ''}">1</a>
+        </span>
+
+            <span th:if="${currentPage < totalPages - 1}">
+            <a th:href="@{/album/list(page=${currentPage + 1})}">다음</a>
+        </span>
+        </div>
     </div>
 </div>
 
@@ -102,242 +117,8 @@
 <!-- Spotify Player Script -->
 <script src="https://sdk.scdn.co/spotify-player.js"></script>
 
-<!-- JSX and React Code -->
-<script type="text/babel">
+<!-- Link the external JS file -->
+<script src="/js/app.js" type="text/babel"></script>
 
-    const SpotifyPlayer = ({ musicInfo, userId, onNextTrack, onPrevTrack }) => {
-        const { musicName, musicUri, albumImage } = musicInfo;
-        const { useState, useEffect } = React;
-        const [paused, setPaused] = useState(true);
-        const [player, setPlayer] = useState(null);
-        const [accessToken, setAccessToken] = useState(null);
-
-
-        //엑세스 토큰 받아오기
-        const fetchAccessToken = async () => {
-            try {
-                const response = await fetch('/api/get-token');
-                const data = await response.json();
-                if (data.access_token) {
-                    setAccessToken(data.access_token);
-                } else {
-                    throw new Error('No access token found');
-                }
-            } catch (error) {
-                console.error('Error fetching access token:', error);
-            }
-        };
-
-        useEffect(() => {
-
-            //음악 재생
-            const loadSpotifySDK = () => {
-                if (!window.Spotify) {
-                    const script = document.createElement('script');
-                    script.src = 'https://sdk.scdn.co/spotify-player.js';
-                    script.async = true;
-                    script.onload = () => {
-                        window.onSpotifyWebPlaybackSDKReady = () => {
-                            initializePlayer();
-                        };
-                    };
-                    script.onerror = () => {
-                        console.error('Spotify SDK failed to load.');
-                    };
-                    document.body.appendChild(script);
-                } else {
-                    initializePlayer();
-                }
-            };
-
-            //엑세스 토큰 확인을 통해 음악 스트리밍 구현
-            const initializePlayer = () => {
-                if (window.Spotify && accessToken) {
-                    const playerInstance = new window.Spotify.Player({
-                        name: 'Web Playback SDK',
-                        getOAuthToken: cb => { cb(accessToken); },
-                        volume: 0.5,
-                    });
-
-                    setPlayer(playerInstance);
-
-                    playerInstance.addListener('ready', ({ device_id }) => {
-                        console.log('Ready with Device ID', device_id);
-                        if (musicUri) {
-                            playTrack(device_id, musicUri);
-                        }
-                    });
-
-                    playerInstance.addListener('player_state_changed', (state) => {
-                        if (!state) return;
-                        setPaused(state.paused);
-                    });
-
-                    playerInstance.connect();
-                } else {
-                    console.error('Spotify SDK is not loaded or access token is missing.');
-                }
-            };
-
-            fetchAccessToken().then(() => {
-                loadSpotifySDK();
-            });
-        }, [musicUri, accessToken]);
-
-
-
-        //음악 uri 공백문자 제거
-        const sanitizeUri = (uri) => uri.trim().replace(/\r?\n|\r/g, '');
-
-        //음악 재생
-        const playTrack = (device_id, trackUri) => {
-            const sanitizedTrackUri = sanitizeUri(trackUri);
-
-            fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
-                method: 'PUT',
-                body: JSON.stringify({ uris: [sanitizedTrackUri] }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(errorData => {
-                            throw new Error(`Spotify API error: ${errorData.error.message}`);
-                        });
-                    }
-                    console.log('Track played successfully');
-                    if (musicInfo.albumId) { // albumId가 있는 경우에만 기록
-                        recordMusicPlay(userId, musicInfo.albumId);
-                    } else {
-                        console.warn('albumId is null, not recording music play.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error playing track:', error.message);
-                });
-        };
-
-        //일시정지
-        const togglePlayPause = () => {
-            if (!player) return;
-            if (paused) {
-                player.resume().then(() => {
-                    setPaused(false);
-                });
-            } else {
-                player.pause().then(() => setPaused(true));
-            }
-        };
-
-        //음악 기록
-        const recordMusicPlay = async (userId, albumId) => {
-            try {
-                const response = await fetch('/api/record', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ userId, albumId }),
-                });
-                const responseText = await response.text(); // 응답을 텍스트로 읽어오기
-                console.log('Server response:', responseText); // 서버 응답 로그 확인
-
-                if (!response.ok) {
-                    throw new Error(`Error recording music: ${responseData.message || response.statusText}`);
-                }
-                console.log('Music recorded successfully');
-            } catch (error) {
-                console.error('Error recording music:', error);
-            }
-        };
-
-
-
-        //ui
-        return (
-            <div className="player-container">
-                <h3>Spotify Player</h3>
-                <img src={albumImage} alt="Album cover" className="album-cover"/>
-                <p>Now playing: {musicName}</p>
-                <div className="navigation-buttons">
-                    <button onClick={onPrevTrack} className="nav-button">이전 곡</button>
-                    <button onClick={togglePlayPause} className="nav-button">
-                        {paused ? '재생' : '일시정지'}
-                    </button>
-                    <button onClick={onNextTrack} className="nav-button">다음 곡</button>
-                </div>
-            </div>
-        );
-    };
-
-
-
-    //서버와 연결 및 곡 재생
-    const App = () => {
-        const { useState, useEffect } = React;
-        const [musicId, setMusicId] = useState(1);
-        const [musicInfo, setMusicInfo] = useState({ musicName: "", musicUri: "", albumImage: "", albumId: "" });
-
-        // `userId`를 HTML에서 data 속성으로 가져오기 (userId 전달하기 위한 코드)
-        const userId = document.getElementById('root').getAttribute('data-user-id');
-
-
-        const fetchMusicInfo = async (id) => {
-            try {
-                const response = await fetch(`/api/music/${id}`);
-                const data = await response.json();
-                if (data) {
-                    setMusicInfo({
-                        musicName: data.music_name,
-                        musicUri: data.music_uri,
-                        albumImage: data.album_image,
-                        albumId: data.albumId,
-                    });
-                } else {
-                    throw new Error('No music info found');
-                }
-            } catch (error) {
-                console.error('Error fetching music info:', error);
-            }
-        };
-
-        useEffect(() => {
-            if (userId && musicId) {
-                fetchMusicInfo(musicId);
-            }
-        }, [musicId, userId]);
-
-
-        const handleNextTrack = () => {
-            setMusicId(prevId => prevId + 1); // Move to the next track
-        };
-
-        const handlePrevTrack = () => {
-            setMusicId(prevId => (prevId > 1 ? prevId - 1 : 1)); // Move to the previous track
-        };
-
-        const handleMusicClick = (id) => {
-            setMusicId(id); // Update the music ID when a music item is clicked
-        };
-
-        window.handleMusicClick = handleMusicClick; // Expose the function to the global scope
-
-        return (
-            <SpotifyPlayer
-                musicInfo={musicInfo} // musicInfo를 넘김
-                userId={userId}
-                onNextTrack={handleNextTrack}
-                onPrevTrack={handlePrevTrack}
-            />
-        );
-
-    };
-
-
-    // Render the App component
-    ReactDOM.render(<App />, document.getElementById('root'));
-</script>
 </body>
 </html>
