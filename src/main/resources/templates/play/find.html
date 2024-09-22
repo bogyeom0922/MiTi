@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Music</title>
+    <!-- jQuery 라이브러리 추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 검색 입력 필드에 입력이 있을 때마다 AJAX 요청을 보냅니다.
+            $('#search').on('input', function() {
+                var query = $(this).val();
+                $.ajax({
+                    url: '/find/search',  // 검색 요청을 처리할 URL
+                    type: 'GET',
+                    data: { query: query },  // 검색어를 쿼리 매개변수로 전송
+                    success: function(data) {
+                        // 서버로부터 받은 HTML을 결과 div에 추가합니다.
+                        $('#results').html(data);
+                    },
+                    error: function() {
+                        // 오류 발생 시 오류 메시지를 표시합니다.
+                        $('#results').html('<p>An error occurred while processing the request.</p>');
+                    }
+                });
+            });
+        });
+    </script>
+    <style>
+        /* 기본적인 스타일링 추가 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding-bottom: 60px; /* 하단바 공간 확보 */
+        }
+        #search {
+            width: 100%;
+            max-width: 600px; /* 최대 너비를 설정하여 화면을 넘지 않도록 */
+            padding: 10px;
+            font-size: 16px;
+            box-sizing: border-box; /* 패딩을 포함한 전체 크기 계산 */
+            margin: 0 auto; /* 중앙 정렬 */
+        }
+        #results {
+            margin-top: 20px;
+        }
+        #results div {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        #results a {
+            text-decoration: none;
+            color: #333;
+        }
+        #results a:hover {
+            text-decoration: underline;
+        }
+        #results h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        #results p {
+            margin: 5px 0 0;
+            color: #555;
+        }
+        /* 재생바 스타일 */
+        .playback-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #222;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+            font-size: 14px;
+            z-index: 1000; /* 다른 요소 위에 표시 */
+        }
+        .playback-bar .track-info-container {
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+        .playback-bar .track-info {
+            display: inline-block;
+            margin: 0 15px;
+            text-align: left;
+        }
+        .playback-bar .track-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+        }
+        .playback-bar .track-info div {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .playback-bar .control-buttons {
+            display: flex;
+            align-items: center;
+        }
+        .playback-bar .control-buttons button {
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+            background: none;
+            border: none;
+            outline: none;
+            margin: 0 5px;
+            transition: color 0.3s ease;
+        }
+        .playback-bar .like-button {
+            cursor: pointer;
+            font-size: 20px;
+            color: white;
+            background: none;
+            border: none;
+            outline: none;
+            margin-left: 15px;
+            transition: color 0.3s ease;
+        }
+        .playback-bar .like-button.liked {
+            color: #ff0000; /* 좋아요 선택 시 하트 색상 빨간색으로 변경 */
+        }
+    </style>
+</head>
+<body>
+<h1>Find Music</h1>
+<!-- 검색 입력 필드 -->
+<input type="text" id="search" placeholder="Search for music or artist" />
+
+<!-- 검색 결과를 표시할 div -->
+<div id="results"></div>
+
+<!-- 하단바 포함 -->
+<div th:replace="play/under :: footer"></div>
+</body>
+</html>

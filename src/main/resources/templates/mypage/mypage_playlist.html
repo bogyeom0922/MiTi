@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MyPage_Playlist</title>
+    <link href="/css/main.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="layout/mypage :: mypage"></div>
+<div th:replace="~{play/under :: footer}"></div>
+<div class="my_playlist"></div>
+<div class="my_body">
+    <p class="my_body_title">내 플레이리스트</p>
+    <table class="my_table_playlist">
+        <tr th:each="post : ${postList}">
+            <td style="width: 40%">
+                <a th:href="@{'/mypage/playlist/albums/' + ${user.id} + '?userPlaylistName=' + ${post.userPlaylistName}}" target="_blank">
+                    <img th:src="@{${post.userPlaylistImage}}" width="50">
+                </a>
+            </td>
+            <td style="width: 60%" class="my_table_padding my_table_body">
+                <span th:text="${post.userPlaylistName}"></span>
+            </td>
+        </tr>
+    </table>
+</div>
+<div th:replace="play/under :: footer"></div>
+</body>
+</html>

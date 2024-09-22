@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MyPage_Record</title>
+    <link href="/css/main.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="layout/mypage :: mypage"></div>
+<div th:replace="~{play/under :: footer}"></div>
+<div class="my_record"></div>
+<div class="my_body">
+    <p class="my_body_title">재생했던 음악</p>
+    <table class="my_table_record">
+        <tr th:each="post : ${postList}">
+            <td style="width: 10%">
+                <img th:src="@{${post.album_image}}">
+            </td>
+            <td style="width: 50%" class="my_table_padding my_table_body">
+                <span th:text="${post.music_name}"></span>
+            </td>
+            <td style="width: 40%">
+                <span th:text="${post.music_artist_name}"></span>
+            </td>
+        </tr>
+    </table>
+</div>
+<div th:replace="play/under :: footer"></div>
+</body>
+</html>

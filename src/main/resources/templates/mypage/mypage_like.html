@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MyPage_Like</title>
+    <link href="/css/main.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="layout/mypage :: mypage"></div>
+<div th:replace="~{play/under :: footer}"></div>
+<div class="my_like"></div>
+<div class="my_body">
+    <p class="my_body_title">좋아요 누른 음악</p>
+    <table class="my_table_like">
+        <tr th:each="post : ${postList}">
+            <td style="width: 8%">
+                <img th:src="@{${post.album_image}}" width="50">
+            </td>
+            <td style="width: 44%"  class="my_table_padding my_table_body">
+                <span th:text="${post.music_name}"></span>
+            </td>
+            <td style="width: 30%">
+                <span th:text="${post.music_artist_name}"></span>
+            </td>
+            <td style="width: 8%">
+                <button th:onclick="'deleteLike(' + ${post.id} + ')'" class="btn btn-danger">삭제</button>
+            </td>
+        </tr>
+    </table>
+
+    <script>
+        function deleteLike(id) {
+            console.log(`Deleting like for userId: ${id}`);
+            fetch(`/mypage/like/${id}`, {
+                method: 'DELETE'
+            })
+                .then(response => response.text())
+                .then(result => {
+                    console.log(`Response: ${result}`);
+                    if (result === 'success') {
+                        location.reload();
+                    } else {
+                        alert('삭제 실패');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</div>
+<div th:replace="play/under :: footer"></div>
+</body>
+</html>
