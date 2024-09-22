@@ -35,8 +35,8 @@ public class PlaylistService {
                         .userPlaylistName(playlist.getUserPlaylistName())
                         .userPlaylistImage(playlist.getUserPlaylistImage())
                         .album_image(playlist.getAlbum().getAlbum_image())
-                        .music_name(playlist.getAlbum().getMusic_name())
-                        .music_artist_name(playlist.getAlbum().getMusic_artist_name())
+                        .music_name(playlist.getAlbum().getMusicName())
+                        .music_artist_name(playlist.getAlbum().getMusicArtistName())
                         .build();
                 playlistDtoList.add(playlistDto);
             }
@@ -53,9 +53,9 @@ public class PlaylistService {
             PlaylistDto playlistDto = PlaylistDto.builder()
                     .albumId(playlist.getAlbumId())
                     .userPlaylistName(playlist.getUserPlaylistName())
-                    .music_name(playlist.getAlbum().getMusic_name())
+                    .music_name(playlist.getAlbum().getMusicName())
                     .album_image(playlist.getAlbum().getAlbum_image())
-                    .music_artist_name(playlist.getAlbum().getMusic_artist_name())
+                    .music_artist_name(playlist.getAlbum().getMusicArtistName())
                     .build();
             playlistDtoList.add(playlistDto);
         }

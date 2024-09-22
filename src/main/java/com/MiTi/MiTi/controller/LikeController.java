@@ -44,16 +44,7 @@ public class LikeController {
         }
     }
 
-    //스트리밍에 필요함
-    @GetMapping("api/music/{id}")
-    public ResponseEntity<LikeDto> getMusicById(@PathVariable Long id) {
-        LikeDto likeDto = likeService.getLikeDtoById(id);
-        if (likeDto != null) {
-            return ResponseEntity.ok(likeDto);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+
 
 
 

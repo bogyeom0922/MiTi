@@ -27,8 +27,8 @@ public class RecordService {
                     .userId(record.getUserId())
                     .albumId(record.getAlbumId())
                     .album_image(record.getAlbum().getAlbum_image())
-                    .music_name(record.getAlbum().getMusic_name())
-                    .music_artist_name(record.getAlbum().getMusic_artist_name())
+                    .music_name(record.getAlbum().getMusicName())
+                    .music_artist_name(record.getAlbum().getMusicArtistName())
                     .music_duration_ms(record.getAlbum().getMusic_duration_ms())
                     .build();
             recordDtoList.add(recordDto);
