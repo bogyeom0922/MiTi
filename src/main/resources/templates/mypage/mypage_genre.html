@@ -11,15 +11,15 @@
 <div class="my_body">
     <p class="my_body_title">선택한 선호 장르</p>
     <table class="my_table_genre">
-        <tr th:each="post : ${postList}">
+        <tr th:each="genre : ${genreList}">
             <td style="width: 15%">
-                <img th:src="@{${post.genre_image}}">
+                <img th:src="@{${genre.genre_image}}">
             </td>
             <td style="width: 60%" class="my_table_padding my_table_body">
-                <span th:text="${post.genre}"></span>
+                <span th:text="${genre.genre}"></span>
             </td>
             <td style="width: 25%">
-                <button th:onclick="'deleteGenre(' + ${post.id} + ')'" class="btn btn-danger">삭제</button>
+                <button th:onclick="'deleteGenre(' + ${genre.id} + ')'" class="btn btn-danger">삭제</button>
             </td>
         </tr>
         <tr>
@@ -109,6 +109,6 @@
         }
     </script>
 </div>
-<div th:replace="play/under :: footer"></div>
+<div th:replace="~{play/under :: footer}"></div>
 </body>
 </html>
