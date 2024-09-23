@@ -9,6 +9,7 @@
 </head>
 <body>
 <div th:fragment="mypage">
+    <div th:replace="~{play/under :: footer}"></div>
     <div class="my_accordion-container">
         <!-- 스팬 태그로 사용자 이름 표시 -->
         <span th:text="${user.userName}" class="my_user" onclick="toggleAccordion()"></span>

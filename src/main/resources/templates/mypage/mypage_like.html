@@ -2,52 +2,68 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MyPage_Like</title>
-    <link href="/css/main.css" rel="stylesheet">
+    <title>유저 좋아요 기록</title>
 </head>
 <body>
-<div th:replace="layout/mypage :: mypage"></div>
-<div class="my_like"></div>
-<div class="my_body">
-    <p class="my_body_title">좋아요 누른 음악</p>
-    <table class="my_table_like">
-        <tr th:each="post : ${postList}">
-            <td style="width: 8%">
-                <img th:src="@{${post.album_image}}" width="50">
-            </td>
-            <td style="width: 44%"  class="my_table_padding my_table_body">
-                <span th:text="${post.music_name}"></span>
-            </td>
-            <td style="width: 30%">
-                <span th:text="${post.music_artist_name}"></span>
-            </td>
-            <td style="width: 8%">
-                <button th:onclick="'deleteLike(' + ${post.id} + ')'" class="btn btn-danger">삭제</button>
-            </td>
-        </tr>
-    </table>
+<div class="layout">
+    <button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${userId})}'|">음악 기록</button>
+    <button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${userId})}'|">좋아요</button>
+    <button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${userId})}'|">선호 장르</button>
+    <button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${userId})}'|">댓글</button>
+    <button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|">플레이리스트</button>
 
-    <script>
-        function deleteLike(id) {
-            console.log(`Deleting like for userId: ${id}`);
-            fetch(`/mypage/like/${id}`, {
-                method: 'DELETE'
-            })
-                .then(response => response.text())
-                .then(result => {
-                    console.log(`Response: ${result}`);
-                    if (result === 'success') {
-                        location.reload();
-                    } else {
-                        alert('삭제 실패');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
-    </script>
 </div>
-<div th:replace="play/under :: footer"></div>
+
+<table>
+    <tr>
+        <th>좋아요 한 음악</th>
+    </tr>
+    <tr>
+        <th>앨범 이미지</th>
+        <th>음악 이름</th>
+        <th>가수</th>
+        <th>음악 길이</th>
+        <th>좋아요 취소</th>
+    </tr>
+    <tr th:each="like : ${likeList}">
+        <td>
+            <img th:src="@{${like.album_image}}" width="50">
+        </td>
+        <td>
+            <span th:text="${like.music_name}"></span>
+        </td>
+        <td>
+            <span th:text="${like.music_artist_name}"></span>
+        </td>
+        <td>
+            <span th:text="${like.formattedDuration}"></span>
+        </td>
+        <td>
+            <button th:onclick="'deleteLike(' + ${like.id} + ')'" class="btn btn-danger">삭제</button>
+        </td>
+    </tr>
+</table>
+
+<script>
+    function deleteLike(id) {
+        console.log(`Deleting like for userId: ${id}`);
+        fetch(`/mypage/like/${id}`, {
+            method: 'DELETE'
+        })
+            .then(response => response.text())
+            .then(result => {
+                console.log(`Response: ${result}`);
+                if (result === 'success') {
+                    location.reload();
+                } else {
+                    alert('삭제 실패');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+
 </body>
 </html>

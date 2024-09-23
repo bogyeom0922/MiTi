@@ -18,10 +18,10 @@ public class Record {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "album_id")
+    @Column(name = "album_id", nullable = false)
     private String albumId;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private String userId;
 
     @ManyToOne(fetch = FetchType.LAZY)

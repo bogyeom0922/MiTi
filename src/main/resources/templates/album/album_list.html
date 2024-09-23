@@ -5,17 +5,17 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Album</title>
+    <title>Album Ranking</title>
 </head>
 <body>
 <h1>ALBUM RANKING</h1>
 <ul style="list-style-type: none;">
-    <li th:each="detail : ${details}">
-        <a th:href="@{/album/{detail}/{id}(detail=${detail}, id=${member.id})}"><p th:text="${detail}"></p></a>
+    <li th:each="detail, stat : ${details}">
+        <p><strong>Rank:</strong> <span th:text="${stat.index + 1}"></span></p>
+        <a th:href="@{/album/{detail}/{id}(detail=${detail}, id=${detail.id})}">
+            <p th:text="${detail.name}"></p>
+        </a>
     </li>
 </ul>
-
-
-
 </body>
 </html>

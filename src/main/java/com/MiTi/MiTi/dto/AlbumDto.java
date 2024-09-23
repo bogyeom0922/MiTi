@@ -2,10 +2,7 @@ package com.MiTi.MiTi.dto;
 
 // AlbumDTO.java
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
@@ -13,16 +10,23 @@ import lombok.ToString;
 @NoArgsConstructor
 public class AlbumDto {
 
-    private String music_name;
-    private String album_image;
-    private String music_artist_name;
+    private String musicName; // 카멜 케이스로 수정
+    private String albumImage; // 카멜 케이스로 수정
+    private String musicArtistName; // 카멜 케이스로 수정
 
-    public AlbumDto(String music_name, String album_image, String music_artist_name) {
-        this.music_name = music_name;
-        this.album_image = album_image;
-        this.music_artist_name = music_artist_name;
+    private Long id;
+    private String music_duration_ms;
+    private String music_uri;
+
+    @Builder
+    public AlbumDto(Long id, String musicName, String albumImage, String musicArtistName, String music_duration_ms, String music_uri) {
+        this.id = id;
+        this.musicName = musicName;
+        this.albumImage = albumImage;
+        this.musicArtistName = musicArtistName;
+        this.music_duration_ms = music_duration_ms;
+        this.music_uri = music_uri;
     }
 
     // getters and setters
 }
-

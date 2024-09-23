@@ -1,10 +1,8 @@
 package com.MiTi.MiTi.controller.mypage;
 
 import com.MiTi.MiTi.dto.GenreDto;
-import com.MiTi.MiTi.dto.UserDTO;
 import com.MiTi.MiTi.repository.GenreRepository;
 import com.MiTi.MiTi.service.GenreService;
-import com.MiTi.MiTi.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,22 +14,17 @@ public class GenreController {
 
     private final GenreService genreService;
     private final GenreRepository genreRepository;
-    private final UserService userService;
 
-    public GenreController(GenreService genreService, GenreRepository genreRepository, UserService userService) {
+    public GenreController(GenreService genreService, GenreRepository genreRepository) {
         this.genreService = genreService;
         this.genreRepository = genreRepository;
-        this.userService = userService;
     }
 
     @GetMapping("/mypage/genre/{userId}")
-    public String list(@PathVariable String userId, Model model, @PathVariable ("userId") Long user) {
+    public String list(@PathVariable String userId, Model model) {
         List<GenreDto> genreDtoList = genreService.getGenreListByUserId(String.valueOf(userId));
-        model.addAttribute("postList", genreDtoList);
+        model.addAttribute("genreList", genreDtoList);
         model.addAttribute("userId", userId);
-
-        UserDTO userDTO = userService.getUserById(user);
-        model.addAttribute("user", userDTO);
         return "mypage/mypage_genre";
     }
 

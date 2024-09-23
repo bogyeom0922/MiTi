@@ -8,9 +8,26 @@
     <title>Header</title>
 </head>
 <body>
+
+
+<button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${providerId})}'|">음악 기록</button>
+<button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${providerId})}'|">좋아요</button>
+<button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${providerId})}'|">선호 장르</button>
+<button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${providerId})}'|">댓글</button>
+<button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${providerId})}'|">플레이리스트</button>
+
 <div th:fragment="header">
     <div class="header">
-        <p class="logo" th:onclick="'window.location.href=\'/main/' + ${user.id} + '\''">MITI</p>
+        <p class="logo" data-provider="${user.provider}" data-provider-id="${user.providerId}" onclick="redirectToMain(this)">MITI</p>
+
+        <script>
+            function redirectToMain(element) {
+                const provider = element.getAttribute('data-provider');
+                const providerId = element.getAttribute('data-provider-id');
+                window.location.href = `/main/${provider}/${providerId}`;
+            }
+        </script>
+
         <!--음악 검색-->
         <div class="search">
             <form class="search_form">
@@ -23,7 +40,7 @@
 
         <div class="accordion-container">
             <!-- 스팬 태그로 사용자 이름 표시 -->
-            <span th:text="${user.userName}" class="user" onclick="toggleAccordion()"></span>
+            <span th:text="${user.Name}" class="user" onclick="toggleAccordion()"></span>
 
             <!-- 아코디언 메뉴 콘텐츠 -->
             <div class="accordion-content">

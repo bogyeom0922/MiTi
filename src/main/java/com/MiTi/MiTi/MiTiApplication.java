@@ -21,7 +21,7 @@ public class MiTiApplication {
 			registry.addMapping("/**")
 					.allowedOrigins("http://localhost:8080")
 					.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-					.allowedHeaders("*");
+					.allowedHeaders("true");
 		}
 	}
 }
