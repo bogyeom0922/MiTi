@@ -12,7 +12,7 @@
     <div th:replace="~{play/under :: footer}"></div>
     <div class="my_accordion-container">
         <!-- 스팬 태그로 사용자 이름 표시 -->
-        <span th:text="${user.Name}" class="my_user" onclick="toggleAccordion()"></span>
+        <span th:text="${user.userName}" class="my_user" onclick="toggleAccordion()"></span>
 
         <!-- 아코디언 메뉴 콘텐츠 -->
         <div class="my_accordion-content">

@@ -18,12 +18,13 @@
 
 <div th:fragment="header">
     <div class="header">
-        <p class="logo" data-provider-id="${user.providerId}" onclick="redirectToMain(this)">MITI</p>
+        <p class="logo" data-provider="${user.provider}" data-provider-id="${user.providerId}" onclick="redirectToMain(this)">MITI</p>
 
         <script>
             function redirectToMain(element) {
+                const provider = element.getAttribute('data-provider');
                 const providerId = element.getAttribute('data-provider-id');
-                window.location.href = `/main/${providerId}`;
+                window.location.href = `/main/${provider}/${providerId}`;
             }
         </script>
 
@@ -44,7 +45,7 @@
             <!-- 아코디언 메뉴 콘텐츠 -->
             <div class="accordion-content">
                 <a href="/logout">로그아웃</a>
-                <a href="/history">재생기록</a>
+                <a th:href="@{/mypage/record/{userId}(userId=${user.id})}">재생기록</a>
                 <a href="/mypage">마이페이지</a>
             </div>
         </div>
