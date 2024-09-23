@@ -40,8 +40,6 @@ public class MyCommentController {
         }
     }
 
-
-
     // 게시글 삭제 (물리적 삭제)
 
     @DeleteMapping("/mypage/comment/{id}")

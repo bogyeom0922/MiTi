@@ -19,8 +19,6 @@ public class PlaylistDto {
     private String album_image;
     private String music_artist_name;
 
-
-
         public Playlist toEntity() {
         return Playlist.builder()
                 .id(id)
@@ -44,4 +42,5 @@ public class PlaylistDto {
         this.music_artist_name = music_artist_name;
 
     }
+
 }

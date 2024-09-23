@@ -10,22 +10,24 @@
 <div th:replace="~{play/under :: footer}"></div>
 <div class="my_playlist"></div>
 <div class="my_body">
-    <p class="my_body_title">내 플레이리스트</p>
-    <table class="my_table_playlist">
-        <tr th:each="album : ${albumList}" >
-            <td  style="width: 10%">
+    <img src="/images/go_back.png" class="my_playlist_back"
+         th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|">
+    <p th:text="${userPlaylistName}" class="my_body_title_playlist_albums"></p>
+    <table class="my_table_playlist_albums">
+        <tr th:each="album : ${albumList}">
+            <td style="width: 9%">
                 <img th:src="@{${album.album_image}}" width="50" alt="앨범 이미지"/>
             </td>
-            <td  style="width: 50%" class="my_table_padding my_table_body">
+            <td style="width: 50%" class="my_table_padding my_table_body">
                 <span th:text="${album.music_name}"></span>
             </td>
-            <td style="width: 40%">
+            <td style="width: 41%">
                 <span th:text="${album.music_artist_name}"></span>
             </td>
         </tr>
-
     </table>
 </div>
+
 <div th:replace="play/under :: footer"></div>
 </body>
 </html>
