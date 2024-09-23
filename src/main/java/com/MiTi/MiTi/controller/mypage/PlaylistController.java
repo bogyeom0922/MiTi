@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -30,24 +31,24 @@ public class PlaylistController {
     }
 
     @GetMapping("/mypage/playlist/{userId}")
-    public String list(@PathVariable String userId, Model model, @PathVariable ("userId") Long user) {
+    public String list(@PathVariable String userId, Model model) {
         List<PlaylistDto> playlistDtoList = playlistService.getPlaylistListByUserId(String.valueOf(userId));
-        model.addAttribute("postList", playlistDtoList);
+        model.addAttribute("playlistList", playlistDtoList);
         model.addAttribute("userId", userId);
 
-        UserDTO userDTO = userService.getUserById(user);
+        Optional<UserDTO> userDTO = userService.getUserById(userId);
         model.addAttribute("user", userDTO);
         return "mypage/mypage_playlist";
     }
 
     @GetMapping("/mypage/playlist/albums/{userId}")
-    public String getAlbumsByPlaylistName(@RequestParam String userPlaylistName, Model model, @PathVariable ("userId") Long user) {
+    public String getAlbumsByPlaylistName(@PathVariable String userId, @RequestParam String userPlaylistName, Model model) {
         List<PlaylistDto> albumList = playlistService.getAlbumsByPlaylistName(userPlaylistName);
         model.addAttribute("albumList", albumList);
 
         model.addAttribute("userPlaylistName", userPlaylistName);
 
-        UserDTO userDTO = userService.getUserById(user);
+        Optional<UserDTO> userDTO = userService.getUserById(userId);
         model.addAttribute("user", userDTO);
 
 //        추천알고리즘
