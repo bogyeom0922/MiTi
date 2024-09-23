@@ -11,42 +11,47 @@ java {
 	sourceCompatibility = '17'
 }
 
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-}
-
 repositories {
 	mavenCentral()
+	maven { url 'https://repo.spring.io/release' }
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.2.5'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-mail'
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
-	implementation 'com.fasterxml.jackson.core:jackson-databind'
-	implementation 'org.hibernate.validator:hibernate-validator:8.0.0.Final'
-	implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
-	implementation 'javax.servlet:javax.servlet-api:4.0.1'
-	implementation 'mysql:mysql-connector-java:8.0.33'
-	implementation 'org.apache.commons:commons-math3:3.6.1'
-
-
+	implementation 'org.springframework.boot:spring-boot-starter-web-services'
 	compileOnly 'org.projectlombok:lombok:1.18.26'
-	annotationProcessor 'org.projectlombok:lombok:1.18.26'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok:1.18.26'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	implementation 'javax.servlet:javax.servlet-api:4.0.1'
+
 	runtimeOnly 'com.mysql:mysql-connector-j'
+
+
+	implementation 'com.github.thelinmichael:spotify-web-api-java:master-SNAPSHOT'
+
+
+	// Spring Security with OAuth2
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+
+
+}
+
+allprojects {
+	repositories {
+		maven { url 'https://jitpack.io' }
+	}
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
-}
-
-tasks.withType(JavaCompile) {
-	options.compilerArgs << "-parameters"
 }

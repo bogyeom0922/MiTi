@@ -905,3 +905,55 @@ a:hover {
     border: none;
     font-weight: 900;
 }
+
+/* 인기차트 섹션 */
+.chart_title {
+    position: relative;
+    text-align: center;
+    font-size: 25px;
+    font-weight: bolder;
+    margin-top: 100px;
+    margin-bottom: 50px;
+}
+
+/* 인기차트 영역 */
+.chart {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* 여러 줄로 감싸도록 설정 */
+    gap: 20px; /* 아이템 사이 간격 설정 */
+    max-width: 80%;
+    margin: 50px auto;
+}
+
+/* 차트 아이템 */
+.chart_item {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 앨범 이미지와 텍스트 사이 간격 설정 */
+    width: auto;
+}
+
+.chart_item img {
+    width: 50px; /* 앨범 이미지 크기 설정 */
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.chart_info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.chart_name {
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+}
+
+.chart_artist {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
