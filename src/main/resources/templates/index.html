@@ -62,6 +62,8 @@
 <button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${userId})}'|">선호 장르</button>
 <button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${userId})}'|">댓글</button>
 <button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|">플레이리스트</button>
+<button th:onclick="|location.href='@{/main/{userId}(userId=${userId})}'|">메인화면으로 가기(임시)</button>
+
 
 <div class="container">
     <div id="root" th:data-user-id="${userId}"></div> <!--userId 전달하기 위한 코드-->
