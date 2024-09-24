@@ -26,6 +26,25 @@ public class FindController {
         return "play/find";
     }
 
+
+    @GetMapping("/find/autocomplete")
+    @ResponseBody
+    public String autocomplete(@RequestParam(value = "query", required = false, defaultValue = "") String query) {
+        List<Album> albums = albumService.findByMusicNameOrArtistName(query, query);
+        StringBuilder sb = new StringBuilder();
+
+        for (Album album : albums) {
+            sb.append("<div class='autocomplete-item'>")
+                    .append("<p>")
+                    .append(album.getMusicName())
+                    .append(" - ")
+                    .append(album.getMusicArtistName())
+                    .append("</p>")
+                    .append("</div>");
+        }
+        return sb.toString();
+    }
+
     @GetMapping("/find/search")
     @ResponseBody
     public String searchMusic(@RequestParam(value = "query", required = false, defaultValue = "") String query) {

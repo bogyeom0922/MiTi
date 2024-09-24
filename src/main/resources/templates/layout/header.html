@@ -27,15 +27,39 @@
         </script>
 
         <!--음악 검색-->
-        <div class="search">
-            <form class="search_form">
-                <label>
-                    <input class="search_input" type="text">
-                </label>
-                <button class="search_button"><img src="/images/search.png" class="search_button_img"></button>
-            </form>
-        </div>
+        <input type="text" class="search_input" id="search" placeholder="Search for music or artist" autocomplete="off" />
+        <div id="autocomplete-results"></div>
 
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                // 검색 입력 필드에 입력이 있을 때마다 AJAX 요청을 보냅니다.
+                $('#search').on('input', function() {
+                    var query = $(this).val();
+
+                    if (query.length > 1) {
+                        $.ajax({
+                            url: '/find/autocomplete',  // 서버에서 자동완성 결과를 처리할 URL
+                            type: 'GET',
+                            data: { query: query },  // 입력한 검색어를 전송
+                            success: function(data) {
+                                // 검색어 자동완성 결과를 표시합니다.
+                                $('#autocomplete-results').html(data);
+                            },
+                            error: function() {
+                                $('#autocomplete-results').html('<p>자동완성 결과를 불러오는 중 오류가 발생했습니다.</p>');
+                            }
+                        });
+                    } else {
+                        // 검색어가 없으면 결과를 비웁니다.
+                        $('#autocomplete-results').empty();
+                    }
+                });
+            });
+        </script>
+
+        <!-- 검색 결과를 표시할 div -->
+        <div id="results"></div>
         <div class="accordion-container">
             <!-- 사용자 정보가 있을 때만 이름 표시 -->
             <span th:if="${user != null}" th:text="${user.name}" class="user" onclick="toggleAccordion()"></span>
