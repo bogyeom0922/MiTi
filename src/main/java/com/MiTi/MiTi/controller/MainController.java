@@ -44,6 +44,8 @@ public class MainController {
         List<Album> popularAlbums = albumRepository.findAllByOrderByMusic_popularityDesc();
         model.addAttribute("albums", popularAlbums);
 
+
+
         return "main"; // main.html 템플릿 반환
     }
 

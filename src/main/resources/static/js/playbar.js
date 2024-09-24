@@ -11,6 +11,7 @@ const SpotifyPlayer = ({ musicInfo, userId, onNextTrack, onPrevTrack }) => {
         try {
             const response = await fetch('/api/get-token');
             const data = await response.json();
+            console.log(data); // 디버깅용 출력
             if (data.access_token) {
                 setAccessToken(data.access_token);
             } else {
@@ -20,6 +21,7 @@ const SpotifyPlayer = ({ musicInfo, userId, onNextTrack, onPrevTrack }) => {
             console.error('Error fetching access token:', error);
         }
     };
+
 
     useEffect(() => {
         // 음악 재생
@@ -144,10 +146,11 @@ const SpotifyPlayer = ({ musicInfo, userId, onNextTrack, onPrevTrack }) => {
     };
 
     return (
-        <div className="player-container">
-            <h3>Spotify Player</h3>
-            <img src={albumImage} alt="Album cover" className="album-cover"/>
-            <p>Now playing: {musicName}</p>
+        <div className="player-container-1">
+            <div className="track-info">
+                <img src={albumImage} alt="Album cover" className="album-cover"/>
+                <p>{musicName}</p>
+            </div>
             <div className="navigation-buttons">
                 <button onClick={onPrevTrack} className="nav-button">이전 곡</button>
                 <button onClick={togglePlayPause} className="nav-button">
@@ -156,14 +159,15 @@ const SpotifyPlayer = ({ musicInfo, userId, onNextTrack, onPrevTrack }) => {
                 <button onClick={onNextTrack} className="nav-button">다음 곡</button>
             </div>
         </div>
+
     );
 };
 
 // App 컴포넌트 정의
 const App = () => {
-    const { useState, useEffect } = React;
+    const {useState, useEffect} = React;
     const [musicId, setMusicId] = useState(1);
-    const [musicInfo, setMusicInfo] = useState({ musicName: "", musicUri: "", albumImage: "", id: "" });
+    const [musicInfo, setMusicInfo] = useState({musicName: "", musicUri: "", albumImage: "", id: ""});
 
     // root 엘리먼트에서 userId 값을 추출
     const userId = document.getElementById('root').getAttribute('data-user-id');

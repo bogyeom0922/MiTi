@@ -44,9 +44,8 @@
 <div class="chart">
     <!-- 왼쪽 열 -->
 
-
     <div class="chart_column">
-        <div class="chart_item" th:each="album, stat : ${albums}" th:if="${stat.index < 5}">
+        <div class="chart_item" th:each="album, stat : ${albums}" th:onclick="|handleMusicClick(${album.id})|" th:if="${stat.index < 5}">
             <img th:src="${album.album_image}" alt="Album Cover">
             <div class="chart_info">
                 <p class="chart_name" th:text="${album.musicName}"></p>
@@ -57,7 +56,7 @@
 
     <!-- 오른쪽 열 -->
     <div class="chart_column">
-        <div class="chart_item" th:each="album, stat : ${albums}" th:if="${stat.index >= 5 && stat.index < 10}">
+        <div class="chart_item" th:each="album, stat : ${albums}" th:onclick="|handleMusicClick(${album.id})|" th:if="${stat.index >= 5 && stat.index < 10}">
             <img th:src="@{${album.album_image}}" alt="Album Cover">
             <div class="chart_info">
                 <p class="chart_name" th:text="${album.musicName}"></p>
@@ -66,7 +65,10 @@
         </div>
     </div>
 </div>
-<div th:replace="play/under :: footer"></div>
 
+
+
+
+<div th:replace="play/under :: footer"></div>
 </body>
 </html>

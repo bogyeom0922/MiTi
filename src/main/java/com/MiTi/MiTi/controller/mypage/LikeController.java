@@ -37,6 +37,19 @@ public class LikeController {
         return "mypage/mypage_like";
     }
 
+
+    //좋아요 삭제
+    @DeleteMapping("/mypage/like/{id}")
+    @ResponseBody
+    public String deleteLike(@PathVariable Long id) {
+        try {
+            likeService.deleteLike(id);
+            return "success";
+        } catch (Exception e) {
+            return "failure";
+        }
+    }
+
     // 앨범 전체에 좋아요/좋아요 취소
     @PostMapping("/mypage/like/album/toggle")
     @ResponseBody

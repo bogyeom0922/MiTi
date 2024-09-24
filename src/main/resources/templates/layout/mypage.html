@@ -17,7 +17,7 @@
         <!-- 아코디언 메뉴 콘텐츠 -->
         <div class="my_accordion-content">
             <a href="/logout">로그아웃</a>
-            <a href="/mypage">마이페이지</a>
+            <a th:href="@{/mypage/record/{userId}(userId=${user.get().providerId})}">마이페이지</a>
         </div>
 
         <script>
@@ -47,7 +47,7 @@
     </div>
 
     <div class="my_left">
-        <img src="/images/logoimg.png" class="my_logo_img" alt="로고 이미지"
+        <img src="/images/headset.png" class="my_logo_img" alt="로고 이미지"
              data-provider-id="${user.get().providerId}" onclick="redirectToMainPage(this)">
 
         <div class="my_category">
