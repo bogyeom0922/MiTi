@@ -42,49 +42,24 @@ a:hover {
     font-weight: 900;
 }
 
-.search {
-    position: relative;
-    top: -58px;
-    margin: 0 auto;
-    width: 40%;
-    height: 40px;
-    border: solid 2px rgba(177, 177, 177, 0.56);
-    display: flex;
+#autocomplete-results {
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    z-index: 1000;
 }
 
-.search_form {
-    height: 100%;
-    width: 100%;
+.autocomplete-item {
+    padding: 10px;
+    z-index: 1000;
+    cursor: pointer;
 }
 
-.search_input {
-    width: 84%;
-    height: 100%;
-    border: 0;
-    outline: none;
-    font-size: 16px;
-    float: left;
+.autocomplete-item:hover {
+    background-color: #f0f0f0;
 }
 
-.search_button {
-    height: 100%;
-    width: 15%;
-    border: 0;
-    background: #9eaa9a;
-    color: #1e1e1e;
-    font-size: 20px;
-    font-weight: bold;
-    float: right;
-}
-
-.search_button_img {
-    position: relative;
-    top: -10%;
-    width: 50%;
-    height: 120%;
-    margin: 0 auto;
-    opacity: 0.6;
-}
 
 .user {
     font-size: 35px;
@@ -958,9 +933,6 @@ a:hover {
     color: rgba(255, 255, 255, 0.7);
 }
 
-
-
-/* 하단에 고정되는 재생바 (playbar) */
 /* 하단에 고정되는 재생바 (playbar) */
 .player-container-1 {
     position: fixed;
