@@ -14,7 +14,7 @@ public class CommentService {
     @Autowired
     private CommentRepository commentRepository;
 
-    public List<Comment> comments(String albumId) {
+    public List<Comment> comments(Long albumId) {
         return commentRepository.findByAlbumId(albumId);
     }
 

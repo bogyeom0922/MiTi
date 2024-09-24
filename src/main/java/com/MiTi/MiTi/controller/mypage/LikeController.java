@@ -53,16 +53,16 @@ public class LikeController {
     // 앨범 전체에 좋아요/좋아요 취소
     @PostMapping("/mypage/like/album/toggle")
     @ResponseBody
-    public String toggleAlbumLike(@RequestParam("albumId") String albumId, @RequestParam("userId") String userId) {
+    public String toggleAlbumLike(@RequestParam("albumId") Long albumId, @RequestParam("userId") String userId) {
         // albumId는 곡의 ID를 나타내므로, albumId를 통해 곡을 좋아요/취소
-        boolean isLiked = albumService.toggleAlbumLike(userId, albumId);
+        boolean isLiked = albumService.toggleAlbumLike(userId, String.valueOf(albumId));
         return isLiked ? "liked" : "unliked";
     }
 
 
     @PostMapping("/mypage/like/album/toggleTrack")
     @ResponseBody
-    public String toggleTrackLike(@RequestParam("albumId") String albumId, @RequestParam("userId") String userId) {
+    public String toggleTrackLike(@RequestParam("albumId") Long albumId, @RequestParam("userId") String userId) {
         boolean isLiked = albumService.toggleTrackLike(userId, albumId);
         return isLiked ? "liked" : "unliked";
     }

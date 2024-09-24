@@ -12,7 +12,7 @@ public class PlaylistDto {
 
     private Long id;
     private String userId;
-    private String albumId;
+    private Long albumId;
     private String userPlaylistName;
     private String userPlaylistImage;
     private String music_name;
@@ -30,7 +30,7 @@ public class PlaylistDto {
     }
 
     @Builder
-    public PlaylistDto(Long id, String userId, String albumId, String userPlaylistName,
+    public PlaylistDto(Long id, String userId, Long albumId, String userPlaylistName,
                        String userPlaylistImage, String music_name, String album_image, String music_artist_name) {
         this.id=id;
         this.userId = userId;

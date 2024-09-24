@@ -27,13 +27,13 @@ public class LikeService {
     }
 
     // 특정 사용자(userId)와 앨범(albumId)에 대한 좋아요 여부 확인
-    public boolean isAlbumLikedByUser(String userId, String albumId) {
+    public boolean isAlbumLikedByUser(String userId, Long albumId) {
         Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(userId, albumId);
         return existingLike.isPresent();
     }
 
     // albumId를 기반으로 좋아요 상태를 토글하는 메서드 (userId 없이)
-    public boolean toggleAlbumLike(String albumId) {
+    public boolean toggleAlbumLike(Long albumId) {
         Optional<Like> existingLike = likeRepository.findByAlbumId(albumId);
 
         if (existingLike.isPresent()) {
@@ -53,7 +53,7 @@ public class LikeService {
     }
 
     // 특정 사용자(userId)와 앨범(albumId)에 대한 좋아요 상태를 토글하는 메서드
-    public boolean toggleTrackLike(String userId, String albumId) {
+    public boolean toggleTrackLike(String userId, Long albumId) {
         Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(userId, albumId);
 
         if (existingLike.isPresent()) {
@@ -74,7 +74,7 @@ public class LikeService {
     }
 
     // 특정 트랙에 대해 좋아요 추가 메서드
-    public boolean addLike(String username, String musicId) {
+    public boolean addLike(String username, Long musicId) {
         Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(username, musicId);
         if (existingLike.isPresent()) {
             return false; // 이미 좋아요가 되어 있음

@@ -70,12 +70,12 @@ public class AlbumController {
             // 각 곡에 대한 좋아요 상태를 설정 (사용자별)
             if (userId != null) {
                 for (Album album : albums) {
-                    boolean isLiked = likeService.isAlbumLikedByUser(userId, String.valueOf(album.getId()));
+                    boolean isLiked = likeService.isAlbumLikedByUser(userId, album.getId());
                     album.setIsLiked(isLiked); // 앨범 객체에 좋아요 상태 설정
                 }
 
                 // 첫 번째 앨범에 대한 좋아요 상태 설정
-                boolean isLikedAlbum = likeService.isAlbumLikedByUser(userId, String.valueOf(albums.get(0).getId()));
+                boolean isLikedAlbum = likeService.isAlbumLikedByUser(userId, albums.get(0).getId());
                 model.addAttribute("isLikedAlbum", isLikedAlbum);
             }
 
@@ -89,7 +89,7 @@ public class AlbumController {
 
     //스트리밍에 필요함
     @GetMapping("api/music/{id}")
-    public ResponseEntity<AlbumDto> getMusicById(@PathVariable String id) {
+    public ResponseEntity<AlbumDto> getMusicById(@PathVariable Long id) {
         AlbumDto albumDto = albumService.getAlbumDtoById(id);
         if (albumDto != null) {
             return ResponseEntity.ok(albumDto);

@@ -19,7 +19,7 @@ public class Record {
     private Long id;
 
     @Column(name = "album_id", nullable = false)
-    private String albumId;
+    private Long albumId;
 
     @Column(name = "user_id", nullable = false)
     private String userId;

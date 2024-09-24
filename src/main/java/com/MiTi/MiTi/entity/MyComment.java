@@ -20,7 +20,7 @@ public class MyComment {
     private Long id;
 
     @Column(name = "album_id")
-    private String albumId;
+    private Long albumId;
 
     @Column(name = "user_id")
     private String userId;

@@ -12,7 +12,7 @@ public class LikeDto {
 
     private Long id;
     private String userId;
-    private String albumId;
+    private Long albumId;
     private String music_name;
     private String album_image;
     private String music_artist_name;
@@ -28,7 +28,7 @@ public class LikeDto {
     }
 
     @Builder
-    public LikeDto(Long id, String userId, String albumId, String music_name, String album_image, String music_artist_name, String music_duration_ms, String music_uri) {
+    public LikeDto(Long id, String userId, Long albumId, String music_name, String album_image, String music_artist_name, String music_duration_ms, String music_uri) {
         this.id=id;
         this.userId = userId;
         this.albumId = albumId;

@@ -23,7 +23,7 @@ public class Playlist {
     private String userId;
 
     @Column(name = "album_id")
-    private String albumId;
+    private Long albumId;
 
     @Column(name = "user_playlist_name")
     private String userPlaylistName;

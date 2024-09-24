@@ -11,7 +11,7 @@
 <div class="my_body">
     <p class="my_body_title">재생했던 음악</p>
     <table class="my_table_record">
-        <tr th:each="record : ${recordList}" >
+        <tr th:each="record : ${recordList}" th:onclick="|handleMusicClick(${record.albumId})|">
             <td style="width: 10%">
                 <img th:src="@{${record.album_image}}">
             </td>

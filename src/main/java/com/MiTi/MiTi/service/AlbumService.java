@@ -37,7 +37,7 @@ public class AlbumService {
 
         // 각 앨범(실제 곡들)에 대해 좋아요/좋아요 취소 처리
         for (Album album : albums) {
-            Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(userId, album.getId().toString());
+            Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(userId, album.getId());
 
             if (existingLike.isPresent()) {
                 // 이미 좋아요가 되어 있으면 좋아요 취소
@@ -46,7 +46,7 @@ public class AlbumService {
                 // 좋아요 추가
                 Like newLike = Like.builder()
                         .userId(userId)
-                        .albumId(album.getId().toString())  // albumId로 곡을 구분
+                        .albumId(album.getId())  // albumId로 곡을 구분
                         .album(album)
                         .build();
                 likeRepository.save(newLike);
@@ -57,7 +57,7 @@ public class AlbumService {
     }
 
     // 개별 곡에 대해 좋아요/취소 처리
-    public boolean toggleTrackLike(String userId, String albumId) {
+    public boolean toggleTrackLike(String userId, Long albumId) {
         Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(userId, albumId);
 
         if (existingLike.isPresent()) {
@@ -80,7 +80,7 @@ public class AlbumService {
     }
 
     // 특정 앨범에 대해 좋아요 처리 (likeAlbum 메서드 추가)
-    public void likeAlbum(String albumId, Boolean isLiked, String userId) {
+    public void likeAlbum(Long albumId, Boolean isLiked, String userId) {
         if (isLiked) {
             // 좋아요 추가
             Album album = albumRepository.findById(albumId)
@@ -107,7 +107,7 @@ public class AlbumService {
     //스트리밍
     //스트리밍에 필요함
     @Transactional
-    public AlbumDto getAlbumDtoById(String id) {
+    public AlbumDto getAlbumDtoById(Long id) {
         return albumRepository.findById(id)
                 .map(album -> AlbumDto.builder()
                         .id(album.getId())

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AlbumRepository extends JpaRepository<Album, String> { // Long -> String으로 변경
+public interface AlbumRepository extends JpaRepository<Album, Long> { // Long -> String으로 변경
     // 상세 정보(detail)를 기준으로 앨범을 검색하는 메서드
     List<Album> findByDetail(String detail);
 

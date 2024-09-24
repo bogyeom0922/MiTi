@@ -10,7 +10,7 @@ import lombok.*;
 public class RecordDto {
 
     private String userId;
-    private String albumId;
+    private Long albumId;
     private String music_name;
     private String album_image;
     private String music_artist_name;
@@ -24,7 +24,7 @@ public class RecordDto {
     }
 
     @Builder
-    public RecordDto(String userId, String albumId, String music_name, String album_image, String music_artist_name, String music_duration_ms) {
+    public RecordDto(String userId, Long albumId, String music_name, String album_image, String music_artist_name, String music_duration_ms) {
         this.userId = userId;
         this.albumId = albumId;
         this.music_name = music_name;

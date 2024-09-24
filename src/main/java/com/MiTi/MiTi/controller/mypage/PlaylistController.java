@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.hibernate.internal.util.StringHelper.join;
+
 @Controller
 public class PlaylistController {
 
@@ -52,29 +54,29 @@ public class PlaylistController {
         model.addAttribute("user", userDTO);
 
 //        추천알고리즘
-        List<String> albumIds = albumList.stream()
+        List<Long> albumIds = albumList.stream()
                 .map(PlaylistDto::getAlbumId)
                 .collect(Collectors.toList());
 
-        List<String> recommendedAlbums = runPythonScript(albumIds);
+        List<Long> recommendedAlbums = runPythonScript(albumIds);
         model.addAttribute("recommendedAlbums", recommendedAlbums);
 
         return "mypage/playlist_albums";
     }
 
-    public List<String> runPythonScript(List<String> albumIds) {
-        List<String> results = new ArrayList<>();
+    public List<Long> runPythonScript(List<Long> albumIds) {
+        List<Long> results = new ArrayList<>();
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("python", "/src/main/scripts/recommendation_algorithm.py");
             Process process = processBuilder.start();
 
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-            writer.write(String.join("\n", albumIds));
+            writer.write(join("\n", albumIds));
             writer.close();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
+            Long line;
+            while ((line = Long.valueOf(reader.readLine())) != null) {
                 results.add(line);
             }
             reader.close();
