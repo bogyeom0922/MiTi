@@ -9,43 +9,65 @@
 </head>
 <body>
 
-
-<button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${providerId})}'|">음악 기록</button>
-<button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${providerId})}'|">좋아요</button>
-<button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${providerId})}'|">선호 장르</button>
-<button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${providerId})}'|">댓글</button>
-<button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${providerId})}'|">플레이리스트</button>
+<button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${user.providerId})}'|">음악 기록</button>
+<button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${user.providerId})}'|">좋아요</button>
+<button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${user.providerId})}'|">선호 장르</button>
+<button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${user.providerId})}'|">댓글</button>
+<button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${user.providerId})}'|">플레이리스트</button>
 
 <div th:fragment="header">
     <div class="header">
-        <p class="logo" data-provider="${user.provider}" data-provider-id="${user.providerId}" onclick="redirectToMain(this)">MITI</p>
+        <p class="logo" data-provider-id="${user.providerId}" onclick="redirectToMain(this)">MITI</p>
 
         <script>
             function redirectToMain(element) {
-                const provider = element.getAttribute('data-provider');
                 const providerId = element.getAttribute('data-provider-id');
-                window.location.href = `/main/${provider}/${providerId}`;
+                window.location.href = `/main/${providerId}`;
             }
         </script>
 
         <!--음악 검색-->
-        <div class="search">
-            <form class="search_form">
-                <label>
-                    <input class="search_input" type="text">
-                </label>
-                <button class="search_button"><img src="/images/search.png" class="search_button_img"></button>
-            </form>
-        </div>
+        <input type="text" class="search_input" id="search" placeholder="Search for music or artist" autocomplete="off" />
+        <div id="autocomplete-results"></div>
 
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                // 검색 입력 필드에 입력이 있을 때마다 AJAX 요청을 보냅니다.
+                $('#search').on('input', function() {
+                    var query = $(this).val();
+
+                    if (query.length > 1) {
+                        $.ajax({
+                            url: '/find/autocomplete',  // 서버에서 자동완성 결과를 처리할 URL
+                            type: 'GET',
+                            data: { query: query },  // 입력한 검색어를 전송
+                            success: function(data) {
+                                // 검색어 자동완성 결과를 표시합니다.
+                                $('#autocomplete-results').html(data);
+                            },
+                            error: function() {
+                                $('#autocomplete-results').html('<p>자동완성 결과를 불러오는 중 오류가 발생했습니다.</p>');
+                            }
+                        });
+                    } else {
+                        // 검색어가 없으면 결과를 비웁니다.
+                        $('#autocomplete-results').empty();
+                    }
+                });
+            });
+        </script>
+
+        <!-- 검색 결과를 표시할 div -->
+        <div id="results"></div>
         <div class="accordion-container">
-            <!-- 스팬 태그로 사용자 이름 표시 -->
-            <span th:text="${user.Name}" class="user" onclick="toggleAccordion()"></span>
+            <!-- 사용자 정보가 있을 때만 이름 표시 -->
+            <span th:if="${user != null}" th:text="${user.name}" class="user" onclick="toggleAccordion()"></span>
 
             <!-- 아코디언 메뉴 콘텐츠 -->
             <div class="accordion-content">
                 <a href="/logout">로그아웃</a>
-                <a th:href="@{/mypage/record/{userId}(userId=${user.id})}">재생기록</a>
+                <a th:href="@{/mypage/record/{userId}(userId=${user.providerId})}">재생기록</a>
                 <a href="/mypage">마이페이지</a>
             </div>
         </div>
