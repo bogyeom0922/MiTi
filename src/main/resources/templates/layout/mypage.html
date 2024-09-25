@@ -12,14 +12,14 @@
     <div th:replace="~{play/under :: footer}"></div>
     <div class="my_accordion-container">
         <!-- 스팬 태그로 사용자 이름 표시 -->
-        <span th:text="${user.userName}" class="my_user" onclick="toggleAccordion()"></span>
+        <span th:if="${user.isPresent()}" th:text="${user.get().name}" class="user" onclick="toggleAccordion()"></span>
 
         <!-- 아코디언 메뉴 콘텐츠 -->
         <div class="my_accordion-content">
             <a href="/logout">로그아웃</a>
-            <a th:href="@{/mypage/record/{userId}(userId=${user.id})}">재생기록</a>
-            <a href="/mypage">마이페이지</a>
+            <a th:href="@{/mypage/record/{userId}(userId=${user.get().providerId})}">마이페이지</a>
         </div>
+
         <script>
             function toggleAccordion() {
                 var content = document.querySelector('.my_accordion-content');
@@ -33,31 +33,32 @@
                 // 클릭한 아코디언 콘텐츠를 토글
                 content.style.display = isVisible ? 'none' : 'block';
             }
+
+            // 이벤트 핸들러에서 사용될 데이터 속성 활용
+            function redirectToMainPage(element) {
+                const providerId = element.getAttribute('data-provider-id');
+                window.location.href = '/main/' + providerId;
+            }
+
+            function redirectToMypage(userId, path) {
+                window.location.href = '/mypage/' + path + '/' + userId;
+            }
         </script>
     </div>
 
     <div class="my_left">
-        <img src="/images/logoimg.png" class="my_logo_img" alt="로고 이미지" th:onclick="'window.location.href=\'/main/' + ${user.id} + '\''">
-        <p class="my_logo" th:onclick="'window.location.href=\'/main/' + ${user.id} + '\''">MITI</p>
+        <img src="/images/logo.png" class="my_logo_img" alt="로고 이미지"
+             data-provider-id="${user.get().providerId}" onclick="redirectToMainPage(this)">
+
         <div class="my_category">
-            <div th:onclick="|location.href='@{/mypage/record/{userId}(userId=${userId})}'|" class="my_shortcuts">음악
-                기록
-            </div>
-            <div th:onclick="|location.href='@{/mypage/like/{userId}(userId=${userId})}'|" class="my_shortcuts">좋아요
-            </div>
-            <div th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${userId})}'|" class="my_shortcuts">선호
-                장르
-            </div>
-            <div th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${userId})}'|" class="my_shortcuts">
-                댓글
-            </div>
-            <div th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|" class="my_shortcuts">
-                플레이리스트
-            </div>
+            <div th:onclick="|location.href='@{/mypage/record/{userId}(userId=${user.get().providerId})}'|" class="my_shortcuts">음악 기록</div>
+            <div th:onclick="|location.href='@{/mypage/like/{userId}(userId=${user.get().providerId})}'|" class="my_shortcuts">좋아요</div>
+            <div th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${user.get().providerId})}'|" class="my_shortcuts">선호 장르</div>
+            <div th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${user.get().providerId})}'|" class="my_shortcuts">댓글</div>
+            <div th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${user.get().providerId})}'|" class="my_shortcuts">플레이리스트</div>
         </div>
     </div>
 
 </div>
 </body>
-
 </html>

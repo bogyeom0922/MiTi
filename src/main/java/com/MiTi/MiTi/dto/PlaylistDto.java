@@ -25,9 +25,11 @@ public class PlaylistDto {
 
     @Builder
     public PlaylistDto(Long id, String userId, Long albumId, String userPlaylistName,
+
                        String userPlaylistImage, String music_name, String album_image, String music_artist_name,
                        int totalSongs, int totalDuration) {
         this.id = id;
+
         this.userId = userId;
         this.albumId = albumId;
         this.userPlaylistName = userPlaylistName;

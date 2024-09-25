@@ -29,6 +29,7 @@ public class LikeDto {
     @Builder
     public LikeDto(Long id, String userId, Long albumId, String music_name, String album_image, String music_artist_name, int music_duration_ms, String music_uri) {
         this.id = id;
+
         this.userId = userId;
         this.albumId = albumId;
         this.music_name = music_name;

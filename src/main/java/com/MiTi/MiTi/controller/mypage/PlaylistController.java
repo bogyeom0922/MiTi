@@ -57,7 +57,9 @@ public class PlaylistController {
         Optional<UserDTO> userDTO = userService.getUserById(userId);
         model.addAttribute("user", userDTO);
 
+
         // 추천알고리즘
+
         List<Long> albumIds = albumList.stream()
                 .map(PlaylistDto::getAlbumId)
                 .collect(Collectors.toList());

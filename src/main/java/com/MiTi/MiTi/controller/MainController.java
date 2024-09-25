@@ -48,10 +48,12 @@ public class MainController {
         List<Album> popularAlbums = albumRepository.findAllByOrderByMusic_popularityDesc();
         model.addAttribute("albums", popularAlbums);
 
+
         // 유저의 선호 장르에 따른 추천 앨범 가져오기 (장르별로 Map 형태로 리턴)
         // 유저의 선호 장르에 따른 추천 앨범 가져오기
         Map<String, List<Album>> recommendedAlbumsMap = playlistService.getRecommendedAlbumsByUserGenres(providerId);
         model.addAttribute("recommendedAlbumsMap", recommendedAlbumsMap);
+
 
         return "main"; // main.html 템플릿 반환
     }

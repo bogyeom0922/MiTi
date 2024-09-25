@@ -1104,6 +1104,7 @@ a:hover {
 
 .player-container-1 .nav-button:last-child {
     margin-right: 10px;
+
 }
 /* 중간 정렬을 위한 수정 */
 
@@ -1213,3 +1214,4 @@ body {
     object-fit: cover;  /* 이미지가 비율을 유지하면서 크기에 맞춰집니다 */
     border-radius: 5px;  /* 이미지에 모서리 둥글기 적용 */
 }
+

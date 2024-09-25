@@ -16,7 +16,7 @@ public class Comment {
     private Long id;
 
     @Column(name = "album_id")
-    private String albumId;
+    private Long albumId;
 
     @Column(name = "user_id")
     private String userId;
@@ -24,7 +24,7 @@ public class Comment {
     @Column
     private String comment;
 
-    public Comment(String albumId, String userId, String comment) {
+    public Comment(Long albumId, String userId, String comment) {
         this.albumId = albumId;
         this.userId = userId;
         this.comment = comment;
