@@ -254,7 +254,118 @@ a:hover {
 
 .panel2 button:hover {
     background-color: #eee;
+}/* accordion menu */
+.accordion_block {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0;
 }
+
+.accordion_container {
+    position: relative; /* 패널을 버튼에 상대적으로 배치하기 위한 설정 */
+    display: inline-block;
+}
+
+.accordion2 {
+    cursor: pointer;
+    top: -3px;
+    left: 20px;
+    border: none;
+    text-align: center;
+    outline: none;
+    transition: 0.4s;
+    position: relative;
+    padding: 5px 10px; /* 버튼 패딩 설정 */
+    background-color: rgba(0, 0, 0, 0);
+    font-size: 18px;
+    color: #333;
+}
+
+.accordion2:hover, .accordion2.active {
+    background-color: rgba(0, 0, 0, 0.1); /* 호버 시 백그라운드 색상 */
+}
+
+.panel {
+    display: none; /* 기본적으로 패널 숨김 */
+    position: absolute;
+    left: 30px; /* 버튼의 오른쪽에 위치하도록 설정 */
+    top: 0;
+    width: 200px; /* 패널 너비 설정 */
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    padding: 10px;
+}
+
+.accordion2.active + .panel {
+    display: block; /* 버튼이 활성화되면 패널이 표시됨 */
+}
+
+.panel button {
+    display: block;
+    background: none;
+    border: none;
+    padding: 10px;
+    text-align: left;
+    width: 100%;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    color: #333;
+}
+
+.panel button:hover {
+    background-color: #f0f0f0; /* 호버 시 백그라운드 색상 변경 */
+}
+
+.accordion3 {
+    cursor: pointer;
+    border: none;
+    text-align: center;
+    outline: none;
+    transition: 0.4s;
+    font-size: 12px;
+    background-color: rgba(0, 0, 0, 0);
+    padding: 5px;
+}
+
+.accordion3:hover, .accordion3.active {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.panel2 {
+    display: none;
+    padding: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.accordion3.active + .panel2 {
+    display: block;
+}
+
+.panel2 button {
+    display: block;
+    background: none;
+    border: none;
+    padding: 10px;
+    text-align: left;
+    width: 100%;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    color: #333;
+}
+
+.panel2 button:hover {
+    background-color: #f0f0f0;
+}
+
 
 .album {
     margin: 0 auto;
@@ -307,6 +418,7 @@ a:hover {
     margin-bottom: 50px;
 }
 
+
 .album_list {
     display: flex; /* Flexbox를 사용하여 정렬 */
     justify-content: center; /* 수평 가운데 정렬 */
@@ -348,13 +460,545 @@ a:hover {
     width: 5%; /* 5% 너비 */
 }
 
+/* 기존 패널 스타일 유지 */
+
+
+.album_comments {
+    position: relative;
+    top: 300px;
+    display: flex; /* Flexbox를 사용하여 자식 요소들을 정렬 */
+    flex-direction: column; /* 자식 요소들을 수직으로 정렬 */
+    justify-content: center; /* 세로 중앙 정렬 */
+    align-items: center; /* 가로 중앙 정렬 */
+    width: 100%; /* 전체 너비 */
+    height: auto; /* 내용에 따라 높이 조정 */
+    margin-bottom: 500px;
+}
+
+
+.album_comments_form {
+    margin: 0;
+    display: flex; /* Flexbox 레이아웃을 사용 */
+    align-items: center; /* 자식 요소들을 세로로 중앙 정렬 */
+    justify-content: center; /* 자식 요소들을 가로로 중앙 정렬 (선택 사항) */
+    width: 100%;
+    padding: 0;
+}
+
+.album_comments_form p {
+    font-weight: bolder;
+    font-size: 30px;
+}
+
+.album_comments_form form {
+    margin-left: 50px;
+}
+
+.album_comments_form textarea {
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    border-bottom: solid 2px rgba(129, 136, 129, 0.56);
+    width: 750px;
+    outline: none; /* 포커스 시 기본 테두리 제거 */
+    resize: none;
+    font-size: 18px;
+}
+
+.album_comments_form button {
+    background-color: rgba(255, 255, 255, 0);
+    font-weight: bold;
+    font-size: 20px;
+    border: none;
+    position: relative;
+    top: -10px;
+    color: rgba(53, 57, 53, 0.83);
+    margin-left: 20px;
+}
+
+.album_comments_list {
+    position: relative;
+    top: 20px;
+    width: 710px;
+    left: 40px;
+    display: flex; /* Flexbox를 사용하여 자식 요소들을 수평으로 정렬 */
+    align-items: center; /* 자식 요소들을 세로로 중앙 정렬 */
+    justify-content: center; /* 자식 요소들을 가로로 중앙 정렬 (필요에 따라 조정 가능) */
+    line-height: 2.5;
+}
+
+.album_comments_list p {
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+}
+
+.comments_userid {
+    width: 20%;
+    font-weight: bold;
+}
+
+.comments_body {
+    width: 80%;
+}
+
+/*my page*/
+.my_left {
+    position: fixed;
+    height: 100%;
+    width: 15%;
+    background-color: #d4e2d1ff;
+    z-index: 500;
+    top: 0;
+    margin: 0;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.17);
+}
+
+.my_logo_img {
+    position: relative;
+    top: 80px;
+    left: 14%;
+    width: 24%;
+}
+
+.my_logo {
+    position: relative;
+    top: -20px;
+    left: 42%;
+    width: 40%;
+    font-size: 45px;
+    font-weight: 900;
+}
+
+
+.my_category {
+    position: relative;
+    float: left;
+    top: 100px;
+    left: 20%;
+    width: 60%;
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.my_shortcuts {
+    position: relative;
+    margin: 0;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    padding-left: 10%;
+    height: 50px;
+}
+
+.my_username {
+    position: relative;
+    z-index: 501;
+    left: 90%;
+}
+
+.my_user {
+    font-size: 35px;
+    font-weight: 900;
+    cursor: pointer; /* 클릭 가능하게 설정 */
+}
+
+.my_accordion-container {
+    position: relative;
+    z-index: 501;
+    left: 90%;
+    top: 92px;
+    display: inline-block;
+    width: 7%;
+}
+
+.my_accordion-content {
+    width: 80%;
+    display: none;
+    position: absolute;
+    background-color: #9eaa9a;
+    border: solid 1px rgba(177, 177, 177, 0.56);
+    padding: 10px;
+    z-index: 1000;
+    margin-top: 10px;
+}
+
+.my_accordion-content a {
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+    color: #333;
+}
+
+.my_accordion-content a:hover {
+    background-color: rgba(221, 221, 221, 0.34);
+}
+
+.my_body {
+    position: relative;
+    left: 12%;
+    width: 65%;
+}
+
+.my_body_title {
+    font-weight: 900;
+    font-size: 26px;
+    position: relative;
+    top: 170px;
+    left: 18.5%;
+    margin: 0;
+}
+
+.my_table_comment {
+    width: 100%;
+    font-weight: 600;
+    font-size: 18px;
+    position: relative;
+    top: 200px;
+    left: 18%;
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_comment img {
+    width: 100%;
+}
+
+.my_table_comment tr {
+    height: 60px;
+}
+
+.my_table_comment button {
+    font-weight: 600;
+    font-size: 18px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_padding {
+    padding-left: 20px;
+}
+
+.my_table_body {
+    font-weight: 900;
+    color: rgba(0, 0, 0, 0.8);
+}
+
+.my_table_genre {
+    width: 50%;
+    font-weight: 600;
+    font-size: 18px;
+    position: relative;
+    top: 200px;
+    left: 18%;
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_genre img {
+    width: 100%;
+}
+
+.my_table_genre tr {
+    height: 60px;
+}
+
+.my_table_genre button {
+    font-weight: 600;
+    font-size: 18px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_like {
+    width: 80%;
+    font-weight: 600;
+    font-size: 18px;
+    position: relative;
+    top: 200px;
+    left: 18%;
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_like img {
+    width: 100%;
+}
+
+.my_table_like tr {
+    height: 60px;
+}
+
+.my_table_like button {
+    font-weight: 600;
+    font-size: 18px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_playlist {
+    width: 80%;
+    font-weight: 600;
+    font-size: 18px;
+    position: relative;
+    top: 200px;
+    left: 18%;
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_playlist img {
+    width: 100%;
+}
+
+.my_table_playlist tr {
+    height: 60px;
+}
+
+.my_table_playlist button {
+    font-weight: 600;
+    font-size: 18px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_playlist_albums {
+    width: 80%;
+    font-weight: 600;
+    font-size: 18px;
+    position: relative;
+    top: 140px;
+    left: 18%;
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_playlist_albums img {
+    width: 100%;
+}
+
+.my_table_playlist_albums tr {
+    height: 60px;
+}
+
+.my_table_playlist_albums button {
+    font-weight: 600;
+    font-size: 18px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_body_title_playlist_albums {
+    font-weight: 900;
+    font-size: 26px;
+    position: relative;
+    top: 110px;
+    left: 18.5%;
+    margin: 0;
+}
+
+.my_table_record {
+    width: 70%;
+    font-weight: 600;
+    font-size: 18px;
+    position: relative;
+    top: 200px;
+    left: 18%;
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_table_record img {
+    width: 100%;
+}
+
+.my_table_record tr {
+    height: 60px;
+}
+
+.my_table_record button {
+    font-weight: 600;
+    font-size: 18px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_record {
+    position: fixed;
+    float: left;
+    top: 310px;
+    left: 2.5%;
+    margin: 0;
+    background-color: rgba(90, 108, 90, 0.42);
+    width: 9%;
+    height: 50px;
+    z-index: 501;
+}
+
+.my_like {
+    position: fixed;
+    float: left;
+    top: 360px;
+    left: 2.5%;
+    margin: 0;
+    background-color: rgba(90, 108, 90, 0.42);
+    width: 9%;
+    height: 50px;
+    z-index: 501;
+}
+
+.my_genre {
+    position: fixed;
+    float: left;
+    top: 410px;
+    left: 2.5%;
+    margin: 0;
+    background-color: rgba(90, 108, 90, 0.42);
+    width: 9%;
+    height: 50px;
+    z-index: 501;
+}
+
+.my_comment {
+    position: fixed;
+    float: left;
+    top: 460px;
+    left: 2.5%;
+    margin: 0;
+    background-color: rgba(90, 108, 90, 0.42);
+    width: 9%;
+    height: 50px;
+    z-index: 501;
+}
+
+.my_playlist {
+    position: fixed;
+    float: left;
+    top: 510px;
+    left: 2.5%;
+    margin: 0;
+    background-color: rgba(90, 108, 90, 0.42);
+    width: 9%;
+    height: 50px;
+    z-index: 501;
+}
+
+.my_playlist_back {
+    position: relative;
+    width: 3%;
+    top: 145px;
+    left: 12%;
+    margin: 0;
+    padding: 0;
+    opacity: 0.6;
+}
+
+.add_genre_list {
+    position: fixed;
+    left: 62%;
+    top: 200px;
+    display: none;
+    width: 20%;
+}
+
+.add_genre {
+    font-weight: 600;
+    font-size: 20px;
+    color: #616161;
+}
+
+#nonSelectedGenreList {
+    list-style-type: none;
+    padding-left: 0;
+    font-weight: 400;
+    font-size: 18px;
+    color: #4a4a4a;
+}
+
+#nonSelectedGenreList li {
+    display: flex; /* flexbox 사용 */
+    align-items: center; /* 수직 가운데 정렬 */
+    margin-bottom: 10px; /* 항목 간 간격 */
+}
+
+#nonSelectedGenreList img {
+    margin-right: 20px; /* 이미지와 텍스트 간 간격 */
+}
+
+#nonSelectedGenreList span {
+    margin-right: 10px; /* 텍스트와 버튼 간 간격 */
+}
+
+#nonSelectedGenreList button {
+    margin-left: auto; /* 버튼을 오른쪽으로 정렬 */
+    background-color: rgba(255, 255, 255, 0);
+    font-weight: 400;
+    font-size: 18px;
+    color: #4a4a4a;
+    border: none;
+}
+
+.my_comment_modal {
+    display: none;
+    background-color: #fffff7;
+    position: fixed; /* 화면에 고정 */
+    top: 50%; /* 화면의 세로 중앙에 위치 */
+    left: 50%; /* 화면의 가로 중앙에 위치 */
+    transform: translate(-50%, -50%);
+    width: 25%;
+    height: 250px;
+    border-radius: 1%;
+    color: #222222;
+    font-weight: bolder;
+    flex-direction: column; /* 자식 요소를 수직으로 배치 */
+    justify-content: center; /* 수직 중앙 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
+}
+
+.my_comment_modal_title {
+    position: absolute; /* 절대 위치 지정 */
+    top: 5%;
+    font-weight: 600;
+    font-size: 25px;
+}
+
+.my_comment_modal_textarea {
+    width: 80%;
+    margin-top: 10%;
+    height: 35%;
+    background-color: rgba(255, 255, 255, 0.85);
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.my_comment_modal_save {
+    position: absolute;
+    bottom: 5%;
+    background-color: rgba(255, 255, 255, 0);
+    color: #222222;
+    font-size: 16px;
+    border: none;
+    font-weight: 600;
+}
+
+.my_comment_modal_close {
+    position: absolute; /* 절대 위치 지정 */
+    top: 3%; /* 상단에 위치 */
+    right: 3%; /* 오른쪽에 위치 */
+    background-color: rgba(255, 255, 255, 0);
+    color: #000000;
+    font-size: 25px;
+    border: none;
+    font-weight: 900;
+}
+
 /* 인기차트 섹션 */
 .chart_title {
     position: relative;
     text-align: center;
     font-size: 25px;
     font-weight: bolder;
-    margin-top: 100px;
+    margin-top: 200px;
     margin-bottom: 50px;
 }
 
@@ -398,4 +1042,174 @@ a:hover {
 .chart_artist {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.7);
+}
+
+/* 하단에 고정되는 재생바 (playbar) */
+.player-container-1 {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 8px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10000;
+    height: 30px;
+}
+
+/* 중앙에 위치하는 앨범 이미지와 음악 제목 */
+.track-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+/* 앨범 이미지 크기 조정 */
+.album-cover {
+    width: 3%;
+    height: auto;
+    border-radius: 8px;
+    margin-right: 10px; /* 음악 제목과의 간격 조정 */
+}
+
+/* 음악 제목 스타일 */
+.player-container-1 p {
+    color: black;
+    margin: 0;
+}
+
+/* 재생바 내 버튼 스타일 */
+.nav-button {
+    background-color: #fff;
+    border: none;
+    padding: 8px 16px;
+    color: #1DB954;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.nav-button:hover {
+    background-color: #e0e0e0;
+}
+
+/* 좌우 버튼은 중앙의 앨범/음악 제목과 분리 */
+.player-container-1 .nav-button:first-child {
+    margin-left: 10px;
+}
+
+.player-container-1 .nav-button:last-child {
+    margin-right: 10px;
+}
+/* 중간 정렬을 위한 수정 */
+
+body {
+    background-color: #d4e2d1ff;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.playlist-header {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.playlist-cover-image {
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.playlist-title {
+    font-size: 48px;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #333;
+}
+
+.playlist-subtitle {
+    font-size: 20px;
+    color: #666;
+    margin-top: 10px;
+}
+
+.playlist_songs {
+    width: 80%;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.playlist_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+}
+
+.playlist_table th, .playlist_table td {
+    padding: 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+    color: #333;
+}
+
+.playlist_table th {
+    background-color: #f5f5f5;
+    font-size: 18px;
+}
+
+.playlist_table td {
+    font-size: 16px;
+}
+
+.playlist-header {
+    text-align: center; /* 중앙 정렬 */
+}
+
+.play-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; /* 곡수와 총 재생시간에서 약간의 여백 추가 */
+}
+
+.play-button {
+    width: 60px;
+    height: 60px;
+    background-color: white; /* 버튼 배경색 */
+    border-radius: 50%; /* 원형 */
+    border: none;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.play-button:before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 15px solid black; /* 삼각형 재생 아이콘 */
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    position: absolute;
+}
+
+.play-button:hover {
+    background-color: #f0f0f0; /* 호버 시 약간 회색 */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* 호버 시 그림자 강조 */
+}
+
+
+.album-cover-thumbnail {
+    width: 50px;  /* 원하는 크기로 이미지 조정 */
+    height: 50px;
+    object-fit: cover;  /* 이미지가 비율을 유지하면서 크기에 맞춰집니다 */
+    border-radius: 5px;  /* 이미지에 모서리 둥글기 적용 */
 }

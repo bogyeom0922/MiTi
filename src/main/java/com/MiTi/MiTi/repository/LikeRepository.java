@@ -14,13 +14,13 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     void deleteById(Long id);
 
     //해든
-    Optional<Like> findByUserIdAndAlbumId(String userId, String albumId);
+    Optional<Like> findByUserIdAndAlbumId(String userId, Long albumId);
 
-    Optional<Like> findByAlbumId(String albumId);
+    Optional<Like> findByAlbumId(Long albumId);
 
-    boolean existsByUserIdAndAlbumId(String userId, String albumId);
+    boolean existsByUserIdAndAlbumId(String userId, Long albumId);
 
-    void deleteByUserIdAndAlbumId(String userId, String albumId);
-    void deleteByAlbumId(String albumId);
+    void deleteByUserIdAndAlbumId(String userId, Long albumId);
+    void deleteByAlbumId(Long albumId);
 
 }

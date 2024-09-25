@@ -10,9 +10,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-
 import org.springframework.data.domain.Pageable;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -35,35 +34,34 @@ public class AlbumService {
         List<Album> albums = albumRepository.findByDetail(detail); // 앨범에 속한 곡들을 조회
         boolean isLiked = false;
 
-        // 각 앨범(실제 곡들)에 대해 좋아요/좋아요 취소 처리
         for (Album album : albums) {
-            Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(userId, album.getId().toString());
+            Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(userId, album.getId());
 
             if (existingLike.isPresent()) {
-                // 이미 좋아요가 되어 있으면 좋아요 취소
+                // 좋아요가 되어 있으면 취소
                 likeRepository.delete(existingLike.get());
             } else {
                 // 좋아요 추가
                 Like newLike = Like.builder()
                         .userId(userId)
-                        .albumId(album.getId().toString())  // albumId로 곡을 구분
+                        .albumId(album.getId())  // albumId로 곡을 구분
                         .album(album)
                         .build();
                 likeRepository.save(newLike);
-                isLiked = true; // 하나라도 좋아요가 추가되면 true로 변경
+                isLiked = true;
             }
         }
-        return isLiked; // 좋아요가 추가된 경우 true 반환
+        return isLiked;
     }
 
     // 개별 곡에 대해 좋아요/취소 처리
-    public boolean toggleTrackLike(String userId, String albumId) {
+    public boolean toggleTrackLike(String userId, Long albumId) {
         Optional<Like> existingLike = likeRepository.findByUserIdAndAlbumId(userId, albumId);
 
         if (existingLike.isPresent()) {
-            // 이미 좋아요가 되어 있으면 좋아요 취소
+            // 좋아요 취소
             likeRepository.delete(existingLike.get());
-            return false; // 좋아요 취소됨
+            return false;
         } else {
             // 좋아요 추가
             Album album = albumRepository.findById(albumId)
@@ -71,18 +69,17 @@ public class AlbumService {
 
             Like newLike = Like.builder()
                     .userId(userId)
-                    .albumId(albumId)  // albumId로 곡을 구분
+                    .albumId(albumId)
                     .album(album)
                     .build();
             likeRepository.save(newLike);
-            return true; // 좋아요 추가됨
+            return true;
         }
     }
 
-    // 특정 앨범에 대해 좋아요 처리 (likeAlbum 메서드 추가)
-    public void likeAlbum(String albumId, Boolean isLiked, String userId) {
+    // 특정 앨범 좋아요 처리
+    public void likeAlbum(Long albumId, Boolean isLiked, String userId) {
         if (isLiked) {
-            // 좋아요 추가
             Album album = albumRepository.findById(albumId)
                     .orElseThrow(() -> new RuntimeException("해당 앨범을 찾을 수 없습니다: " + albumId));
 
@@ -93,28 +90,25 @@ public class AlbumService {
                     .build();
             likeRepository.save(newLike);
         } else {
-            // 좋아요 취소
             likeRepository.deleteByUserIdAndAlbumId(userId, albumId);
         }
     }
 
-    // 새롭게 추가된 findByMusicNameOrArtistName 메서드
+    // 음악 이름 또는 아티스트 이름으로 검색
     public List<Album> findByMusicNameOrArtistName(String musicName, String artistName) {
         return albumRepository.findByMusicNameContainingIgnoreCaseOrMusicArtistNameContainingIgnoreCase(musicName, artistName);
     }
 
-
-    //스트리밍
-    //스트리밍에 필요함
+    // 스트리밍
     @Transactional
-    public AlbumDto getAlbumDtoById(String id) {
+    public AlbumDto getAlbumDtoById(Long id) {
         return albumRepository.findById(id)
                 .map(album -> AlbumDto.builder()
                         .id(album.getId())
                         .albumImage(album.getAlbum_image())
                         .musicName(album.getMusicName())
                         .musicArtistName(album.getMusicArtistName())
-                        .music_duration_ms(album.getMusic_duration_ms())
+                        .music_duration_ms(album.getMusic_duration_ms())  // int 처리
                         .music_uri(album.getMusic_uri())
                         .build())
                 .orElse(null);
@@ -122,16 +116,14 @@ public class AlbumService {
 
     @Transactional
     public Page<AlbumDto> getAlbumList(Pageable pageable) {
-        Page<Album> albumPage = albumRepository.findAll((org.springframework.data.domain.Pageable) pageable);  // 페이지네이션 적용
+        Page<Album> albumPage = albumRepository.findAll(pageable);
         return albumPage.map(album -> AlbumDto.builder()
                 .id(album.getId())
                 .albumImage(album.getAlbum_image())
                 .musicName(album.getMusicName())
                 .musicArtistName(album.getMusicArtistName())
-                .music_duration_ms(album.getMusic_duration_ms())
+                .music_duration_ms(album.getMusic_duration_ms())  // int 처리
                 .music_uri(album.getMusic_uri())
                 .build());
     }
-
-
 }
