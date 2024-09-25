@@ -15,37 +15,26 @@
 
 <div th:replace="layout/header :: header"></div>
 
+<!-- 추천 플레이리스트 섹션 -->
 <div class="recommend_title">Recommended Playlist</div>
 <div class="recommend">
-    <div class="recommend_playlist">
-        <img src="/images/album.jpeg" class="playlist_image">
-        <p class="playlist_name">공부할 때 듣기 좋은 음악</p>
-    </div>
-    <div class="recommend_playlist">
-        <img src="/images/album.jpeg" class="playlist_image">
-        <p class="playlist_name">공부할 때 듣기 좋은 음악</p>
-    </div>
-    <div class="recommend_playlist">
-        <img src="/images/album.jpeg" class="playlist_image">
-        <p class="playlist_name">공부할 때 듣기 좋은 음악</p>
-    </div>
-    <div class="recommend_playlist">
-        <img src="/images/album.jpeg" class="playlist_image">
-        <p class="playlist_name">공부할 때 듣기 좋은 음악</p>
-    </div>
-    <div class="recommend_playlist">
-        <img src="/images/album.jpeg" class="playlist_image">
-        <p class="playlist_name">공부할 때 듣기 좋은 음악</p>
-    </div>
+    <th:block th:each="entry : ${recommendedAlbumsMap}">
+        <div class="recommend_playlist">
+            <a th:href="@{'/playlist/detail/' + ${entry.key}}">
+                <img th:src="${entry.value[0].album_image}" alt="Playlist Image" class="playlist_image">
+            </a>
+            <p class="playlist_name" th:text="${entry.key} + ' 때 듣는 음악'"></p> <!-- 장르에 따른 플레이리스트 이름 -->
+        </div>
+    </th:block>
 </div>
+
 
 <!-- 인기차트 섹션 -->
 <div class="chart_title">Popular Chart</div>
 <div class="chart">
     <!-- 왼쪽 열 -->
-
     <div class="chart_column">
-        <div class="chart_item" th:each="album, stat : ${albums}" th:onclick="|handleMusicClick(${album.id})|" th:if="${stat.index < 5}">
+        <div class="chart_item" th:each="album, stat : ${albums}" th:if="${stat.index < 5}">
             <img th:src="${album.album_image}" alt="Album Cover">
             <div class="chart_info">
                 <p class="chart_name" th:text="${album.musicName}"></p>
@@ -56,7 +45,7 @@
 
     <!-- 오른쪽 열 -->
     <div class="chart_column">
-        <div class="chart_item" th:each="album, stat : ${albums}" th:onclick="|handleMusicClick(${album.id})|" th:if="${stat.index >= 5 && stat.index < 10}">
+        <div class="chart_item" th:each="album, stat : ${albums}" th:if="${stat.index >= 5 && stat.index < 10}">
             <img th:src="@{${album.album_image}}" alt="Album Cover">
             <div class="chart_info">
                 <p class="chart_name" th:text="${album.musicName}"></p>
@@ -66,9 +55,7 @@
     </div>
 </div>
 
-
-
-
 <div th:replace="play/under :: footer"></div>
+
 </body>
 </html>
