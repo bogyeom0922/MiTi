@@ -15,11 +15,11 @@ public class AlbumDto {
     private String musicArtistName; // 카멜 케이스로 수정
 
     private Long id;
-    private String music_duration_ms;
+    private int music_duration_ms;
     private String music_uri;
 
     @Builder
-    public AlbumDto(Long id, String musicName, String albumImage, String musicArtistName, String music_duration_ms, String music_uri) {
+    public AlbumDto(Long id, String musicName, String albumImage, String musicArtistName, int music_duration_ms, String music_uri) {
         this.id = id;
         this.musicName = musicName;
         this.albumImage = albumImage;

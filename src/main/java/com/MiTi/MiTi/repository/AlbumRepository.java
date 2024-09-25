@@ -21,4 +21,23 @@ public interface AlbumRepository extends JpaRepository<Album, Long> { // Long ->
     List<Album> findAllByOrderByMusic_popularityDesc();
 
     Page<Album> findAll(Pageable pageable);
+    // 에너지와 댄서빌리티로 필터링
+    @Query("SELECT a FROM album a WHERE a.music_energy > :energy AND a.music_danceability > :danceability")
+    List<Album> findByEnergyAndDanceability(double energy, double danceability);
+
+    // 밸런스와 어쿠스틱 특성으로 필터링
+    @Query("SELECT a FROM album a WHERE a.music_valence < :valence AND a.music_acousticness > :acousticness")
+    List<Album> findByValenceAndAcousticness(double valence, double acousticness);
+
+    // 템포와 댄서빌리티로 필터링
+    @Query("SELECT a FROM album a WHERE a.music_tempo > :tempo AND a.music_danceability > :danceability")
+    List<Album> findByTempoAndDanceability(double tempo, double danceability);
+
+    // 에너지와 소리 크기로 필터링
+    @Query("SELECT a FROM album a WHERE a.music_energy > :energy AND a.music_loudness > :loudness")
+    List<Album> findByEnergyAndLoudness(double energy, double loudness);
+
+    // 어쿠스틱과 에너지로 필터링
+    @Query("SELECT a FROM album a WHERE a.music_acousticness > :acousticness AND a.music_energy < :energy")
+    List<Album> findByAcousticnessAndEnergy(double acousticness, double energy);
 }

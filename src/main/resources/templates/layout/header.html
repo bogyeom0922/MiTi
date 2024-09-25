@@ -9,15 +9,27 @@
 </head>
 <body>
 
-<button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${user.providerId})}'|">음악 기록</button>
-<button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${user.providerId})}'|">좋아요</button>
-<button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${user.providerId})}'|">선호 장르</button>
-<button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${user.providerId})}'|">댓글</button>
-<button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${user.providerId})}'|">플레이리스트</button>
+<!-- user가 null이 아닌 경우에만 버튼을 보여줍니다 -->
+<button th:if="${user != null}"
+        th:onclick="|location.href='@{/mypage/record/{userId}(userId=${user.providerId})}'|">음악 기록</button>
+
+<button th:if="${user != null}"
+        th:onclick="|location.href='@{/mypage/like/{userId}(userId=${user.providerId})}'|">좋아요</button>
+
+<button th:if="${user != null}"
+        th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${user.providerId})}'|">선호 장르</button>
+
+<button th:if="${user != null}"
+        th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${user.providerId})}'|">댓글</button>
+
+<button th:if="${user != null}"
+        th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${user.providerId})}'|">플레이리스트</button>
 
 <div th:fragment="header">
     <div class="header">
+
         <p class="logo"  th:attr="data-provider-id=${user.providerId}" onclick="redirectToMain(this)">MITI</p>
+
 
         <script>
             function redirectToMain(element) {
@@ -64,14 +76,16 @@
 
 
         <div class="accordion-container">
-            <!-- 사용자 정보가 있을 때만 이름 표시 -->
+            <!-- user가 null이 아닌 경우에만 이름 표시 -->
             <span th:if="${user != null}" th:text="${user.name}" class="user" onclick="toggleAccordion()"></span>
 
             <!-- 아코디언 메뉴 콘텐츠 -->
             <div class="accordion-content">
                 <a href="/logout">로그아웃</a>
+
                 <a th:href="@{/mypage/record/{userId}(userId=${user.providerId})}">재생기록</a>
                 <a th:href="@{/mypage/record/{userId}(userId=${user.providerId})}">마이페이지</a>
+
             </div>
         </div>
     </div>

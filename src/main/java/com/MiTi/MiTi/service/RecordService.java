@@ -29,12 +29,14 @@ public class RecordService {
                     .album_image(record.getAlbum().getAlbum_image())
                     .music_name(record.getAlbum().getMusicName())
                     .music_artist_name(record.getAlbum().getMusicArtistName())
-                    .music_duration_ms(record.getAlbum().getMusic_duration_ms())
+                    .music_duration_ms(record.getAlbum().getMusic_duration_ms())  // int 타입으로 처리
                     .build();
             recordDtoList.add(recordDto);
         }
         return recordDtoList;
     }
+
+
 
     @Transactional
     public void recordMusic(RecordDto recordDto) {  //스트리밍 시 음악 기록하기

@@ -50,7 +50,7 @@ public class AlbumController {
 
         model.addAttribute("details", details);
 
-       //UserDTO userDTO = userService.getUserById(userId);
+        //UserDTO userDTO = userService.getUserById(userId);
         //model.addAttribute("user", userDTO);
 
         return "album/album_list";
