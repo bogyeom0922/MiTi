@@ -17,7 +17,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/", "/login", "/error", "/api/token", "/callback", "/index.html",
-                                "/streaming.html", "/app.js", "/home", "/main/**").permitAll()
+                                "/streaming.html", "/app.js", "/playbar.js","/home", "/main/**").permitAll()
                         .requestMatchers("/resources/**", "/static/**", "/public/**").permitAll()
                         .anyRequest().authenticated()
                 )

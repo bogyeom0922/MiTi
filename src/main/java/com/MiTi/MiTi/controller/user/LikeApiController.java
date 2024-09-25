@@ -26,7 +26,7 @@ public class LikeApiController {
             username = "anonymous";  // 비회원일 때 기본 사용자 ID
         }
 
-        boolean success = likeService.addLike(username, String.valueOf(musicId));
+        boolean success = likeService.addLike(username, musicId);
         Map<String, Object> response = new HashMap<>();
         response.put("success", success);
         return ResponseEntity.ok(response);

@@ -77,6 +77,7 @@ public class AlbumService {
         }
     }
 
+
     // 특정 앨범 좋아요 처리
     public void likeAlbum(Long albumId, Boolean isLiked, String userId) {
         if (isLiked) {

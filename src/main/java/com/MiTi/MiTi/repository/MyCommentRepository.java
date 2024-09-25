@@ -8,7 +8,7 @@ import java.util.List;
 public interface MyCommentRepository extends JpaRepository<MyComment, Long> {
 
     // 특정 앨범 댓글 조회
-    List<MyComment> findByAlbumId(String albumId);
+    List<MyComment> findByAlbumId(Long albumId);
 
     // 특정 사용자 댓글 조회
     List<MyComment> findByUserId(String userId);

@@ -24,7 +24,9 @@ public class RecordDto {
     }
 
     @Builder
+
     public RecordDto(String userId, Long albumId, String music_name, String album_image, String music_artist_name, int music_duration_ms) {
+
         this.userId = userId;
         this.albumId = albumId;
         this.music_name = music_name;
