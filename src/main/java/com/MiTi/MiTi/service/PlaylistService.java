@@ -90,7 +90,6 @@ public class PlaylistService {
         List<Playlist> playlistList = playlistRepository.findByUserPlaylistName(playlist.getUserPlaylistName());
 
         for (Playlist song : playlistList) {
-            // 재생 시간을 String에서 int로 변환하는 부분 제거
             totalDuration += song.getAlbum().getMusic_duration_ms();
         }
 
@@ -102,10 +101,9 @@ public class PlaylistService {
         return playlistDto;
     }
 
-
     // 유저가 선택한 장르에 맞춰 음향 특성을 분석한 앨범을 추천
-    public Map<String, List<Album>> getRecommendedAlbumsByUserGenres(String providerId) {
-        List<Genre> userGenres = genreRepository.findByUserId(providerId);
+    public Map<String, List<Album>> getRecommendedAlbumsByUserGenres(String userId) {
+        List<Genre> userGenres = genreRepository.findByUserId(userId);
         Map<String, List<Album>> recommendedAlbumsMap = new HashMap<>();
 
         for (Genre genre : userGenres) {
@@ -161,5 +159,4 @@ public class PlaylistService {
 
         return playlist.stream().limit(20).collect(Collectors.toList());
     }
-
 }
