@@ -20,6 +20,7 @@ public class UserService {
     // 회원 정보 가져오기
     // 회원 정보 가져오기
     public Optional<UserDTO> getUserById(String providerId) {
+        System.out.println("Provider ID: " + providerId); // 사용자 ID 확인
         try {
             // 고정된 provider 값 사용
             OAuth2Provider oAuth2Provider = OAuth2Provider.SPOTIFY; // 예시로 SPOTIFY 사용

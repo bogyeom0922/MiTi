@@ -43,7 +43,12 @@ public class PlaylistController {
         model.addAttribute("userId", userId);
 
         Optional<UserDTO> userDTO = userService.getUserById(userId);
-        model.addAttribute("user", userDTO);
+        if (userDTO.isPresent()) {
+            model.addAttribute("user", userDTO.get());
+            log.info("User found: " + userDTO.get().getName());
+        } else {
+            log.warn("User not found for userId: " + userId);
+        }
         return "mypage/mypage_playlist";
     }
 
@@ -55,11 +60,14 @@ public class PlaylistController {
         model.addAttribute("userPlaylistName", userPlaylistName);
 
         Optional<UserDTO> userDTO = userService.getUserById(userId);
-        model.addAttribute("user", userDTO);
+        if (userDTO.isPresent()) {
+            model.addAttribute("user", userDTO.get());
+            log.info("User found: " + userDTO.get().getName());
+        } else {
+            log.warn("User not found for userId: " + userId);
+        }
 
-
-        // 추천알고리즘
-
+        // 추천 알고리즘
         List<Long> albumIds = albumList.stream()
                 .map(PlaylistDto::getAlbumId)
                 .collect(Collectors.toList());
