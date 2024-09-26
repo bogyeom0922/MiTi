@@ -27,16 +27,27 @@ public class RecordController {
         this.userService = userService;
     }
 
-    @GetMapping("/mypage/record/{userId}")
-    public String list(@PathVariable String userId, Model model) {
-        List<RecordDto> recordDtoList = recordService.getRecordListByUserId(String.valueOf(userId));
-        model.addAttribute("recordList", recordDtoList);
-        model.addAttribute("userId", userId);
+    @GetMapping("/mypage/record/{providerId}")
+    public String list(@PathVariable String providerId, Model model) {
 
-        Optional<UserDTO> userDTO = userService.getUserById(userId);
-        model.addAttribute("user", userDTO);
-        return "mypage/mypage_record";
+        List<RecordDto> recordDtoList = recordService.getRecordListByProviderId(String.valueOf(providerId));
+        model.addAttribute("recordList", recordDtoList);
+
+
+        Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);
+        if (userDTOOptional.isPresent()) {
+            UserDTO userDTO = userDTOOptional.get();
+            model.addAttribute("user", userDTO); // 사용자 정보를 모델에 추가
+
+            // 좋아요 목록을 가져와서 모델에 추가
+            // model.addAttribute("likeList", likeService.getLikesForUser(userDTO.getProviderId()));
+            return "mypage/mypage_record"; // 적절한 뷰 이름 반환
+        }
+
+        // 사용자 정보가 없는 경우, 적절한 처리를 해주셔야 합니다.
+        return "error"; // 또는 다른 적절한 경로로 리디렉션
     }
+
 
 
 

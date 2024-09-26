@@ -1,6 +1,7 @@
 package com.MiTi.MiTi.controller.mypage;
 
 import com.MiTi.MiTi.dto.MyCommentDto;
+import com.MiTi.MiTi.dto.PlaylistDto;
 import com.MiTi.MiTi.dto.UserDTO;
 import com.MiTi.MiTi.repository.MyCommentRepository;
 import com.MiTi.MiTi.service.MyCommentService;
@@ -26,15 +27,22 @@ public class MyCommentController {
         this.userService = userService;
     }
 
-    @GetMapping("/mypage/comment/{userId}")
-    public String list(@PathVariable String userId, Model model) {
-        List<MyCommentDto> myCommentDtoList = myCommentService.getCommentListByUserId(String.valueOf(userId));
+    @GetMapping("/mypage/comment/{providerId}")
+    public String list(@PathVariable String providerId, Model model) {
+        List<MyCommentDto> myCommentDtoList = myCommentService.getMyCommentListByProviderId(String.valueOf(providerId));
         model.addAttribute("commentList", myCommentDtoList);
-        model.addAttribute("userId", userId);
 
-        Optional<UserDTO> userDTO = userService.getUserById(userId);
-        model.addAttribute("user", userDTO);
-        return "mypage/mypage_comment";
+
+        Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);
+        if (userDTOOptional.isPresent()) {
+            UserDTO userDTO = userDTOOptional.get();
+            model.addAttribute("user", userDTO); // 사용자 정보를 모델에 추가
+
+            return "mypage/mypage_comment"; // 적절한 뷰 이름 반환
+        }
+
+        // 사용자 정보가 없는 경우, 적절한 처리를 해주셔야 합니다.
+        return "error"; // 또는 다른 적절한 경로로 리디렉션
     }
 
     // 댓글 수정 요청 처리

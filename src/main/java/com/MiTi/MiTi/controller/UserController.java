@@ -5,6 +5,7 @@ import com.MiTi.MiTi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -18,13 +19,17 @@ public class UserController {
 
     // 회원 정보 가져오기
     @GetMapping("/{providerId}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable String providerId) {
-        Optional<UserDTO> memberDTO = userService.getUserById(providerId);
-        if (memberDTO.isPresent()) {
-            return new ResponseEntity<>(memberDTO.get(), HttpStatus.OK);
+    public ResponseEntity<UserDTO> getUserById(@PathVariable String providerId, Model model) {
+        Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);
+
+        if (userDTOOptional.isPresent()) {
+            UserDTO userDTO = userDTOOptional.get();
+            model.addAttribute("user", userDTO); // 모델에 사용자 정보 추가
+            return new ResponseEntity<>(userDTO, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
 
     // 회원 정보 저장하기
     @PostMapping

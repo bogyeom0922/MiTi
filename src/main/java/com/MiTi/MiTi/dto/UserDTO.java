@@ -18,4 +18,9 @@ public class UserDTO {
     private String email;
     private String image;
     private String role;
+
+    // 확인용 getter
+    public String getProviderId() {
+        return providerId;
+    }
 }

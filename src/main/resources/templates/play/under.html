@@ -8,10 +8,8 @@
 </head>
 <body>
 <div th:fragment="footer">
-    <div id="root" data-user-id="${user.userId}"></div>
+    <div id="root" th:attr="data-user-id=${user.providerId}"></div>
 
-    <!-- <div id="root" th:attr="data-user-id=${user.get().providerId}"></div>
-    db에 저장되게 하는 거/ 이거하면 마이페이지는 안들어가짐 ㅡㅡ -->
     <footer>
         <!-- React and ReactDOM from CDN -->
         <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
@@ -23,7 +21,7 @@
         <script src="https://sdk.scdn.co/spotify-player.js"></script>
 
         <!-- Link the external JS file -->
-        <script src="/js/playbar.js" type="text/babel"></script>
+        <script src="/js/app.js" type="text/babel"></script>
     </footer>
 </div>
 

@@ -13,9 +13,9 @@ public class AlbumApiController {
     private AlbumService albumService;
 
     @PostMapping("/{albumId}/like")
-    public ResponseEntity<String> likeAlbum(@PathVariable Long albumId, @RequestParam Boolean isLiked, @RequestParam String userId) {
+    public ResponseEntity<String> likeAlbum(@PathVariable Long albumId, @RequestParam Boolean isLiked, @RequestParam String providerId) {
         // userId를 추가로 전달
-        albumService.likeAlbum(albumId, isLiked, userId);
+        albumService.likeAlbum(albumId, isLiked, providerId);
         return ResponseEntity.ok(isLiked ? "좋아요" : "좋아요 취소");
     }
 }

@@ -11,7 +11,7 @@ public interface MyCommentRepository extends JpaRepository<MyComment, Long> {
     List<MyComment> findByAlbumId(Long albumId);
 
     // 특정 사용자 댓글 조회
-    List<MyComment> findByUserId(String userId);
+    List<MyComment> findByProviderId(String providerId);
 
     //댓글 삭제
     void deleteById(Long id);

@@ -20,14 +20,14 @@ public class MyCommentService {
     }
 
     @Transactional
-    public List<MyCommentDto> getCommentListByUserId(String userId) {
-        List<MyComment> myCommentList = myCommentRepository.findByUserId(userId);
+    public List<MyCommentDto> getMyCommentListByProviderId(String providerId) {
+        List<MyComment> myCommentList = myCommentRepository.findByProviderId(providerId);
         List<MyCommentDto> myCommentDtoList = new ArrayList<>();
 
         for (MyComment myComment : myCommentList) {
             MyCommentDto myCommentDto = MyCommentDto.builder()
                     .id(myComment.getId())
-                    .userId(myComment.getUserId())
+                    .providerId(myComment.getProviderId())
                     .albumId(myComment.getAlbumId())
                     .comment(myComment.getComment())
                     .album_image(myComment.getAlbum().getAlbum_image())

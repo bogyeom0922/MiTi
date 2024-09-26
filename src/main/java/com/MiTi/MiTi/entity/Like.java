@@ -23,7 +23,7 @@ public class Like {
     private Long albumId;
 
     @Column(name = "user_id")
-    private String userId;
+    private String providerId;
 
 
     @ManyToOne(fetch = FetchType.LAZY)

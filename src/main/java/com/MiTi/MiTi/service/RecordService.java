@@ -18,13 +18,13 @@ public class RecordService {
     }
 
     @Transactional
-    public List<RecordDto> getRecordListByUserId(String userId) {
-        List<Record> recordList = recordRepository.findByUserId(userId);
+    public List<RecordDto> getRecordListByProviderId(String providerId) {
+        List<Record> recordList = recordRepository.findByProviderId(providerId);
         List<RecordDto> recordDtoList = new ArrayList<>();
 
         for (Record record : recordList) {
             RecordDto recordDto = RecordDto.builder()
-                    .userId(record.getUserId())
+                    .providerId(record.getProviderId())
                     .albumId(record.getAlbumId())
                     .album_image(record.getAlbum().getAlbum_image())
                     .music_name(record.getAlbum().getMusicName())
@@ -42,7 +42,7 @@ public class RecordService {
     public void recordMusic(RecordDto recordDto) {  //스트리밍 시 음악 기록하기
         System.out.println("Recording music for albumId: " + recordDto.getAlbumId());
         Record record = Record.builder()
-                .userId(recordDto.getUserId())
+                .providerId(recordDto.getProviderId())
                 .albumId(recordDto.getAlbumId())
                 .build();
         recordRepository.save(record);

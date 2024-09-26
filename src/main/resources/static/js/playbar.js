@@ -1,5 +1,5 @@
 // SpotifyPlayer 컴포넌트 정의
-const SpotifyPlayer = ({ musicInfo, userId, onNextTrack, onPrevTrack }) => {
+/*const SpotifyPlayer = ({ musicInfo, userId, onNextTrack, onPrevTrack }) => {
     const { musicName, musicUri, albumImage } = musicInfo;
     const { useState, useEffect } = React;
     const [paused, setPaused] = useState(true);
@@ -46,36 +46,49 @@ const SpotifyPlayer = ({ musicInfo, userId, onNextTrack, onPrevTrack }) => {
 
         // 엑세스 토큰 확인을 통해 음악 스트리밍 구현
         const initializePlayer = () => {
-            if (window.Spotify && accessToken) {
-                const playerInstance = new window.Spotify.Player({
-                    name: 'Web Playback SDK',
-                    getOAuthToken: cb => { cb(accessToken); },
-                    volume: 0.5,
-                });
+            // 이미 플레이어가 생성된 경우, 중복 생성 방지
+            if (player || !accessToken) return;
+            const playerInstance = new window.Spotify.Player({
+                name: 'Web Playback SDK',
+                getOAuthToken: cb => {
+                    cb(accessToken);
+                },
+                volume: 0.5,
+            });
 
-                setPlayer(playerInstance);
+            setPlayer(playerInstance);
 
-                playerInstance.addListener('ready', ({ device_id }) => {
-                    console.log('Ready with Device ID', device_id);
-                    if (musicUri) {
-                        playTrack(device_id, musicUri);
-                    }
-                });
+            playerInstance.addListener('ready', ({device_id}) => {
+                console.log('Ready with Device ID', device_id);
+                if (musicUri) {
+                    playTrack(device_id, musicUri);
+                }
+            });
 
-                playerInstance.addListener('player_state_changed', (state) => {
-                    if (!state) return;
-                    setPaused(state.paused);
-                });
+            playerInstance.addListener('player_state_changed', (state) => {
+                if (!state) return;
+                setPaused(state.paused);
+                // 재생 상태가 변경될 때마다 곡이 끝났는지 확인
+                if (state.position === 0 && state.paused && state.duration > 0) {
+                    // 곡이 끝났다면 자동으로 다음 곡으로 넘어감
+                    onNextTrack();
+                }
+            });
 
-                playerInstance.connect();
-            } else {
-                console.error('Spotify SDK is not loaded or access token is missing.');
-            }
+            playerInstance.connect();
         };
+
 
         fetchAccessToken().then(() => {
             loadSpotifySDK();
         });
+
+        // 컴포넌트가 언마운트될 때 플레이어 정리
+        return () => {
+            if (player) {
+                player.disconnect();
+            }
+        };
     }, [musicUri, accessToken]);
 
     // 음악 uri 공백문자 제거
@@ -227,3 +240,4 @@ const App = () => {
 };
 
 ReactDOM.render(<App />, document.getElementById('root'));
+*/

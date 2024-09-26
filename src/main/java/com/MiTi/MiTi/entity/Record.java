@@ -22,7 +22,7 @@ public class Record {
     private Long albumId;
 
     @Column(name = "user_id", nullable = false)
-    private String userId;
+    private String providerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id", referencedColumnName = "id", insertable = false, updatable = false)

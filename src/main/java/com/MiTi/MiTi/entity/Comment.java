@@ -19,14 +19,14 @@ public class Comment {
     private Long albumId;
 
     @Column(name = "user_id")
-    private String userId;
+    private String providerId;
 
     @Column
     private String comment;
 
-    public Comment(Long albumId, String userId, String comment) {
+    public Comment(Long albumId, String providerId, String comment) {
         this.albumId = albumId;
-        this.userId = userId;
+        this.providerId = providerId;
         this.comment = comment;
     }
 

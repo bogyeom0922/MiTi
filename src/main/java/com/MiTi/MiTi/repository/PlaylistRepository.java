@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
-    List<Playlist> findByUserId(String userId);
+    List<Playlist> findByProviderId(String providerId);
     List<Playlist> findByUserPlaylistName(String userPlaylistName); // 수정된 메서드 이름
 }

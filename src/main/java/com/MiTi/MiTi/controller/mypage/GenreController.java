@@ -1,6 +1,7 @@
 package com.MiTi.MiTi.controller.mypage;
 
 import com.MiTi.MiTi.dto.GenreDto;
+import com.MiTi.MiTi.dto.PlaylistDto;
 import com.MiTi.MiTi.dto.UserDTO;
 import com.MiTi.MiTi.repository.GenreRepository;
 import com.MiTi.MiTi.service.GenreService;
@@ -25,15 +26,22 @@ public class GenreController {
         this.userService = userService;
     }
 
-    @GetMapping("/mypage/genre/{userId}")
-    public String list(@PathVariable String userId, Model model) {
-        List<GenreDto> genreDtoList = genreService.getGenreListByUserId(String.valueOf(userId));
+    @GetMapping("/mypage/genre/{providerId}")
+    public String list(@PathVariable String providerId, Model model) {
+        List<GenreDto> genreDtoList = genreService.getGenreListByProviderId(String.valueOf(providerId));
         model.addAttribute("genreList", genreDtoList);
-        model.addAttribute("userId", userId);
 
-        Optional<UserDTO> userDTO = userService.getUserById(userId);
-        model.addAttribute("user", userDTO);
-        return "mypage/mypage_genre";
+
+        Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);
+        if (userDTOOptional.isPresent()) {
+            UserDTO userDTO = userDTOOptional.get();
+            model.addAttribute("user", userDTO); // 사용자 정보를 모델에 추가
+
+            return "mypage/mypage_genre"; // 적절한 뷰 이름 반환
+        }
+
+        // 사용자 정보가 없는 경우, 적절한 처리를 해주셔야 합니다.
+        return "error"; // 또는 다른 적절한 경로로 리디렉션
     }
 
     // 선호장르 삭제 (물리적 삭제)
@@ -62,9 +70,9 @@ public class GenreController {
         }
     }
 
-    @GetMapping("/mypage/genre/non-selected/{userId}")
+    @GetMapping("/mypage/genre/non-selected/{providerId}")
     @ResponseBody
-    public List<GenreDto> getNonSelectedGenres(@PathVariable String userId) {
-        return genreService.getNonSelectedGenres(userId);
+    public List<GenreDto> getNonSelectedGenres(@PathVariable String providerId) {
+        return genreService.getNonSelectedGenres(providerId);
     }
 }

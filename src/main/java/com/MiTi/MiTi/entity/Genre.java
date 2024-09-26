@@ -20,7 +20,7 @@ public class Genre {
     private Long id;
 
     @Column(name = "user_id")
-    private String userId;
+    private String providerId;
 
     @Column(name = "genre")
     private String genre;

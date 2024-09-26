@@ -29,8 +29,8 @@ public class PlaylistService {
     }
 
     @Transactional
-    public List<PlaylistDto> getPlaylistListByUserId(String userId) {
-        List<Playlist> playlistList = playlistRepository.findByUserId(userId);
+    public List<PlaylistDto> getPlaylistListByProviderId(String providerId) {
+        List<Playlist> playlistList = playlistRepository.findByProviderId(providerId);
         List<PlaylistDto> playlistDtoList = new ArrayList<>();
         Set<String> uniqueNames = new HashSet<>();
 
@@ -38,7 +38,7 @@ public class PlaylistService {
             if (uniqueNames.add(playlist.getUserPlaylistName())) { // 중복이 아니면 추가
                 PlaylistDto playlistDto = PlaylistDto.builder()
                         .id(playlist.getId())
-                        .userId(playlist.getUserId())
+                        .providerId(playlist.getProviderId())
                         .albumId(playlist.getAlbumId())
                         .userPlaylistName(playlist.getUserPlaylistName())
                         .userPlaylistImage(playlist.getUserPlaylistImage())

@@ -20,7 +20,7 @@ public class Playlist {
     private Long id;
 
     @Column(name = "user_id")
-    private String userId;
+    private String providerId;
 
     @Column(name = "album_id")
     private Long albumId;

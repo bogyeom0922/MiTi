@@ -23,7 +23,7 @@ public class CommentController {
     public ResponseEntity<String> submitComment(@RequestBody CommentDto commentDto) {
         Comment comment = new Comment(
                 commentDto.getAlbumId(),
-                commentDto.getUserId(),
+                commentDto.getProviderId(),
                 commentDto.getComment()
         );
         commentService.saveComment(comment);

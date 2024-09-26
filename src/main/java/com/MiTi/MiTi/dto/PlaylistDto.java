@@ -11,7 +11,7 @@ import lombok.*;
 public class PlaylistDto {
 
     private Long id;
-    private String userId;
+    private String providerId;
     private Long albumId;
     private String userPlaylistName;
     private String userPlaylistImage;
@@ -19,34 +19,28 @@ public class PlaylistDto {
     private String album_image;
     private String music_artist_name;
 
-    // 추가된 필드
-    private int totalSongs;
-    private int totalDuration;
+        public Playlist toEntity() {
+        return Playlist.builder()
+                .id(id)
+                .providerId(providerId)
+                .albumId(albumId)
+                .userPlaylistName(userPlaylistName)
+                .userPlaylistImage(userPlaylistImage)
+                .build();
+    }
 
     @Builder
-    public PlaylistDto(Long id, String userId, Long albumId, String userPlaylistName,
-
-                       String userPlaylistImage, String music_name, String album_image, String music_artist_name,
-                       int totalSongs, int totalDuration) {
-        this.id = id;
-
-        this.userId = userId;
+    public PlaylistDto(Long id, String providerId, Long albumId, String userPlaylistName,
+                       String userPlaylistImage, String music_name, String album_image, String music_artist_name) {
+        this.id=id;
+        this.providerId = providerId;
         this.albumId = albumId;
-        this.userPlaylistName = userPlaylistName;
-        this.userPlaylistImage = userPlaylistImage;
+        this.userPlaylistName=userPlaylistName;
+        this.userPlaylistImage=userPlaylistImage;
         this.music_name = music_name;
         this.album_image = album_image;
         this.music_artist_name = music_artist_name;
-        this.totalSongs = totalSongs;
-        this.totalDuration = totalDuration;
+
     }
 
-    // 필요한 setter 메서드
-    public void setTotalSongs(int totalSongs) {
-        this.totalSongs = totalSongs;
-    }
-
-    public void setTotalDuration(int totalDuration) {
-        this.totalDuration = totalDuration;
-    }
 }

@@ -11,6 +11,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByAlbumId(Long albumId);
 
     // 특정 사용자 댓글 조회
-    List<Comment> findByUserId(String userId);
+    List<Comment> findByProviderId(String providerId);
 
 }

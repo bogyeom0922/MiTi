@@ -22,14 +22,14 @@ public class GenreService {
     }
 
     @Transactional
-    public List<GenreDto> getGenreListByUserId(String userId) {
-        List<Genre> genreList = genreRepository.findByUserId(userId);
+    public List<GenreDto> getGenreListByProviderId(String providerId) {
+        List<Genre> genreList = genreRepository.findByProviderId(providerId);
         List<GenreDto> genreDtoList = new ArrayList<>();
 
         for (Genre genre : genreList) {
             GenreDto genreDto = GenreDto.builder()
                     .id(genre.getId())
-                    .userId(genre.getUserId())
+                    .providerId(genre.getProviderId())
                     .genre(genre.getGenre())
                     .genre_image(genre.getGenre_image())
                     .build();
@@ -46,9 +46,9 @@ public class GenreService {
     }
 
     @Transactional
-    public List<GenreDto> getNonSelectedGenres(String userId) {
+    public List<GenreDto> getNonSelectedGenres(String providerId) {
         List<Genre> allGenres = genreRepository.findAll();
-        List<Genre> userGenres = genreRepository.findByUserId(userId);
+        List<Genre> userGenres = genreRepository.findByProviderId(providerId);
         Set<String> userGenreNames = userGenres.stream()
                 .map(Genre::getGenre)
                 .collect(Collectors.toSet());
@@ -58,7 +58,7 @@ public class GenreService {
                 .filter(genre -> !userGenreNames.contains(genre.getGenre()) && uniqueGenres.add(genre.getGenre()))
                 .map(genre -> GenreDto.builder()
                         .id(genre.getId())
-                        .userId(userId)
+                        .providerId(providerId)
                         .genre(genre.getGenre())
                         .genre_image(genre.getGenre_image())
                         .build())
@@ -70,7 +70,7 @@ public class GenreService {
     @Transactional
     public void addGenre(GenreDto genreDto) {
         Genre genre = Genre.builder()
-                .userId(genreDto.getUserId())
+                .providerId(genreDto.getProviderId())
                 .genre(genreDto.getGenre())
                 .genre_image(genreDto.getGenre_image())
                 .build();
