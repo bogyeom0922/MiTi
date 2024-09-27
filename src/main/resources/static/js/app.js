@@ -112,7 +112,7 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
                     }
                     console.log('Track played successfully');
                     if (musicInfo.id) {
-                        recordMusicPlay(userId, musicInfo.id);
+                        recordMusicPlay(providerId, musicInfo.id);
                     } else {
                         console.warn('albumId is null, not recording music play.');
                     }
@@ -126,7 +126,7 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
     // 음악 uri 공백문자 제거
     const sanitizeUri = (uri) => uri.trim().replace(/\r?\n|\r/g, '');
 
-    // 음악 재생
+    // 음악 재생 위에랑 코드 중복인데 없애면 또 고장나서 일단 보류임
     const playTrack = (device_id, trackUri) => {
         const sanitizedTrackUri = sanitizeUri(trackUri);
         console.log(`Playing sanitized URI: ${sanitizedTrackUri}`);

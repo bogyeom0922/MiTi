@@ -1,6 +1,7 @@
 package com.MiTi.MiTi.controller.album;
 
 import com.MiTi.MiTi.dto.AlbumDto;
+import com.MiTi.MiTi.dto.UserDTO;
 import com.MiTi.MiTi.entity.Album;
 import com.MiTi.MiTi.repository.AlbumRepository;
 import com.MiTi.MiTi.service.AlbumService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -40,8 +42,8 @@ public class AlbumController {
         this.userService = userService;
     }
 
-    @GetMapping("/album_list/{id}")
-    public String albumList(@PathVariable("id") Long userId, Model model) {
+    @GetMapping("/album_list/{providerId}/{id}")
+    public String albumList(@PathVariable("id") Long id, @PathVariable("providerId") String providerId, Model model) {
         List<String> details = albumRepository.findAll()
                 .stream()
                 .map(Album::getDetail)
@@ -50,14 +52,20 @@ public class AlbumController {
 
         model.addAttribute("details", details);
 
-        //UserDTO userDTO = userService.getUserById(userId);
-        //model.addAttribute("user", userDTO);
+        Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);
+        if (userDTOOptional.isPresent()) {
+            UserDTO userDTO = userDTOOptional.get();
+            model.addAttribute("user", userDTO); // 사용자 정보를 모델에 추가
 
-        return "album/album_list";
+            return "album/album_list"; // 적절한 뷰 이름 반환
+        }
+
+        return "error"; // 또는 다른 적절한 경로로 리디렉션
     }
 
+
     @GetMapping("/album/{detail}/{id}")
-    public String detailList(@PathVariable("detail") String detail, @PathVariable("id") Long id, Model model, @RequestParam(value = "userId", required = false) String userId) {
+    public String detailList(@PathVariable("detail") String detail, @PathVariable("id") Long id, Model model, @RequestParam(value = "providerId", required = false) String providerId) {
         log.info("Detail: {}", detail);
 
         // 앨범과 곡 목록 가져오기
@@ -68,23 +76,28 @@ public class AlbumController {
             model.addAttribute("firstAlbum", albums.get(0));
 
             // 각 곡에 대한 좋아요 상태를 설정 (사용자별)
-            if (userId != null) {
+            if (providerId != null) {
                 for (Album album : albums) {
-                    boolean isLiked = likeService.isAlbumLikedByUser(userId, album.getId());
+                    boolean isLiked = likeService.isAlbumLikedByUser(providerId, album.getId());
                     album.setIsLiked(isLiked); // 앨범 객체에 좋아요 상태 설정
                 }
 
                 // 첫 번째 앨범에 대한 좋아요 상태 설정
-                boolean isLikedAlbum = likeService.isAlbumLikedByUser(userId, albums.get(0).getId());
+                boolean isLikedAlbum = likeService.isAlbumLikedByUser(providerId, albums.get(0).getId());
                 model.addAttribute("isLikedAlbum", isLikedAlbum);
             }
 
         }
 
-        //UserDTO userDTO = userService.getUserById(id);
-        //model.addAttribute("user", userDTO);
+        Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);
+        if (userDTOOptional.isPresent()) {
+            UserDTO userDTO = userDTOOptional.get();
+            model.addAttribute("user", userDTO); // 사용자 정보를 모델에 추가
 
-        return "album/album_detail";
+            return "album/album_detail"; // 적절한 뷰 이름 반환
+        }
+
+        return "error"; // 또는 다른 적절한 경로로 리디렉션
     }
 
     //스트리밍에 필요함

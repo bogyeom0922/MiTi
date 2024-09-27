@@ -39,7 +39,7 @@
 
     <!-- userId를 JavaScript로 전달 -->
     <script th:inline="javascript">
-        var userId = /*[[${userId}]]*/ 'defaultUserId';
+        var providerId = /*[[${providerId}]]*/ 'defaultProviderId';
     </script>
 
     <script>
@@ -63,7 +63,7 @@
         }
 
         function showAddGenreList() {
-            fetch(`/mypage/genre/non-selected/${userId}`)
+            fetch(`/mypage/genre/non-selected/${providerId}`)
                 .then(response => response.json())
                 .then(nonSelectedGenres => {
                     const list = document.getElementById('nonSelectedGenreList');
@@ -85,7 +85,7 @@
         }
 
         function addGenre(genre, genre_image) {
-            const genreDto = {userId, genre, genre_image};
+            const genreDto = {providerId, genre, genre_image};
 
             fetch(`/mypage/genre/add`, {
                 method: 'POST',

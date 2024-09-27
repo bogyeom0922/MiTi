@@ -44,10 +44,10 @@ public class HomeController {
     public String indexPage(@RequestParam(defaultValue = "0") int page, Model model) {
         // 현재 인증된 사용자 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = ""; // 기본값은 빈 문자열로 초기화
+        String providerId = ""; // 기본값은 빈 문자열로 초기화
         if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User) {
             CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
-            userId = customOAuth2User.getUser().getId().getProviderId();  // 혹은 적절한 UserId 필드 사용
+            providerId = customOAuth2User.getUser().getId().getProviderId();  // 혹은 적절한 UserId 필드 사용
         }
 
         // 페이지네이션을 위한 Pageable 객체 생성
@@ -60,7 +60,7 @@ public class HomeController {
 
         // 모델에 추가
         model.addAttribute("albumList", albumDtoList);
-        model.addAttribute("userId", userId);
+        model.addAttribute("providerId", providerId);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", albumPage.getTotalPages());
 

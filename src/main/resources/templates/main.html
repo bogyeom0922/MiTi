@@ -7,12 +7,6 @@
 </head>
 <body>
 
-<button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${providerId})}'|">음악 기록</button>
-<button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${providerId})}'|">좋아요</button>
-<button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${providerId})}'|">선호 장르</button>
-<button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${providerId})}'|">댓글</button>
-<button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${providerId})}'|">플레이리스트</button>
-
 <div th:replace="layout/header :: header"></div>
 
 

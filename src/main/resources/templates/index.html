@@ -57,16 +57,16 @@
 </head>
 <body>
 
-<button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${userId})}'|">음악 기록</button>
-<button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${userId})}'|">좋아요</button>
-<button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${userId})}'|">선호 장르</button>
-<button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${userId})}'|">댓글</button>
-<button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|">플레이리스트</button>
-<button th:onclick="|location.href='@{/main/{userId}(userId=${userId})}'|">메인화면으로 가기(임시)</button>
+<button th:onclick="|location.href='@{/mypage/record/{userId}(userId=${providerId})}'|">음악 기록</button>
+<button th:onclick="|location.href='@{/mypage/like/{userId}(userId=${providerId})}'|">좋아요</button>
+<button th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${providerId})}'|">선호 장르</button>
+<button th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${providerId})}'|">댓글</button>
+<button th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${providerId})}'|">플레이리스트</button>
+<button th:onclick="|location.href='@{/main/{userId}(userId=${providerId})}'|">메인화면으로 가기(임시)</button>
 
 
 <div class="container">
-    <div id="root" th:data-user-id="${userId}"></div> <!--userId 전달하기 위한 코드-->
+    <div id="root" th:data-user-id="${providerId}"></div> <!--userId 전달하기 위한 코드-->
 
     <div class="liked-music-list">
         <h2>좋아요 한 음악</h2>

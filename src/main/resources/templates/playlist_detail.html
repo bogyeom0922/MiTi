@@ -78,9 +78,9 @@
         likeButtons.forEach(button => {
             button.addEventListener('click', function () {
                 const albumId = this.getAttribute('data-album-id');
-                const userId = this.getAttribute('data-user-id');
+                const providerId = this.getAttribute('data-user-id');
 
-                fetch(`/mypage/like/album/toggleTrack?albumId=${albumId}&userId=${userId}`, {
+                fetch(`/mypage/like/album/toggleTrack?albumId=${albumId}&providerId=${providerId}`, {
                     method: 'POST',
                 })
                     .then(response => response.text())

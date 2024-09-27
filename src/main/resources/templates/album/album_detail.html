@@ -30,7 +30,7 @@
         <!-- 앨범 전체 좋아요 버튼 (하트만 표시) -->
         <button class="albumHeartButton"
                 th:data-album-id="${firstAlbum.id}"
-                th:data-user-id="${user.id}">
+                th:data-user-id="${user.providerId}">
             <span th:text="${firstAlbum.isLiked != null && firstAlbum.isLiked ? '♥' : '♡'}"></span>
         </button>
     </div>
@@ -57,7 +57,7 @@
                     <div class="panel">
                         <button class="like-button"
                                 th:data-album-id="${album.id}"
-                                th:data-user-id="${user.id}">
+                                th:data-user-id="${user.providerId}">
                             <!-- isLiked 상태에 따른 하트 렌더링 -->
                             <span th:text="${album.isLiked != null ? (album.isLiked ? '♥' : '♡') : '♡'}"></span>
                         </button>
@@ -98,7 +98,7 @@
     <div class="album_comments_form">
         <p>Comments</p>
         <form>
-            <input type="hidden" name="userId" id="userId" th:value="${user.id}"/>
+            <input type="hidden" name="providerId" id="providerId" th:value="${user.providerId}"/>
             <input type="hidden" name="albumId" id="albumId" th:value="${firstAlbum.id}"/>
             <textarea name="comment" id="comment"></textarea>
             <button type="button" onclick="submitComment()">post</button>
@@ -107,7 +107,7 @@
     <!--댓글 목록-->
     <div th:if="${comments != null}">
         <div th:each="comment : ${comments}" class="album_comments_list">
-            <p th:text="${comment.userId}" class="comments_userid"></p>
+            <p th:text="${comment.providerId}" class="comments_userid"></p>
             <p th:text="${comment.comment}" class="comments_body"></p>
         </div>
     </div>
@@ -123,9 +123,9 @@
         if (albumHeartButton) {
             albumHeartButton.addEventListener('click', function () {
                 const albumId = this.getAttribute('data-album-id');
-                const userId = this.getAttribute('data-user-id');  // userId 추가
+                const providerId = this.getAttribute('data-user-id');  // userId 추가
 
-                fetch(`/mypage/like/album/toggle?albumId=${albumId}&userId=${userId}`, {
+                fetch(`/mypage/like/album/toggle?albumId=${albumId}&providerId=${providerId}`, {
                     method: 'POST',
                 })
                     .then(response => response.text())
@@ -164,9 +164,9 @@
             button.addEventListener('click', function () {
                 console.log('Track like button clicked');  // 이 줄 추가
                 const albumId = this.getAttribute('data-album-id');
-                const userId = this.getAttribute('data-user-id');  // userId 추가
+                const providerId = this.getAttribute('data-user-id');  // userId 추가
 
-                fetch(`/mypage/like/album/toggleTrack?albumId=${albumId}&userId=${userId}`, {
+                fetch(`/mypage/like/album/toggleTrack?albumId=${albumId}&providerId=${providerId}`, {
                     method: 'POST',
                     cache: 'no-cache'  // 캐시 방지 추가
                 })
@@ -191,13 +191,13 @@
 <!--댓글 생성 폼 json 형태로 전송-->
 <script>
     function submitComment() {
-        var userId = document.getElementById('userId').value;
+        var providerId = document.getElementById('providerId').value;
         var albumId = document.getElementById('albumId').value;
         var comment = document.getElementById('comment').value;
 
         // 데이터를 JSON 형태로 만들어 서버로 전송
         var data = {
-            userId: userId,
+            providerId: providerId,
             albumId: albumId,
             comment: comment
         };
