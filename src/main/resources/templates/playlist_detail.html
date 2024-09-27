@@ -7,7 +7,14 @@
     <!-- JavaScript for accordion -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Accordion code here...
+            const acc = document.getElementsByClassName("accordion2");
+            Array.from(acc).forEach(button => {
+                button.addEventListener("click", function() {
+                    this.classList.toggle("active");
+                    const panel = this.nextElementSibling;
+                    panel.style.display = panel.style.display === "block" ? "none" : "block";
+                });
+            });
         });
     </script>
 </head>
