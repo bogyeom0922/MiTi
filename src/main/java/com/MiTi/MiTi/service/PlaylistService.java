@@ -8,7 +8,6 @@ import com.MiTi.MiTi.repository.AlbumRepository;
 import com.MiTi.MiTi.repository.GenreRepository;
 import com.MiTi.MiTi.repository.PlaylistRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -21,7 +20,6 @@ public class PlaylistService {
     private final AlbumRepository albumRepository;
     private final GenreRepository genreRepository;
 
-    @Autowired
     public PlaylistService(PlaylistRepository playlistRepository, AlbumRepository albumRepository, GenreRepository genreRepository) {
         this.playlistRepository = playlistRepository;
         this.albumRepository = albumRepository;
@@ -69,11 +67,20 @@ public class PlaylistService {
         }
         return playlistDtoList;
     }
-
     @Transactional
     public PlaylistDto getPlaylistDetails(String playlistId) {
+        // playlistId가 null이거나 빈 문자열인지 확인
+        if (playlistId == null || playlistId.trim().isEmpty()) {
+            throw new IllegalArgumentException("Playlist ID is null or empty");
+        }
+
         // String으로 받은 playlistId를 Long으로 변환
-        Long parsedPlaylistId = Long.parseLong(playlistId);
+        Long parsedPlaylistId;
+        try {
+            parsedPlaylistId = Long.parseLong(playlistId);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid Playlist ID: " + playlistId, e);
+        }
 
         // findById 메서드를 사용하여 플레이리스트를 가져옵니다.
         Optional<Playlist> playlistOptional = playlistRepository.findById(parsedPlaylistId);
@@ -101,9 +108,10 @@ public class PlaylistService {
         return playlistDto;
     }
 
+
     // 유저가 선택한 장르에 맞춰 음향 특성을 분석한 앨범을 추천
-    public Map<String, List<Album>> getRecommendedAlbumsByUserGenres(String userId) {
-        List<Genre> userGenres = genreRepository.findByUserId(userId);
+    public Map<String, List<Album>> getRecommendedAlbumsByUserGenres(String providerId) {
+        List<Genre> userGenres = genreRepository.findByProviderId(providerId);
         Map<String, List<Album>> recommendedAlbumsMap = new HashMap<>();
 
         for (Genre genre : userGenres) {

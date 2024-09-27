@@ -20,14 +20,33 @@ public class UserService {
 
     // 회원 정보 가져오기
     public Optional<UserDTO> getUserById(String providerId) {
-        OAuth2Provider oAuth2Provider = getFixedOAuth2Provider(); // provider를 고정
-        UserId userId = UserId.builder()
-                .provider(oAuth2Provider)
-                .providerId(providerId)
-                .build();
+        System.out.println("Provider ID: " + providerId); // 사용자 ID 확인
+        try {
+            // 고정된 provider 값 사용
+            OAuth2Provider oAuth2Provider = OAuth2Provider.SPOTIFY; // 예시로 SPOTIFY 사용
+            UserId userId = UserId.builder()
+                    .provider(oAuth2Provider)  // 고정된 provider
+                    .providerId(providerId)
+                    .build();
 
-        return userRepository.findById(userId) // User 엔티티 조회
-                .map(this::convertToUserDTO); // User 엔티티를 UserDTO로 변환
+            Optional<User> userOpt = userRepository.findById(userId);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                UserDTO userDTO = UserDTO.builder()
+                        .provider(user.getId().getProvider().name())
+                        .providerId(user.getId().getProviderId())
+                        .name(user.getName())
+                        .email(user.getEmail())
+                        .image(user.getImage())
+                        .role(user.getRole().name())
+                        .build();
+                return Optional.of(userDTO);
+            }
+        } catch (IllegalArgumentException e) {
+            // provider가 유효하지 않을 때 예외 처리
+            System.out.println("Invalid provider");
+        }
+        return Optional.empty();
     }
 
     // 회원 정보 저장하기

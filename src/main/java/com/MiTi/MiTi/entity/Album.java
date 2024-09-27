@@ -34,7 +34,7 @@ public class Album {
     private String music_analysis_url;
     private String music_key;
     @Column(name = "music_duration_ms")
-    private int music_duration_ms;
+    private Integer music_duration_ms;
     private Double music_instrumentalness;  // 악기 특성 (0.0 ~ 1.0)
     private Double music_acousticness;      // 어쿠스틱 특성 (0.0 ~ 1.0)
     private Double music_danceability;      // 댄서블 특성 (0.0 ~ 1.0)
@@ -66,5 +66,4 @@ public class Album {
     public void setMusic_duration_ms(int music_duration_ms) {
         this.music_duration_ms = music_duration_ms;
     }
-
 }

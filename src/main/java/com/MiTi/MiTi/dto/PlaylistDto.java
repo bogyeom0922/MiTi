@@ -19,7 +19,12 @@ public class PlaylistDto {
     private String album_image;
     private String music_artist_name;
 
-        public Playlist toEntity() {
+    // 추가된 필드
+    private int totalSongs;
+    private int totalDuration;
+
+
+    public Playlist toEntity() {
         return Playlist.builder()
                 .id(id)
                 .providerId(providerId)
@@ -41,6 +46,15 @@ public class PlaylistDto {
         this.album_image = album_image;
         this.music_artist_name = music_artist_name;
 
+    }
+
+    // 필요한 setter 메서드
+    public void setTotalSongs(int totalSongs) {
+        this.totalSongs = totalSongs;
+    }
+
+    public void setTotalDuration(int totalDuration) {
+        this.totalDuration = totalDuration;
     }
 
 }

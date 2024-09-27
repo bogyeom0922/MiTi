@@ -46,8 +46,9 @@
     </div>
 
     <div class="my_left">
-        <img src="/images/logo.png" class="my_logo_img" alt="로고 이미지"
-             th:attr="data-provider-id=${user.providerId}" onclick="redirectToMainPage(this)">
+        <img th:src="@{/images/logo.png}" class="my_logo_img" alt="로고 이미지"
+             th:attr="data-provider-id=${user != null ? user.providerId : 'default'}" onclick="redirectToMainPage(this)">
+
 
         <div class="my_category">
             <div th:onclick="|location.href='@{/mypage/record/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">음악 기록</div>

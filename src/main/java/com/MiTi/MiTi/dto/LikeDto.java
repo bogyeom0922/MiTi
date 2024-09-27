@@ -16,7 +16,7 @@ public class LikeDto {
     private String music_name;
     private String album_image;
     private String music_artist_name;
-    private String music_duration_ms;
+    private Integer music_duration_ms;
     private String music_uri;
 
     public Like toEntity() {
@@ -28,7 +28,7 @@ public class LikeDto {
     }
 
     @Builder
-    public LikeDto(Long id, String providerId, Long albumId, String music_name, String album_image, String music_artist_name, String music_duration_ms, String music_uri) {
+    public LikeDto(Long id, String providerId, Long albumId, String music_name, String album_image, String music_artist_name, Integer music_duration_ms, String music_uri) {
         this.id=id;
         this.providerId = providerId;
         this.albumId = albumId;
@@ -44,8 +44,8 @@ public class LikeDto {
             return "00:00"; // 기본값 반환 (혹은 다른 처리)
         }
 
-        long minutes = Integer.parseInt(music_duration_ms) / 60000;
-        long seconds = (Integer.parseInt(music_duration_ms) % 60000) / 1000;
+        Integer minutes = music_duration_ms / 60000;
+        Integer seconds = (music_duration_ms % 60000) / 1000;
         return String.format("%d:%02d", minutes, seconds);
     }
 

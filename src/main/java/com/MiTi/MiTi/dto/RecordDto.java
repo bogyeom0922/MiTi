@@ -14,7 +14,7 @@ public class RecordDto {
     private String music_name;
     private String album_image;
     private String music_artist_name;
-    private String music_duration_ms;
+    private Integer music_duration_ms;
 
     public Record toEntity() {
         return Record.builder()
@@ -24,7 +24,7 @@ public class RecordDto {
     }
 
     @Builder
-    public RecordDto(String providerId, Long albumId, String music_name, String album_image, String music_artist_name, String music_duration_ms) {
+    public RecordDto(String providerId, Long albumId, String music_name, String album_image, String music_artist_name, Integer music_duration_ms) {
         this.providerId = providerId;
         this.albumId = albumId;
         this.music_name = music_name;
@@ -38,8 +38,8 @@ public class RecordDto {
             return "00:00"; // 기본값 반환 (혹은 다른 처리)
         }
 
-        long minutes = Integer.parseInt(music_duration_ms) / 60000;
-        long seconds = (Integer.parseInt(music_duration_ms) % 60000) / 1000;
+        Integer minutes = music_duration_ms / 60000;
+        Integer seconds = (music_duration_ms % 60000) / 1000;
         return String.format("%d:%02d", minutes, seconds);
     }
 

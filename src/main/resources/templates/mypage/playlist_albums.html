@@ -9,11 +9,9 @@
 <div th:replace="layout/mypage :: mypage"></div>
 <div class="my_playlist"></div>
 <div class="my_body">
-    <img src="/images/go_back.png" class="my_playlist_back"
-         th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${userId})}'|">
     <p th:text="${userPlaylistName}" class="my_body_title_playlist_albums"></p>
     <table class="my_table_playlist_albums">
-        <tr th:each="album : ${albumList}">
+        <tr th:each="album : ${albumList}" th:onclick="|handleMusicClick(${album.albumId})|">
             <td style="width: 9%">
                 <img th:src="@{${album.album_image}}" width="50" alt="앨범 이미지"/>
             </td>

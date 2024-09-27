@@ -21,6 +21,7 @@ public interface AlbumRepository extends JpaRepository<Album, Long> { // Long ->
     List<Album> findAllByOrderByMusic_popularityDesc();
 
     Page<Album> findAll(Pageable pageable);
+
     // 에너지와 댄서빌리티로 필터링
     @Query("SELECT a FROM album a WHERE a.music_energy > :energy AND a.music_danceability > :danceability")
     List<Album> findByEnergyAndDanceability(double energy, double danceability);
