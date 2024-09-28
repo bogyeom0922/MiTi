@@ -13,9 +13,8 @@
     <div class="header">
         <p class="logo" th:if="${user != null}" data-provider-id="${user.providerId}" onclick="redirectToMain(this)">MITI</p>
         <script>
-            function redirectToMain(element) {
-                const providerId = element.getAttribute('data-provider-id');
-                window.location.href = `/main/${providerId}`;
+            function redirectToMain() {
+                window.location.href = `/main`;
             }
         </script>
 
