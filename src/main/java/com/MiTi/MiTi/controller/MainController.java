@@ -1,5 +1,6 @@
 package com.MiTi.MiTi.controller;
 
+import com.MiTi.MiTi.OAuth2.CustomOAuth2User;
 import com.MiTi.MiTi.dto.UserDTO;
 import com.MiTi.MiTi.entity.Album;
 import com.MiTi.MiTi.repository.AlbumRepository;
@@ -8,6 +9,8 @@ import com.MiTi.MiTi.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +38,17 @@ public class MainController {
 
 
     // 사용자 정보가 포함된 메인 페이지
-    @GetMapping("/main/{providerId}")
-    public String mainPage(@PathVariable("providerId") String providerId, Model model) {
+    @GetMapping("/main")
+    public String mainPage(Model model) {
+
+        // 현재 인증된 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String providerId = ""; // 기본값은 빈 문자열로 초기화
+        if (authentication != null && authentication.getPrincipal() instanceof CustomOAuth2User) {
+            CustomOAuth2User customOAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+            providerId = customOAuth2User.getUser().getId().getProviderId();  // 혹은 적절한 UserId 필드 사용
+        }
+
         // provider와 providerId로 사용자 정보를 가져와 모델에 추가
         Optional<UserDTO> userDTOOpt = userService.getUserById(providerId);
 

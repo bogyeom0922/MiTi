@@ -201,6 +201,12 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
                     {paused ? '재생' : '일시정지'}
                 </button>
                 <button onClick={onNextTrack} className="nav-button">다음 곡</button>
+                <button
+                    onClick={() => window.location.href = `http://localhost:8080/index/${providerId}`}
+                    className="nav-button"
+                >
+                    음악 목록
+                </button>
             </div>
         </div>
     );
@@ -208,7 +214,7 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
 
 // App 컴포넌트 정의
 const App = () => {
-    const { useState, useEffect } = React;
+    const {useState, useEffect} = React;
     const [musicId, setMusicId] = useState(272);
     const [musicInfo, setMusicInfo] = useState({ musicName: "", musicUri: "", albumImage: "", id: "" });
 
