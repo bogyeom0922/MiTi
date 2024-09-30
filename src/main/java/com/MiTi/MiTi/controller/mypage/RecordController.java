@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -54,10 +56,24 @@ public class RecordController {
     @PostMapping("/api/record")
     public ResponseEntity<String> recordMusic(@RequestBody RecordDto recordDto) {
         try {
+            // 음악 기록 로직
             recordService.recordMusic(recordDto);
-            return ResponseEntity.ok("Music recorded successfully");
+
+            // 파이썬 스크립트 실행
+            String pythonScriptPath = "src/main/scripts/customized_rec.py"; // 파이썬 스크립트 경로
+            ProcessBuilder processBuilder = new ProcessBuilder("/Library/Frameworks/Python.framework/Versions/3.9/bin/python3", pythonScriptPath, String.valueOf(recordDto.getProviderId()), String.valueOf(recordDto.getAlbumId()));
+
+            Process process = processBuilder.start();
+            int exitCode = process.waitFor(); // 프로세스가 완료될 때까지 대기
+
+            if (exitCode != 0) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error executing Python script");
+            }
+
+            return ResponseEntity.ok("Music recorded successfully and Python script executed");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error recording music");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error recording music or executing Python script");
         }
     }
+
 }
