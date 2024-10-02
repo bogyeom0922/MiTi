@@ -13,7 +13,7 @@
     <li th:each="detail, stat : ${details}">
         <p><strong>Rank:</strong> <span th:text="${stat.index + 1}"></span></p>
         <a th:href="@{/album/{detail}/{id}(detail=${detail}, id=${detail.id})}">
-            <p th:text="${detail.name}"></p>
+            <p th:text="${detail.musicName}"></p>
         </a>
     </li>
 </ul>

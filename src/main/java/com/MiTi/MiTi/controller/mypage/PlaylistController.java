@@ -9,6 +9,8 @@ import com.MiTi.MiTi.service.PlaylistService;
 import com.MiTi.MiTi.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
@@ -153,10 +155,12 @@ public class PlaylistController {
                 })
                 .collect(Collectors.toList());
 
+
         model.addAttribute("playlist", playlist);
         model.addAttribute("formattedDurations", formattedDurations);  // 미리 계산된 재생 시간을 전달
         model.addAttribute("totalSongs", totalSongs);
         model.addAttribute("totalDuration", totalDuration);
+
 
         // entry 객체 추가
         Map<String, String> entry = new HashMap<>();
@@ -179,6 +183,18 @@ public class PlaylistController {
         return "playlist_detail";
     }
 
+    @GetMapping("/api/playlist/{providerId}/{mood}")
+    public ResponseEntity<List<Album>> getPlaylist(@PathVariable("providerId") String providerId, @PathVariable("mood") String mood, Model model) {
+        List<Album> playlist = playlistService.generatePlaylistByMood(mood);
+
+
+        model.addAttribute("mood", mood);
+        model.addAttribute("providerId", providerId);
+        if (playlist.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(playlist);
+    }
 
 
 }

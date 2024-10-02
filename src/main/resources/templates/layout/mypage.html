@@ -10,9 +10,8 @@
 <body>
 <div th:fragment="mypage">
     <div class="my_accordion-container">
-        <!-- 스팬 태그로 사용자 이름 표시
-        <span th:if="${user.isPresent()}" th:text="${user.get().name}" class="user" onclick="toggleAccordion()"></span>
--->
+        <span th:text="${user.name}" class="user" onclick="toggleAccordion()"></span>
+
         <!-- 아코디언 메뉴 콘텐츠 -->
         <div class="my_accordion-content">
             <a href="/logout">로그아웃</a>

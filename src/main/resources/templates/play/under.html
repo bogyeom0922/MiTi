@@ -8,7 +8,7 @@
 </head>
 <body>
 <div th:fragment="footer">
-    <div id="root" th:attr="data-user-id=${user.providerId}"></div>
+    <div id="root" th:attr="data-user-id=${user.providerId}"  th:data-mood="${mood}"></div>
 
     <footer>
         <!-- React and ReactDOM from CDN -->

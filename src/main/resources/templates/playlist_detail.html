@@ -1,104 +1,87 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <link href="/css/main.css" rel="stylesheet">
-    <title>Playlist Detail</title>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const acc = document.getElementsByClassName("accordion2");
-            Array.from(acc).forEach(button => {
-                button.addEventListener("click", function() {
-                    this.classList.toggle("active");
-                    const panel = this.nextElementSibling;
-                    panel.style.display = panel.style.display === "block" ? "none" : "block";
+    <!DOCTYPE html>
+    <html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <link href="/css/main.css" rel="stylesheet">
+        <title>Playlist Detail</title>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const acc = document.getElementsByClassName("accordion2");
+                Array.from(acc).forEach(button => {
+                    button.addEventListener("click", function() {
+                        this.classList.toggle("active");
+                        const panel = this.nextElementSibling;
+                        panel.style.display = panel.style.display === "block" ? "none" : "block";
+                    });
                 });
             });
-        });
-    </script>
-</head>
-<body>
+        </script>
+    </head>
+    <body>
 
-<div th:replace="layout/mypage :: mypage"></div>
+    <div th:replace="layout/mypage :: mypage"></div>
 
-<div class="playlist-header">
-    <img th:src="${playlistImage != null ? playlistImage : (playlist[0].album_image != null ? playlist[0].album_image : '/path/to/default-image.png')}" class="playlist-cover-image" alt="플레이리스트 이미지">
-    <h1 class="playlist-title" th:text="${entry.key} + ' 때 듣는 음악'">Playlist Title</h1>
-    <p class="playlist-subtitle" th:text="'총 ' + ${totalSongs} + ' 곡 • 총 재생 시간: ' + ${totalDuration}"></p>
-    <div class="play-button-container">
-        <button class="play-button"></button>
+    <!--플레이 리스트 제목 -->
+    <div class="playlist-header">
+        <img th:src="${playlistImage != null ? playlistImage : (playlist[0].album_image != null ? playlist[0].album_image : '/path/to/default-image.png')}" class="playlist-cover-image" alt="플레이리스트 이미지">
+        <h1 class="playlist-title" th:text="${entry.key} + ' 때 듣는 음악'">Playlist Title</h1>
+        <p class="playlist-subtitle" th:text="'총 ' + ${totalSongs} + ' 곡 • 총 재생 시간: ' + ${totalDuration}"></p>
     </div>
-</div>
 
-<div class="playlist_songs">
-    <table class="playlist_table">
-        <tbody>
-        <tr th:each="song, iterStat : ${playlist}" th:onclick="|handleMusicClick(${song.id})|">
-            <td th:text="${iterStat.index + 1}"></td>
-            <td>
-                <img th:src="${song.album_image}" alt="앨범 이미지" class="album-cover-thumbnail">
-            </td>
-            <td th:text="${song.musicName}"></td>
-            <td th:text="${song.musicArtistName}"></td>
-            <td th:text="${formattedDurations[iterStat.index]}"></td>
-            <td class="menu">
-                <div class="accordion_container">
-                    <button class="accordion2">:</button>
-                    <div class="panel">
-                        <button class="like-button" th:data-album-id="${song.id}" th:attr="data-user-id=${user != null ? user.providerId : ''}">
-                            <span class="heart" th:text="${song.isLiked != null ? (song.isLiked ? '♥' : '♡') : '♡'}"></span>
-                        </button>
-                        <button>재생 목록에 추가</button>
-                        <button>다음에 재생</button>
-                        <a th:href="@{/album/{detail}/{id}(detail=${song.detail}, id=${user != null ? user.providerId : ''})}">
-                            <button>앨범 정보</button>
-                        </a>
-                        <button class="accordion3">공유</button>
-                        <div class="panel2">
-                            <button><a href="#" onclick="clip(); return false;">링크 복사</a></button>
-                            <button><a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a></button>
-                            <button><a href="javascript:shareTwitter();">트위터에 공유</a></button>
-                            <button><a href="javascript:shareFacebook();">페이스북에 공유</a></button>
-                            <button><a href="javascript:shareBand();">밴드에 공유</a></button>
+    <!-- 전역 플레이 버튼 -->
+    <div class="play-button-container">
+        <button class="play-button" onclick="fetchPlaylist()">재생</button>
+    </div>
+
+
+
+
+    <!--플레이 리스트 음악들 -->
+    <div class="playlist_songs">
+        <table class="playlist_table">
+            <tbody>
+            <tr th:each="song, iterStat : ${playlist}" th:onclick="|handleMusicClick(${song.id})|">
+                <td th:text="${iterStat.index + 1}"></td>
+                <td>
+                    <img th:src="${song.album_image}" alt="앨범 이미지" class="album-cover-thumbnail">
+                </td>
+                <td th:text="${song.musicName}"></td>
+                <td th:text="${song.musicArtistName}"></td>
+                <td th:text="${formattedDurations[iterStat.index]}"></td>
+                <td class="menu">
+                    <div class="accordion_container">
+                        <button class="accordion2">:</button>
+                        <div class="panel">
+                            <button class="like-button" th:data-album-id="${song.id}" th:attr="data-user-id=${user != null ? user.providerId : ''}" >
+
+                                <span class="heart" th:text="${song.isLiked != null ? (song.isLiked ? '♥' : '♡') : '♡'}"></span>
+                            </button>
+                            <button>재생 목록에 추가</button>
+                            <button>다음에 재생</button>
+                            <a th:href="@{/album/{detail}/{id}(detail=${song.detail}, id=${user != null ? user.providerId : ''})}">
+                                <button>앨범 정보</button>
+                            </a>
+                            <button class="accordion3">공유</button>
+                            <div class="panel2">
+                                <button><a href="#" onclick="clip(); return false;">링크 복사</a></button>
+                                <button><a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a></button>
+                                <button><a href="javascript:shareTwitter();">트위터에 공유</a></button>
+                                <button><a href="javascript:shareFacebook();">페이스북에 공유</a></button>
+                                <button><a href="javascript:shareBand();">밴드에 공유</a></button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:replace="~{play/under :: footer}"></div>
 
-<div th:replace="~{play/under :: footer}"></div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const likeButtons = document.querySelectorAll('.like-button');
 
-        likeButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const albumId = this.getAttribute('data-album-id');
-                const providerId = this.getAttribute('data-user-id');
 
-                fetch(`/mypage/like/album/toggleTrack?albumId=${albumId}&providerId=${providerId}`, {
-                    method: 'POST',
-                })
-                    .then(response => response.text())
-                    .then(result => {
-                        const heartSpan = this.querySelector('.heart');
-                        if (result === 'liked') {
-                            heartSpan.textContent = '♥';
-                        } else {
-                            heartSpan.textContent = '♡';
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            });
-        });
-    });
-</script>
 
-</body>
-</html>
+
+    </body>
+    </html>

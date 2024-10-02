@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link href="/css/main.css" rel="stylesheet">
     <title>Album Detail</title>
-    <!--음악 재생 시간 분:초 단위로 변경-->
+    <!-- 음악 재생 시간 분:초 단위로 변경 -->
     <script type="text/javascript">
         function formatDuration(ms) {
             var minutes = Math.floor(ms / 60000);
@@ -18,7 +18,7 @@
 <div th:replace="layout/header :: header"></div>
 <div th:replace="~{play/under :: footer}"></div>
 
-<!--앨범 기본 정보-->
+<!-- 앨범 기본 정보 -->
 <div th:if="${firstAlbum != null}" class="album">
     <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" class="album_img">
     <div class="album_detail">
@@ -27,18 +27,11 @@
         <p>followers: <span th:text="${firstAlbum.music_artist_followers}"></span></p>
         <p>artist genres: <span th:text="${firstAlbum.music_artist_genres}"></span></p>
 
-        <!-- 앨범 전체 좋아요 버튼 (하트만 표시) -->
-        <button class="albumHeartButton"
-                th:data-album-id="${firstAlbum.id}"
-                th:data-user-id="${user.providerId}">
-            <span th:text="${firstAlbum.isLiked != null && firstAlbum.isLiked ? '♥' : '♡'}"></span>
-        </button>
     </div>
-    <img src="/images/play.png" class="album_play_img">
-    <!--    <button id="play-all-button" type="button">이 재생버튼을 위 이미지 눌렀을 때 실행되도록 수정해야함</button>-->
+    <img src="/images/play.png" class="album_play_img" id="play-all-button">
 </div>
 
-<!--앨범에 해당되는 곡 목록-->
+<!-- 앨범에 해당되는 곡 목록 -->
 <div class="album_list">
     <table>
         <tbody>
@@ -63,7 +56,7 @@
                         </button>
                         <button>재생 목록에 추가</button>
                         <button>다음에 재생</button>
-                        <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${member.id})}">
+                        <a th:href="@{/album/{detail}/{providerId}(detail=${album.detail}, providerId=${user.providerId})}">
                             <button>앨범 정보</button>
                         </a>
                         <button class="accordion3">공유</button>
@@ -92,9 +85,9 @@
     </table>
 </div>
 
-<!--댓글-->
+<!-- 댓글 -->
 <div class="album_comments">
-    <!--댓글 작성-->
+    <!-- 댓글 작성 -->
     <div class="album_comments_form">
         <p>Comments</p>
         <form>
@@ -104,7 +97,7 @@
             <button type="button" onclick="submitComment()">post</button>
         </form>
     </div>
-    <!--댓글 목록-->
+    <!-- 댓글 목록 -->
     <div th:if="${comments != null}">
         <div th:each="comment : ${comments}" class="album_comments_list">
             <p th:text="${comment.providerId}" class="comments_userid"></p>
@@ -123,7 +116,7 @@
         if (albumHeartButton) {
             albumHeartButton.addEventListener('click', function () {
                 const albumId = this.getAttribute('data-album-id');
-                const providerId = this.getAttribute('data-user-id');  // userId 추가
+                const providerId = this.getAttribute('data-user-id');
 
                 fetch(`/mypage/like/album/toggle?albumId=${albumId}&providerId=${providerId}`, {
                     method: 'POST',
@@ -162,13 +155,13 @@
         const trackHeartButtons = document.querySelectorAll('.like-button');
         trackHeartButtons.forEach(button => {
             button.addEventListener('click', function () {
-                console.log('Track like button clicked');  // 이 줄 추가
+                console.log('Track like button clicked');
                 const albumId = this.getAttribute('data-album-id');
-                const providerId = this.getAttribute('data-user-id');  // userId 추가
+                const providerId = this.getAttribute('data-user-id');
 
                 fetch(`/mypage/like/album/toggleTrack?albumId=${albumId}&providerId=${providerId}`, {
                     method: 'POST',
-                    cache: 'no-cache'  // 캐시 방지 추가
+                    cache: 'no-cache'
                 })
                     .then(response => response.text())
                     .then(result => {
@@ -188,7 +181,7 @@
     });
 </script>
 
-<!--댓글 생성 폼 json 형태로 전송-->
+<!-- 댓글 생성 폼 json 형태로 전송 -->
 <script>
     function submitComment() {
         var providerId = document.getElementById('providerId').value;
@@ -212,40 +205,28 @@
         }).then(function (response) {
             // 응답 처리
             if (response.ok) {
-                console.log('Comment submitted successfully');
-                location.reload();
+                return response.json();
             } else {
-                console.error('Failed to submit comment');
+                throw new Error('댓글 작성에 실패했습니다.');
             }
+        }).then(function (data) {
+            // 댓글 작성 성공 시 처리
+            alert('댓글이 작성되었습니다.');
+            // 댓글 목록 업데이트 또는 페이지 리로드
+            location.reload();
         }).catch(function (error) {
-            console.error('Error submitting comment:', error);
+            // 에러 처리
+            console.error('Error:', error);
+            alert('댓글 작성 중 오류가 발생했습니다.');
         });
     }
-
 </script>
 
-<!--아코디언 메뉴-->
+<!-- 아코디언 메뉴 -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // 첫 번째 아코디언
         var acc = document.getElementsByClassName("accordion2");
-        for (var i = 0; i < acc.length; i++) {
-            acc[i].addEventListener("click", function () {
-                this.classList.toggle("active");
-                var panel = this.nextElementSibling;
-                if (panel && panel.classList.contains('panel')) {
-                    if (panel.style.display === "block") {
-                        panel.style.display = "none";
-                    } else {
-                        panel.style.display = "block";
-                    }
-                }
-            });
-        }
-    });
-
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var acc = document.getElementsByClassName("accordion3");
         for (var i = 0; i < acc.length; i++) {
             acc[i].addEventListener("click", function () {
                 this.classList.toggle("active");
@@ -257,133 +238,90 @@
                 }
             });
         }
+
+        // 두 번째 아코디언 (공유 메뉴)
+        var acc2 = document.getElementsByClassName("accordion3");
+        for (var j = 0; j < acc2.length; j++) {
+            acc2[j].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel2 = this.nextElementSibling;
+                if (panel2.style.display === "block") {
+                    panel2.style.display = "none";
+                } else {
+                    panel2.style.display = "block";
+                }
+            });
+        }
     });
 </script>
 
-<!--공유-->
-<script th:inline="javascript">
-
-    function clip() {
-
-        // 현재 페이지의 URL을 클립보드에 복사
-        var url = window.document.location.href;
-
-        navigator.clipboard.writeText(url).then(function () {
-            alert("URL이 복사되었습니다.");
-        }).catch(function (error) {
-            console.error('클립보드에 복사할 수 없습니다:', error);
-            alert("URL 복사에 실패했습니다. 브라우저 설정을 확인해주세요.");
-        });
-
-    }
-
-    var thisUrl = document.URL;
-    var albumDetail = [[${firstAlbum.detail}]]; // Thymeleaf 구문을 사용하여 서버에서 이 부분을 대체
-    var snsTitle = "MiTi에서 듣는 " + albumDetail;
-
-    function shareTwitter() {
-        var url = "http://twitter.com/share?url=" + encodeURIComponent(thisUrl) + "&text=" + encodeURIComponent(snsTitle);
-        window.open(url, "tweetPop", "width=600, height=800,scrollbars=yes");
-    }
-
-    function shareFacebook() {
-        var url = "http://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(thisUrl);
-        window.open(url, "", "width=600, height=800");
-    }
-
-    function shareBand() {
-        var url = "http://www.band.us/plugin/share?body=" + encodeURIComponent(snsTitle) + "&route=" + encodeURIComponent(thisUrl);
-        window.open(url, "shareBand", "width=600, height=800, resizable=yes");
-    }
+<!-- 카카오톡 공유 -->
+<script>
+    Kakao.init('YOUR_KAKAO_API_KEY');
 
     function shareKakao() {
-
-        // 사용할 앱의 JavaScript 키 설정
-        Kakao.init('c674475155401a14bdb7e23238b59868');
-
-        // 카카오링크 버튼 생성
         Kakao.Link.createDefaultButton({
-            container: '#btnKakao', // 카카오공유버튼ID
+            container: '#btnKakao',
             objectType: 'feed',
             content: {
-                title: snsTitle, // 동적으로 설정된 제목 사용
-                imageUrl: thisUrl, // 콘텐츠 URL (실제 URL로 변경)
+                title: '앨범 공유 제목',
+                description: '앨범 공유 설명',
+                imageUrl: window.location.origin + '/images/album_image.jpg',
                 link: {
-                    mobileWebUrl: thisUrl,
-                    webUrl: thisUrl
+                    mobileWebUrl: window.location.href,
+                    webUrl: window.location.href
                 }
             }
         });
     }
 </script>
 
-<!-- 앨범 트랙 재생 기능 -->
+<!-- 트위터 공유 -->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const playAllButton = document.getElementById('play-all-button');
-        const playButtons = document.querySelectorAll('.play-button');
-        const albumListItems = document.querySelectorAll('#album-list li');
-        let currentTrackIndex = 0;
-        let audio = new Audio();
+    function shareTwitter() {
+        var text = '앨범 공유 텍스트';
+        var url = window.location.href;
+        var hashtags = '음악,앨범';
 
-        // 개별 곡 재생 버튼 클릭 이벤트 처리
-        playButtons.forEach((button, index) => {
-            button.addEventListener('click', () => {
-                currentTrackIndex = index; // 현재 클릭한 곡의 인덱스를 설정
-                playTrack();
-            });
-        });
+        var twitterUrl = 'https://twitter.com/intent/tweet?' +
+            'text=' + encodeURIComponent(text) +
+            '&url=' + encodeURIComponent(url) +
+            '&hashtags=' + encodeURIComponent(hashtags);
 
-        // 전체 재생 버튼 클릭 이벤트 처리
-        playAllButton.addEventListener('click', () => {
-            currentTrackIndex = 0; // 첫 번째 곡부터 재생
-            playTrack();
-        });
-
-        // 현재 트랙 재생 함수
-        function playTrack() {
-            if (currentTrackIndex >= albumListItems.length) {
-                console.log('All tracks finished');
-                return; // 모든 곡이 재생되었으면 종료
-            }
-
-            const trackElement = albumListItems[currentTrackIndex];
-            const trackUrl = trackElement.getAttribute('data-music-url');
-
-            if (trackUrl) {
-                audio.src = trackUrl;
-                audio.play();
-
-                audio.onended = () => {
-                    currentTrackIndex++; // 다음 트랙으로 이동
-                    playTrack(); // 다음 트랙 재생
-                };
-            } else {
-                console.error('Track URL is not available');
-            }
-        }
-
-        // 페이지를 벗어나면 재생 중지
-        window.addEventListener('beforeunload', function () {
-            if (audio) {
-                audio.pause();
-                audio.src = '';
-            }
-        });
-    });
+        window.open(twitterUrl, '_blank');
+    }
 </script>
 
+<!-- 페이스북 공유 -->
 <script>
-    // 좋아요 버튼 클릭 시 작동하는 JavaScript
-    document.getElementById('likeButton').addEventListener('click', function () {
-        this.classList.toggle('liked');
-        if (this.classList.contains('liked')) {
-            this.innerText = '♥'; // 하트 모양 변경
-        } else {
-            this.innerText = '♡'; // 기본 하트 모양
-        }
-    });
+    function shareFacebook() {
+        var url = window.location.href;
+        var facebookUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url);
+        window.open(facebookUrl, '_blank');
+    }
+</script>
 
+<!-- 밴드 공유 -->
+<script>
+    function shareBand() {
+        var url = window.location.href;
+        var bandUrl = 'https://band.us/plugin/share?body=' + encodeURIComponent(url) + '&route=' + encodeURIComponent(url);
+        window.open(bandUrl, '_blank');
+    }
+</script>
+
+<!-- 링크 복사 -->
+<script>
+    function clip() {
+        var url = window.location.href;
+        var textarea = document.createElement('textarea');
+        document.body.appendChild(textarea);
+        textarea.value = url;
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        alert('링크가 복사되었습니다.');
+    }
 </script>
 
 </html>

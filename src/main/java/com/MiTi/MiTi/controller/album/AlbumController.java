@@ -42,30 +42,8 @@ public class AlbumController {
         this.userService = userService;
     }
 
-    @GetMapping("/album_list/{providerId}/{id}")
-    public String albumList(@PathVariable("id") Long id, @PathVariable("providerId") String providerId, Model model) {
-        List<String> details = albumRepository.findAll()
-                .stream()
-                .map(Album::getDetail)
-                .distinct()
-                .collect(Collectors.toList());
-
-        model.addAttribute("details", details);
-
-        Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);
-        if (userDTOOptional.isPresent()) {
-            UserDTO userDTO = userDTOOptional.get();
-            model.addAttribute("user", userDTO); // 사용자 정보를 모델에 추가
-
-            return "album/album_list"; // 적절한 뷰 이름 반환
-        }
-
-        return "error"; // 또는 다른 적절한 경로로 리디렉션
-    }
-
-
-    @GetMapping("/album/{detail}/{id}")
-    public String detailList(@PathVariable("detail") String detail, @PathVariable("id") Long id, Model model, @RequestParam(value = "providerId", required = false) String providerId) {
+    @GetMapping("/album/{detail}/{providerId}")
+    public String detailList(@PathVariable("detail") String detail, @PathVariable(value = "providerId") String providerId, Model model) {
         log.info("Detail: {}", detail);
 
         // 앨범과 곡 목록 가져오기
@@ -97,7 +75,7 @@ public class AlbumController {
             return "album/album_detail"; // 적절한 뷰 이름 반환
         }
 
-        return "error"; // 또는 다른 적절한 경로로 리디렉션
+        return "album/album_detail"; // 또는 다른 적절한 경로로 리디렉션
     }
 
     //스트리밍에 필요함
