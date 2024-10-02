@@ -11,8 +11,8 @@ def fetch_records_and_albums(connection):
 
         # album 테이블에서 id와 크롤링한 필드 값 가져오기
         cursor.execute("""
-            SELECT id, music_acousticness, music_danceability, music_energy,
-                   music_liveness, music_loudness, music_tempo, music_valence
+            SELECT id, music_acousticness, music_danceability, music_energy, 
+                   music_liveness, music_loudness, music_tempo, music_valence 
             FROM album
         """)
         albums = cursor.fetchall()  # 결과를 튜플 리스트로 가져옴
