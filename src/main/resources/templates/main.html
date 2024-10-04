@@ -22,6 +22,18 @@
         </div>
     </th:block>
 </div>
+<!-- 기록 기반 추천 플레이리스트 -->
+<div class="recommend_title" th:if="${userBasedRecommendations}">
+    <p th:text="${user != null ? user.userName : ''} + '님에게 딱 맞는 플레이리스트'"></p>
+</div>
+<th:block th:each="album : ${userBasedRecommendations}">
+    <div class="recommend_playlist">
+        <a th:href="@{'/playlist/detail/' + ${user != null ? user.providerId : ''} + '/' + ${album.music_genre}}">
+            <img th:src="${album.album_image}" alt="Playlist Image" class="playlist_image">
+        </a>
+        <p class="playlist_name" th:text="'추천곡: ' + ${album.musicName}"></p> <!-- 기록 기반의 추천 음악 -->
+    </div>
+</th:block>
 
 <!-- 인기차트 섹션 -->
 <div class="chart_title">Popular Chart</div>
