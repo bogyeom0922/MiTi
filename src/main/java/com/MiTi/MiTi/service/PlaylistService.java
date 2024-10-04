@@ -109,62 +109,38 @@ public class PlaylistService {
     }
 
 
+    // 장르에 맞춰 추천 앨범을 가져오는 메서드 추가
+    public List<Album> getRecommendedAlbumsByGenre(String genre) {
+        return albumRepository.findAlbumsByGenre(genre);
+    }
+
     // 유저가 선택한 장르에 맞춰 음향 특성을 분석한 앨범을 추천
     public Map<String, List<Album>> getRecommendedAlbumsByUserGenres(String providerId) {
         List<Genre> userGenres = genreRepository.findByProviderId(providerId);
         Map<String, List<Album>> recommendedAlbumsMap = new HashMap<>();
 
         for (Genre genre : userGenres) {
-            List<Album> genreAlbums = new ArrayList<>();
-            switch (genre.getGenre()) {
-                case "신나는":
-                    genreAlbums = albumRepository.findByEnergyAndDanceability(0.7, 0.6);
-                    break;
-                case "울고싶어":
-                    genreAlbums = albumRepository.findByValenceAndAcousticness(0.2, 0.7);
-                    break;
-                case "차에서":
-                    genreAlbums = albumRepository.findByTempoAndDanceability(100, 0.5);
-                    break;
-                case "게임":
-                    genreAlbums = albumRepository.findByEnergyAndLoudness(0.8, -5.0);
-                    break;
-                case "조용한":
-                    genreAlbums = albumRepository.findByAcousticnessAndEnergy(0.8, 0.3);
-                    break;
-            }
-
+            List<Album> genreAlbums = albumRepository.findAlbumsByGenre(genre.getGenre());  // genre_rec 테이블과 매핑된 메서드
             if (!genreAlbums.isEmpty()) {
                 recommendedAlbumsMap.put(genre.getGenre(), genreAlbums.stream().limit(20).collect(Collectors.toList()));
             }
         }
+
         return recommendedAlbumsMap;
     }
+    // 사용자 기록을 바탕으로 추천 앨범을 가져오는 메서드 추가
+    public List<Album> getRecommendedAlbumsBasedOnUserRecord(String providerId) {
+        // 사용자가 들은 음악의 장르 목록을 가져옴
+        List<String> userGenres = albumRepository.findGenresByUserRecord(providerId);
 
-    // 분위기에 따라 플레이리스트 생성
-    public List<Album> generatePlaylistByMood(String mood) {
-        List<Album> playlist = new ArrayList<>();
-
-        switch (mood) {
-            case "신나는":
-                playlist = albumRepository.findByEnergyAndDanceability(0.7, 0.6);
-                break;
-            case "울고싶어":
-                playlist = albumRepository.findByValenceAndAcousticness(0.2, 0.7);
-                break;
-            case "차에서":
-                playlist = albumRepository.findByTempoAndDanceability(100, 0.5);
-                break;
-            case "게임":
-                playlist = albumRepository.findByEnergyAndLoudness(0.8, -5.0);
-                break;
-            case "조용한":
-                playlist = albumRepository.findByAcousticnessAndEnergy(0.8, 0.3);
-                break;
-            default:
-                throw new IllegalArgumentException("잘못된 분위기 값입니다: " + mood);
+        // 각 장르별로 앨범을 추천
+        List<Album> recommendedAlbums = new ArrayList<>();
+        for (String genre : userGenres) {
+            List<Album> genreAlbums = albumRepository.findAlbumsByGenre(genre);
+            recommendedAlbums.addAll(genreAlbums);
         }
 
-        return playlist.stream().limit(20).collect(Collectors.toList());
+        // 중복 제거 및 최대 20곡으로 제한
+        return recommendedAlbums.stream().distinct().limit(20).collect(Collectors.toList());
     }
 }

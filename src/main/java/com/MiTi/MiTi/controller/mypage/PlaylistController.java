@@ -124,9 +124,10 @@ public class PlaylistController {
 //    </tr>
 //</table>
 
-    @GetMapping("/playlist/detail/{providerId}/{mood}")
-    public String getPlaylistDetail( @PathVariable("providerId") String providerId,@PathVariable("mood") String mood, Model model) {
-        List<Album> playlist = playlistService.generatePlaylistByMood(mood);
+    @GetMapping("/playlist/detail/{providerId}/{genre}")
+    public String getPlaylistDetail(@PathVariable("providerId") String providerId, @PathVariable("genre") String genre, Model model) {
+        // 장르 기반으로 플레이리스트 생성
+        List<Album> playlist = playlistService.getRecommendedAlbumsByGenre(genre);
 
         Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);
         if (userDTOOptional.isPresent()) {
@@ -164,7 +165,7 @@ public class PlaylistController {
 
         // entry 객체 추가
         Map<String, String> entry = new HashMap<>();
-        entry.put("key", mood); // key 값을 mood로 설정
+        entry.put("key", genre); // key 값을 genre로 설정
         model.addAttribute("entry", entry);
         model.addAttribute("providerId", providerId);  // providerId를 모델에 추가
         return "playlist_detail";
@@ -183,18 +184,28 @@ public class PlaylistController {
         return "playlist_detail";
     }
 
-    @GetMapping("/api/playlist/{providerId}/{mood}")
-    public ResponseEntity<List<Album>> getPlaylist(@PathVariable("providerId") String providerId, @PathVariable("mood") String mood, Model model) {
-        List<Album> playlist = playlistService.generatePlaylistByMood(mood);
+    @GetMapping("/api/playlist/{providerId}/{genre}")
+    public ResponseEntity<List<Album>> getPlaylist(@PathVariable("providerId") String providerId, @PathVariable("genre") String genre, Model model) {
+        // 장르를 기반으로 플레이리스트를 생성하는 로직
+        List<Album> playlist = playlistService.getRecommendedAlbumsByGenre(genre);
 
-
-        model.addAttribute("mood", mood);
+        model.addAttribute("genre", genre);
         model.addAttribute("providerId", providerId);
+
         if (playlist.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(playlist);
     }
 
+    // 사용자 기록을 바탕으로 앨범 추천
+    @GetMapping("/api/recommendation/{providerId}")
+    public ResponseEntity<List<Album>> getRecommendationsBasedOnUserRecord(@PathVariable("providerId") String providerId) {
+        List<Album> recommendedAlbums = playlistService.getRecommendedAlbumsBasedOnUserRecord(providerId);
 
+        if (recommendedAlbums.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }   
+        return ResponseEntity.ok(recommendedAlbums);
+    }
 }
