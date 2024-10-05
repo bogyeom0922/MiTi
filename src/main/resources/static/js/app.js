@@ -5,6 +5,23 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
     const [player, setPlayer] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
     const [deviceId, setDeviceId] = useState(null);
+    const [trackPosition, setTrackPosition] = useState(0); // 현재 재생 위치
+    const [trackDuration, setTrackDuration] = useState(0); // 트랙 길이
+
+    // 음악 재생 상태를 저장하는 함수
+    const saveMusicState = (musicInfo, isPaused) => {
+        const musicState = {
+            ...musicInfo,
+            paused: isPaused // 재생 중인지 여부도 저장
+        };
+        localStorage.setItem('musicState', JSON.stringify(musicState));
+    };
+
+    // 페이지 로드 시 저장된 상태를 불러오는 함수
+    const loadMusicState = () => {
+        const savedState = localStorage.getItem('musicState');
+        return savedState ? JSON.parse(savedState) : { musicName: "", musicUri: "", albumImage: "", id: "", paused: true };
+    };
 
     // 엑세스 토큰 받아오기
     const fetchAccessToken = async () => {
@@ -41,11 +58,12 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
             playerInstance.addListener('player_state_changed', (state) => {
                 if (!state) return;
                 setPaused(state.paused);
+                setTrackPosition(state.position); // 현재 위치
+                setTrackDuration(state.track_window.current_track.duration_ms); // 트랙 길이
 
-                // 트랙이 끝났을 때 자동으로 다음 곡 재생
                 if (state.track_window.current_track && state.position === 0 && state.paused) {
                     console.log('Track ended, calling onNextTrack');
-                    setTimeout(onNextTrack, 1000); // 1초 딜레이 후 다음 곡으로 넘어가도록 설정
+                    setTimeout(onNextTrack, 1000); // 1초 딜레이 후 다음 곡으로
                 }
             });
 
@@ -93,6 +111,15 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
     }, []);
 
     useEffect(() => {
+        const savedMusicInfo = loadMusicState();
+        setPaused(savedMusicInfo.paused); // 저장된 재생 상태 복원
+        setTrackPosition(savedMusicInfo.trackPosition || 0); // 저장된 위치 복원
+        if (!savedMusicInfo.paused && player) {
+            player.resume(); // 저장된 상태가 재생 중이라면 자동으로 재생
+        }
+    }, []);
+
+    useEffect(() => {
         if (player && musicUri && deviceId) {
             player._options.getOAuthToken((token) => {
                 const sanitizedUri = sanitizeUri(musicUri);
@@ -126,38 +153,33 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
     // 음악 uri 공백문자 제거
     const sanitizeUri = (uri) => uri.trim().replace(/\r?\n|\r/g, '');
 
-    // 음악 재생 위에랑 코드 중복인데 없애면 또 고장나서 일단 보류임
-    const playTrack = (device_id, trackUri) => {
-        const sanitizedTrackUri = sanitizeUri(trackUri);
-        console.log(`Playing sanitized URI: ${sanitizedTrackUri}`);
-
-        fetch(`https://api.spotify.com/v1/me/player/play?device_id=${device_id}`, {
-            method: 'PUT',
-            body: JSON.stringify({ uris: [sanitizedTrackUri] }),
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${accessToken}`,
-            },
-        })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(errorData => {
-                        throw new Error(`Spotify API error: ${errorData.error.message}`);
-                    });
-                }
-                console.log('Track played successfully');
-                if (musicInfo.id) {
-                    recordMusicPlay(providerId, musicInfo.id);
-                } else {
-                    console.warn('albumId is null, not recording music play.');
-                }
-            })
-            .catch(error => {
-                console.error('Error playing track:', error.message);
+    // 슬라이더로 위치 이동
+    const handleSeek = (e) => {
+        const position = (e.target.value / 100) * trackDuration;
+        if (player) {
+            player.seek(position).then(() => {
+                setTrackPosition(position);
             });
+        }
     };
 
-    // 일시정지
+    // 주기적으로 재생 위치 가져오기
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (player) {
+                player.getCurrentState().then(state => {
+                    if (state) {
+                        setTrackPosition(state.position);
+                        setTrackDuration(state.track_window.current_track.duration_ms);
+                    }
+                });
+            }
+        }, 1000); // 1초마다 재생 위치 업데이트
+
+        return () => clearInterval(interval);
+    }, [player]);
+
+    // 일시정지 및 재생
     const togglePlayPause = () => {
         if (!player) return;
         if (paused) {
@@ -167,6 +189,13 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
         } else {
             player.pause().then(() => setPaused(true));
         }
+    };
+
+    // 시간을 mm:ss 형식으로 변환
+    const formatTime = (milliseconds) => {
+        const minutes = Math.floor(milliseconds / 60000);
+        const seconds = ((milliseconds % 60000) / 1000).toFixed(0);
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     };
 
     // 음악 기록
@@ -191,135 +220,132 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
         }
     };
 
+    // 음악 상태 저장
+    useEffect(() => {
+        saveMusicState(musicInfo, paused); // 재생 상태와 함께 저장
+    }, [musicInfo, paused]);
+
     return (
         <div className="player-container-1">
+            {/* 프로그레스 바 컨테이너를 상단으로 이동 */}
+            <div className="progress-bar-container">
+                <span>{formatTime(trackPosition)}</span>
+                <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={(trackPosition / trackDuration) * 100 || 0}
+                    onChange={handleSeek} // 사용자가 슬라이더를 움직이면 위치 이동
+                />
+                <span>{formatTime(trackDuration)}</span>
+            </div>
+
+            {/* 앨범 이미지 및 음악 정보 */}
             <img src={albumImage} alt="Album cover" className="album-cover"/>
             <p>Now playing: {musicName}</p>
+
+            {/* 네비게이션 버튼 */}
             <div className="navigation-buttons">
                 <button onClick={onPrevTrack} className="nav-button">이전 곡</button>
                 <button onClick={togglePlayPause} className="nav-button">
                     {paused ? '재생' : '일시정지'}
                 </button>
                 <button onClick={onNextTrack} className="nav-button">다음 곡</button>
-                <button
-                    onClick={() => window.location.href = `http://localhost:8080/index/${providerId}`}
-                    className="nav-button"
-                >
-                    음악 목록
-                </button>
             </div>
         </div>
     );
 };
 
+
 // App 컴포넌트 정의
 // App 컴포넌트 정의
 const App = () => {
-    const { useState, useEffect } = React;
-    const [currentTrackIndex, setCurrentTrackIndex] = useState(0); // 현재 플레이리스트에서의 트랙 인덱스
-    const [musicInfo, setMusicInfo] = useState({ musicName: "", musicUri: "", albumImage: "", id: "" });
-    const [playlist, setPlaylist] = useState([]); // 플레이리스트 상태
+    const [musicInfo, setMusicInfo] = React.useState({
+        musicName: "",
+        musicUri: "",
+        albumImage: "",
+        id: "",
+    });
+    const [recommendedAlbums, setRecommendedAlbums] = React.useState([]); // 추천 앨범 목록 상태
 
-    // root 엘리먼트에서 userId와 mood 값을 추출
     const providerId = document.getElementById('root').getAttribute('data-user-id');
-    const mood =  document.getElementById('root').getAttribute('data-mood');
 
     // 음악 정보 가져오기
     const fetchMusicInfo = async (id) => {
         try {
             const response = await fetch(`/api/music/${id}`);
             const data = await response.json();
-            if (data) {
-                setMusicInfo({
-                    musicName: data.musicName,
-                    musicUri: data.music_uri,
-                    albumImage: data.album_image,
-                    id: data.id,
-                });
-            } else {
-                throw new Error('No music info found');
-            }
-        } catch (error) {
-            console.error('Error fetching music info:', error);
-        }
-    };
-
-    // 플레이리스트 데이터를 가져오는 함수
-    async function fetchPlaylist() {
-        try {
-            const response = await fetch(`/api/playlist/${providerId}/${mood}`);
-            const data = await response.json();
-            if (response.ok && data.length > 0) {
-                setPlaylist(data); // 가져온 데이터를 플레이리스트로 설정
-            } else {
-                console.error('플레이리스트를 찾을 수 없습니다.');
-            }
-        } catch (error) {
-            console.error('플레이리스트 가져오기 실패:', error);
-        }
-    }
-
-    // fetchPlaylist를 전역으로 노출
-    window.fetchPlaylist = fetchPlaylist;
-
-    // 현재 트랙의 정보를 플레이리스트에서 가져옴
-    const updateCurrentTrack = (index) => {
-        if (playlist.length > 0 && index >= 0 && index < playlist.length) {
-            const track = playlist[index];
             setMusicInfo({
-                musicName: track.musicName,
-                musicUri: track.music_uri,
-                albumImage: track.album_image,
-                id: track.id,
+                musicName: data.musicName,
+                musicUri: data.music_uri,
+                albumImage: data.albumImage,
+                id: data.id,
             });
+        } catch (error) {
+            console.error("Error fetching music info: ", error);
         }
     };
 
-    useEffect(() => {
-        fetchPlaylist(); // 컴포넌트가 처음 로드될 때 플레이리스트 가져옴
-    }, []);
-
-    useEffect(() => {
-        if (playlist.length > 0 && currentTrackIndex >= 0 && currentTrackIndex < playlist.length) {
-            updateCurrentTrack(currentTrackIndex); // 현재 트랙 업데이트
+    // 추천 앨범 목록 가져오기
+    const fetchRecommendedAlbums = async (id) => {
+        if (!id) {
+            console.warn('Invalid albumId for fetching recommended albums');
+            return;
         }
-    }, [currentTrackIndex, playlist]);
+
+        try {
+            const response = await fetch(`/api/recommend/${id}`);
+            const data = await response.json();
+            setRecommendedAlbums(data.recommendedAlbums); // 추천 앨범 목록 상태 업데이트
+        } catch (error) {
+            console.error('Error fetching recommended albums:', error);
+        }
+    };
+
+    // 음악 클릭 시 처리: 음악 정보와 추천 앨범 목록을 동시에 가져오기
+    const handleMusicClick = async (id) => {
+        await fetchMusicInfo(id); // 선택한 음악의 정보 가져오기
+        await fetchRecommendedAlbums(id); // 선택한 음악에 대한 추천 앨범 목록 가져오기
+    };
 
     // 다음 곡 재생
-    const handleNextTrack = () => {
-        setCurrentTrackIndex((prevIndex) => {
-            const nextIndex = prevIndex + 1;
-            return nextIndex < playlist.length ? nextIndex : 0; // 마지막 곡이면 첫 번째 곡으로 돌아감
-        });
-    };
-
-    // 이전 곡 재생
-    const handlePrevTrack = () => {
-        setCurrentTrackIndex((prevIndex) => {
-            const prevTrackIndex = prevIndex - 1;
-            return prevTrackIndex >= 0 ? prevTrackIndex : playlist.length - 1; // 첫 번째 곡이면 마지막 곡으로 돌아감
-        });
-    };
-
-    const handleMusicClick = (id) => {
-        const trackIndex = playlist.findIndex(track => track.id === id);
-        if (trackIndex !== -1) {
-            setCurrentTrackIndex(trackIndex); // 선택한 곡으로 인덱스 변경
+    const onNextTrack = async () => {
+        if (recommendedAlbums.length > 0) {
+            const nextAlbumId = recommendedAlbums[0]; // 추천 앨범 목록에서 첫 번째 앨범
+            await fetchMusicInfo(nextAlbumId); // 다음 곡 재생
+            await fetchRecommendedAlbums(nextAlbumId); // 그 곡에 대한 새로운 추천 앨범 목록 가져오기
+        } else {
+            console.warn('No recommended albums found');
         }
     };
 
-    // 전역 범위로 노출 (파일 나누면서 필요)
-    window.handleMusicClick = handleMusicClick;
+    // 재생 목록 UI 생성
+    const renderPlaylist = () => {
+        return recommendedAlbums.length > 0 ? (
+            <ul>
+                {recommendedAlbums.map((albumId, index) => (
+                    <li key={index} onClick={() => handleMusicClick(albumId)}>
+                        앨범 {albumId} 재생
+                    </li>
+                ))}
+            </ul>
+        ) : (
+            <p>추천 앨범이 없습니다.</p>
+        );
+    };
+
+    React.useEffect(() => {
+        window.handleMusicClick = handleMusicClick; // 전역 함수로 노출
+    }, []);
 
     return (
-        <div>
+
             <SpotifyPlayer
                 musicInfo={musicInfo}
                 providerId={providerId}
-                onNextTrack={handleNextTrack}
-                onPrevTrack={handlePrevTrack}
+                onNextTrack={onNextTrack} // 자동으로 다음 트랙 재생
+                onPrevTrack={() => {}} // 이전 트랙 핸들러는 생략
             />
-        </div>
     );
 };
 

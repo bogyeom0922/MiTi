@@ -8,6 +8,7 @@ def fetch_album_features(connection, album_ids):
         query = f"SELECT id, music_acousticness, music_danceability, music_energy, music_liveness, music_loudness, music_tempo, music_valence FROM album WHERE id IN ({format_strings})"
         cursor.execute(query, tuple(album_ids))
         albums = cursor.fetchall()
+        print("Fetched albums:", albums)  # 추가된 코드
     return {album[0]: np.array(album[1:], dtype=float) for album in albums}
 
 def calculate_average_features(user_records, album_dict, feature_indices):
@@ -71,17 +72,26 @@ def main(album_ids):
         sorted_group1 = sorted(similarities_group1, key=lambda x: x[1], reverse=True)
         sorted_group2 = sorted(similarities_group2, key=lambda x: x[1], reverse=True)
 
-        top_albums = []
-        seen_album_ids = set()
 
+        # 추천 앨범 리스트를 출력하기 전, similarities를 확인해 보세요.
+        print("Similarities Group 1:", similarities_group1)
+        print("Similarities Group 2:", similarities_group2)
+        top_albums = []
+        seen_album_ids = set(album_ids)  # 입력한 앨범 ID를 초기화
+
+        # 추천 앨범 리스트 생성
         for album_id, similarity in sorted_group1 + sorted_group2:
-            if album_id in seen_album_ids:
-                continue
+            print(f"Evaluating album {album_id} with similarity {similarity}")  # 추가된 코드
+            # 현재 앨범을 제외하지 않도록 조건을 수정
             top_albums.append((album_id, similarity))
-            seen_album_ids.add(album_id)
             if len(top_albums) == 20:
                 break
 
+
+        print("Top albums after filtering:", top_albums)  # 추천된 앨범 확인
+
+
+        print("Top albums:", top_albums)  # 여기를 수정했습니다.
         for album_id, similarity in top_albums:
             print(album_id, similarity)
 

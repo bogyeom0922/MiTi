@@ -205,7 +205,7 @@ public class PlaylistController {
 
         if (recommendedAlbums.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }   
+        }
         return ResponseEntity.ok(recommendedAlbums);
     }
 }

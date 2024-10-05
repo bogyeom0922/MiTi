@@ -27,6 +27,12 @@
         <p>followers: <span th:text="${firstAlbum.music_artist_followers}"></span></p>
         <p>artist genres: <span th:text="${firstAlbum.music_artist_genres}"></span></p>
 
+        <!-- 앨범 전체 좋아요 버튼 (하트만 표시) -->
+        <button class="albumHeartButton"
+                th:data-album-id="${firstAlbum.id}"
+                th:data-user-id="${user.providerId}">
+            <span th:text="${firstAlbum.isLiked != null && firstAlbum.isLiked ? '♥' : '♡'}"></span>
+        </button>
     </div>
     <img src="/images/play.png" class="album_play_img" id="play-all-button">
 </div>
