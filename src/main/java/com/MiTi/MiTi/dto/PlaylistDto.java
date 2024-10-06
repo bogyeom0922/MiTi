@@ -19,8 +19,11 @@ public class PlaylistDto {
     private String album_image;
     private String music_artist_name;
 
+    // 필요한 setter 메서드
     // 추가된 필드
+    @Setter
     private int totalSongs;
+    @Setter
     private int totalDuration;
 
 
@@ -46,15 +49,6 @@ public class PlaylistDto {
         this.album_image = album_image;
         this.music_artist_name = music_artist_name;
 
-    }
-
-    // 필요한 setter 메서드
-    public void setTotalSongs(int totalSongs) {
-        this.totalSongs = totalSongs;
-    }
-
-    public void setTotalDuration(int totalDuration) {
-        this.totalDuration = totalDuration;
     }
 
 }
