@@ -40,9 +40,6 @@ public class PlaylistService {
                         .albumId(playlist.getAlbumId())
                         .userPlaylistName(playlist.getUserPlaylistName())
                         .userPlaylistImage(playlist.getUserPlaylistImage())
-                        .album_image(playlist.getAlbum().getAlbum_image())
-                        .music_name(playlist.getAlbum().getMusicName())
-                        .music_artist_name(playlist.getAlbum().getMusicArtistName())
                         .build();
                 playlistDtoList.add(playlistDto);
             }
@@ -67,6 +64,7 @@ public class PlaylistService {
         }
         return playlistDtoList;
     }
+
     @Transactional
     public PlaylistDto getPlaylistDetails(String playlistId) {
         // playlistId가 null이거나 빈 문자열인지 확인
@@ -142,5 +140,10 @@ public class PlaylistService {
 
         // 중복 제거 및 최대 20곡으로 제한
         return recommendedAlbums.stream().distinct().limit(20).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void save(Playlist playlist) {
+        playlistRepository.save(playlist);
     }
 }

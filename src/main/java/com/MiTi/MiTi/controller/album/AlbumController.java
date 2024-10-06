@@ -1,27 +1,24 @@
 package com.MiTi.MiTi.controller.album;
 
 import com.MiTi.MiTi.dto.AlbumDto;
+import com.MiTi.MiTi.dto.PlaylistDto;
 import com.MiTi.MiTi.dto.UserDTO;
 import com.MiTi.MiTi.entity.Album;
+import com.MiTi.MiTi.entity.Playlist;
 import com.MiTi.MiTi.repository.AlbumRepository;
-import com.MiTi.MiTi.service.AlbumService;
-import com.MiTi.MiTi.service.CommentService;
-import com.MiTi.MiTi.service.LikeService;
-import com.MiTi.MiTi.service.UserService;
+import com.MiTi.MiTi.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -32,14 +29,16 @@ public class AlbumController {
     private final CommentService commentService;
     private final UserService userService;
     private final LikeService likeService;
+    private final PlaylistService playlistService;
 
     public AlbumController(AlbumService albumService, AlbumRepository albumRepository,
-                           CommentService commentService, LikeService likeService, UserService userService) {
+                           CommentService commentService, LikeService likeService, UserService userService, PlaylistService playlistService) {
         this.albumService = albumService;
         this.albumRepository = albumRepository;
         this.commentService = commentService;
         this.likeService = likeService;
         this.userService = userService;
+        this.playlistService = playlistService;
     }
 
     @GetMapping("/album/{detail}/{providerId}")
@@ -72,10 +71,64 @@ public class AlbumController {
             UserDTO userDTO = userDTOOptional.get();
             model.addAttribute("user", userDTO); // 사용자 정보를 모델에 추가
 
-            return "album/album_detail"; // 적절한 뷰 이름 반환
+            List<PlaylistDto> playlistDtoList = playlistService.getPlaylistListByProviderId(String.valueOf(providerId));
+            model.addAttribute("playlists", playlistDtoList); // 재생 목록을 모델에 추가
         }
 
         return "album/album_detail"; // 또는 다른 적절한 경로로 리디렉션
+    }
+
+    @PostMapping("/playlist/add")
+    @ResponseBody
+    public ResponseEntity<String> addPlaylist(@RequestBody PlaylistDto playlistDto) {
+        try {
+            // user_playlist_image 기본값 설정
+            String defaultImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSer3RBirIRkkFqpY3Fp2YfHANEPmafXSt7IA&s";
+
+            // Playlist 엔티티 생성 및 저장
+            Playlist playlist = Playlist.builder()
+                    .providerId(playlistDto.getProviderId()) // PlaylistDto의 providerId
+                    .albumId(playlistDto.getAlbumId()) // PlaylistDto의 albumId
+                    .userPlaylistName(playlistDto.getUserPlaylistName()) // PlaylistDto의 userPlaylistName
+                    .userPlaylistImage(defaultImageUrl) // 기본 이미지 URL 설정
+                    .build();
+
+            // 저장
+            playlistService.save(playlist);
+
+            return ResponseEntity.ok("재생 목록에 성공적으로 추가되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류가 발생했습니다.");
+        }
+    }
+
+    @PostMapping("/playlist/create")
+    @ResponseBody
+    public ResponseEntity<String> createPlaylist(@RequestBody PlaylistDto playlistDto) {
+        try {
+            // user_playlist_image 기본값 설정
+            String defaultImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSer3RBirIRkkFqpY3Fp2YfHANEPmafXSt7IA&s";
+
+            // Playlist 엔티티 생성 및 저장
+            Playlist playlist = Playlist.builder()
+                    .providerId(playlistDto.getProviderId()) // PlaylistDto의 providerId
+                    .albumId(playlistDto.getAlbumId())
+                    .userPlaylistName(playlistDto.getUserPlaylistName()) // PlaylistDto의 userPlaylistName
+                    .userPlaylistImage(defaultImageUrl) // 기본 이미지 URL 설정
+                    .build();
+
+            // 저장
+            playlistService.save(playlist);
+
+            // 로그 추가
+            System.out.println("Received providerId: " + playlistDto.getProviderId());
+            System.out.println("Received albumId: " + playlistDto.getAlbumId());
+            System.out.println("Received userPlaylistName: " + playlistDto.getUserPlaylistName());
+
+            return ResponseEntity.ok("재생 목록이 성공적으로 추가되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류가 발생했습니다.");
+        }
     }
 
     //스트리밍에 필요함
