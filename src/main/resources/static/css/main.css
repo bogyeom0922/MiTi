@@ -2,6 +2,7 @@ body {
     background-color: #d4e2d1ff;
     margin: 0;
     padding: 0;
+    font-family: Arial, sans-serif;
 }
 
 div {
@@ -26,6 +27,7 @@ a:hover {
 }
 
 /*header*/
+/*header*/
 .header {
     position: relative;
     height: 120px;
@@ -42,22 +44,66 @@ a:hover {
     font-weight: 900;
 }
 
+
+/* 검색창 */
+.search_input {
+    width: 300px;
+    height: 40px;
+    font-size: 16px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: none;
+    margin: 0 auto;
+    display: block;
+    position: relative; /* relative로 설정 */
+    z-index: 10;
+}
+
+/* 검색 자동완성 결과 컨테이너 */
 #autocomplete-results {
+    display: none; /* 기본적으로 숨기기 */
     border: 1px solid #ccc;
     max-height: 200px;
     overflow-y: auto;
-    background-color: #fff;
-    z-index: 1000;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 300px;
+    margin-top: 10px; /* 검색창 바로 밑으로 간격 추가 */
+    position: absolute;
+    left: 0;
+    top: 45px; /* 검색창 바로 아래에 위치하도록 설정 */
+    z-index: 9;
 }
 
+
+/* 검색 결과 항목 */
 .autocomplete-item {
     padding: 10px;
-    z-index: 1000;
     cursor: pointer;
+    font-size: 14px; /* 글씨 크기 조정 */
+    border-bottom: 1px solid #ddd; /* 아이템 간의 구분선 */
+    color: #333; /* 텍스트 색상 */
+    display: flex; /* 플렉스 레이아웃 사용 */
+    align-items: center; /* 텍스트 수직 정렬 */
 }
 
 .autocomplete-item:hover {
-    background-color: #f0f0f0;
+    background-color: #f0f0f0; /* 호버 시 배경색 변경 */
+}
+
+.autocomplete-item img {
+    width: 40px; /* 앨범 커버 이미지 크기 설정 */
+    height: 40px;
+    object-fit: cover; /* 이미지 비율 유지 */
+    border-radius: 5px; /* 이미지 모서리 둥글게 */
+    margin-right: 10px; /* 이미지와 텍스트 사이 간격 */
+}
+
+.autocomplete-item p {
+    margin: 0; /* 기본 마진 제거 */
+    color: #333; /* 텍스트 색상 */
 }
 
 
@@ -66,6 +112,8 @@ a:hover {
     font-weight: 900;
     cursor: pointer; /* 클릭 가능하게 설정 */
 }
+
+
 
 .accordion-container {
     position: relative;
@@ -936,7 +984,7 @@ a:hover {
     text-align: center;
     font-size: 25px;
     font-weight: bolder;
-    margin-top: 200px;
+    margin-top: 150px;
     margin-bottom: 50px;
 }
 
@@ -1046,13 +1094,6 @@ a:hover {
 }
 /* 중간 정렬을 위한 수정 */
 
-body {
-    background-color: #d4e2d1ff;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-}
-
 .playlist-header {
     text-align: center;
     margin-top: 40px;
@@ -1151,4 +1192,79 @@ body {
     height: 50px;
     object-fit: cover;  /* 이미지가 비율을 유지하면서 크기에 맞춰집니다 */
     border-radius: 5px;  /* 이미지에 모서리 둥글기 적용 */
+}
+/* Webkit 브라우저 (Chrome, Safari)에서 스크롤바 스타일 */
+.songs-container::-webkit-scrollbar {
+    width: 6px;  /* 스크롤바의 너비를 약간 더 얇게 설정 */
+    height: 6px; /* 가로 스크롤바의 높이 */
+}
+
+.songs-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3); /* 스크롤바의 기본 색상 */
+    border-radius: 10px;  /* 스크롤바의 둥근 모서리 */
+}
+
+.songs-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.5); /* 스크롤바에 마우스를 올렸을 때 더 어두운 색 */
+}
+
+.songs-container::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.05); /* 스크롤 트랙의 옅은 색상 */
+}
+
+/* Firefox에서 스크롤바 스타일 */
+.songs-container {
+    scrollbar-width: thin; /* 얇은 스크롤바 */
+    scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.05); /* 스크롤바 및 트랙 색상 */
+}
+
+/* 스크롤바에 마우스를 올렸을 때 */
+.songs-container:hover {
+    scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.05); /* 마우스가 올려졌을 때 더 진한 색상 */
+}
+
+/* 맞춤형 추천 곡들 섹션 스타일 */
+.custom-songs-section {
+    margin-top: 200px; /* 위에 플레이리스트와의 간격을 100px로 설정 */
+    padding-left: 3%;
+    clear: both; /* 플로팅 요소로 인해 발생하는 겹침 방지 */
+}
+
+.custom-songs-section h2 {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.songs-container {
+    display: flex;
+    gap: 30px;  /* 곡 간 간격을 조정합니다 */
+    overflow-x: auto; /* 곡들이 가로로 넘쳐흐를 때 스크롤이 가능하도록 합니다 */
+    padding-bottom: 20px;
+}
+
+.song-item {
+    text-align: center;
+    width: 150px; /* 곡 이미지 및 정보 블록의 너비 설정 */
+    margin-right: 20px; /* 곡 사이 간격 */
+}
+
+.album-cover-thumbnail {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.song-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #1e1e1e;
+    margin-top: 10px;
+}
+
+.song-artist {
+    font-size: 12px;
+    color: #666;
 }
