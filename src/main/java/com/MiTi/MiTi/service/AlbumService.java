@@ -131,6 +131,8 @@ public class AlbumService {
                 .music_uri(album.getMusic_uri())
                 .build());
     }
-
-
+    public Album findById(Long id) {
+        return albumRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 앨범을 찾을 수 없습니다: " + id));
+    }
 }
