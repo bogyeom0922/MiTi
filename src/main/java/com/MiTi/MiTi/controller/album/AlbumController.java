@@ -4,6 +4,7 @@ import com.MiTi.MiTi.dto.AlbumDto;
 import com.MiTi.MiTi.dto.PlaylistDto;
 import com.MiTi.MiTi.dto.UserDTO;
 import com.MiTi.MiTi.entity.Album;
+import com.MiTi.MiTi.entity.Comment;
 import com.MiTi.MiTi.entity.Playlist;
 import com.MiTi.MiTi.repository.AlbumRepository;
 import com.MiTi.MiTi.service.*;
@@ -51,6 +52,9 @@ public class AlbumController {
 
         if (!albums.isEmpty()) {
             model.addAttribute("firstAlbum", albums.get(0));
+
+            List<Comment> myComments = commentService.comments(albums.get(0).getId());
+            model.addAttribute("comments", myComments);
 
             // 각 곡에 대한 좋아요 상태를 설정 (사용자별)
             if (providerId != null) {
