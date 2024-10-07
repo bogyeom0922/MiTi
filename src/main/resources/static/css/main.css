@@ -26,6 +26,7 @@ a:hover {
 }
 
 /*header*/
+/*header*/
 .header {
     position: relative;
     height: 120px;
@@ -42,22 +43,66 @@ a:hover {
     font-weight: 900;
 }
 
+
+/* 검색창 */
+.search_input {
+    width: 300px;
+    height: 40px;
+    font-size: 16px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: none;
+    margin: 0 auto;
+    display: block;
+    position: relative; /* relative로 설정 */
+    z-index: 10;
+}
+
+/* 검색 자동완성 결과 컨테이너 */
 #autocomplete-results {
+    display: none; /* 기본적으로 숨기기 */
     border: 1px solid #ccc;
     max-height: 200px;
     overflow-y: auto;
-    background-color: #fff;
-    z-index: 1000;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 300px;
+    margin-top: 10px; /* 검색창 바로 밑으로 간격 추가 */
+    position: absolute;
+    left: 0;
+    top: 45px; /* 검색창 바로 아래에 위치하도록 설정 */
+    z-index: 9;
 }
 
+
+/* 검색 결과 항목 */
 .autocomplete-item {
     padding: 10px;
-    z-index: 1000;
     cursor: pointer;
+    font-size: 14px; /* 글씨 크기 조정 */
+    border-bottom: 1px solid #ddd; /* 아이템 간의 구분선 */
+    color: #333; /* 텍스트 색상 */
+    display: flex; /* 플렉스 레이아웃 사용 */
+    align-items: center; /* 텍스트 수직 정렬 */
 }
 
 .autocomplete-item:hover {
-    background-color: #f0f0f0;
+    background-color: #f0f0f0; /* 호버 시 배경색 변경 */
+}
+
+.autocomplete-item img {
+    width: 40px; /* 앨범 커버 이미지 크기 설정 */
+    height: 40px;
+    object-fit: cover; /* 이미지 비율 유지 */
+    border-radius: 5px; /* 이미지 모서리 둥글게 */
+    margin-right: 10px; /* 이미지와 텍스트 사이 간격 */
+}
+
+.autocomplete-item p {
+    margin: 0; /* 기본 마진 제거 */
+    color: #333; /* 텍스트 색상 */
 }
 
 
@@ -66,6 +111,8 @@ a:hover {
     font-weight: 900;
     cursor: pointer; /* 클릭 가능하게 설정 */
 }
+
+
 
 .accordion-container {
     position: relative;
