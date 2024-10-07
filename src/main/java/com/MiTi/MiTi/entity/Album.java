@@ -52,9 +52,6 @@ public class Album {
 
     @Column(name = "is_liked")
     private Boolean isLiked;
-    // GenreRec와의 관계 설정
-    @OneToMany(mappedBy = "album", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<GenreRec> genres;
 
     // 기존의 getter 메서드를 수정
     public String getAlbum_image() {

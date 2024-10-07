@@ -67,6 +67,9 @@ public class MainController {
         Map<String, List<Album>> recommendedAlbumsMap = playlistService.getRecommendedAlbumsByUserGenres(providerId);
         model.addAttribute("recommendedAlbumsMap", recommendedAlbumsMap);
 
+        // 맞춤형 추천 앨범 추가
+        List<Album> customizedAlbums = playlistService.getCustomizedAlbumsByUser(providerId);
+        model.addAttribute("customizedAlbums", customizedAlbums);
 
         return "main"; // main.html 템플릿 반환
     }

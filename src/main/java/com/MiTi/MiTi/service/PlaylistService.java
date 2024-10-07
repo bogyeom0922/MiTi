@@ -2,9 +2,11 @@ package com.MiTi.MiTi.service;
 
 import com.MiTi.MiTi.dto.PlaylistDto;
 import com.MiTi.MiTi.entity.Album;
+import com.MiTi.MiTi.entity.CustomizedRec;
 import com.MiTi.MiTi.entity.Genre;
 import com.MiTi.MiTi.entity.Playlist;
 import com.MiTi.MiTi.repository.AlbumRepository;
+import com.MiTi.MiTi.repository.CustomizedRecRepository;
 import com.MiTi.MiTi.repository.GenreRepository;
 import com.MiTi.MiTi.repository.PlaylistRepository;
 import jakarta.transaction.Transactional;
@@ -19,11 +21,13 @@ public class PlaylistService {
     private final PlaylistRepository playlistRepository;
     private final AlbumRepository albumRepository;
     private final GenreRepository genreRepository;
+    private final CustomizedRecRepository customizedRecRepository;
 
-    public PlaylistService(PlaylistRepository playlistRepository, AlbumRepository albumRepository, GenreRepository genreRepository) {
+    public PlaylistService(PlaylistRepository playlistRepository, AlbumRepository albumRepository, GenreRepository genreRepository, CustomizedRecRepository customizedRecRepository) {
         this.playlistRepository = playlistRepository;
         this.albumRepository = albumRepository;
         this.genreRepository = genreRepository;
+        this.customizedRecRepository = customizedRecRepository;
     }
 
     @Transactional
@@ -126,24 +130,25 @@ public class PlaylistService {
 
         return recommendedAlbumsMap;
     }
-    // 사용자 기록을 바탕으로 추천 앨범을 가져오는 메서드 추가
-    public List<Album> getRecommendedAlbumsBasedOnUserRecord(String providerId) {
-        // 사용자가 들은 음악의 장르 목록을 가져옴
-        List<String> userGenres = albumRepository.findGenresByUserRecord(providerId);
-
-        // 각 장르별로 앨범을 추천
-        List<Album> recommendedAlbums = new ArrayList<>();
-        for (String genre : userGenres) {
-            List<Album> genreAlbums = albumRepository.findAlbumsByGenre(genre);
-            recommendedAlbums.addAll(genreAlbums);
-        }
-
-        // 중복 제거 및 최대 20곡으로 제한
-        return recommendedAlbums.stream().distinct().limit(20).collect(Collectors.toList());
-    }
-
     @Transactional
     public void save(Playlist playlist) {
         playlistRepository.save(playlist);
     }
+    // 사용자 맞춤 추천 앨범 가져오는 메서드
+    public List<Album> getCustomizedAlbumsByUser(String userId) {
+        List<CustomizedRec> customizedRecs = customizedRecRepository.findByUserId(userId);
+
+        List<Long> albumIds = customizedRecs.stream()
+                .map(CustomizedRec::getAlbumId)
+                .collect(Collectors.toList());
+
+        List<Album> albums = customizedRecRepository.findCustomizedAlbumsByUserId(userId);
+
+        // 로그로 조회된 앨범 확인
+        albums.forEach(album -> System.out.println("Album: " + album.getMusicName()));
+
+        return albums;
+    }
+
+
 }
