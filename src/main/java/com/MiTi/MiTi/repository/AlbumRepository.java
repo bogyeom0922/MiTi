@@ -28,5 +28,4 @@ public interface AlbumRepository extends JpaRepository<Album, Long> {
     // 사용자 기록을 바탕으로 장르 추천 (Record와 GenreRec 조인)
     @Query("SELECT DISTINCT g.genre FROM GenreRec g JOIN Record r ON g.albumId = r.albumId WHERE r.providerId = :providerId")
     List<String> findGenresByUserRecord(@Param("providerId") String providerId);
-
 }

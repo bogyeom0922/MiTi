@@ -151,31 +151,23 @@ public class PlaylistController {
         return "playlist_detail";
     }
 
-    @GetMapping("/api/playlist/{providerId}/{genre}")
-    public ResponseEntity<List<Album>> getPlaylist(@PathVariable("providerId") String providerId, @PathVariable("genre") String genre, Model model) {
-        // 장르를 기반으로 플레이리스트를 생성하는 로직
-        List<Album> playlist = playlistService.getRecommendedAlbumsByGenre(genre);
+    @GetMapping("/mypage/playlist/record/{providerId}")
+    public String getCustomizedPlaylist(@PathVariable String providerId, Model model) {
+        // 사용자의 맞춤형 추천 앨범 가져오기
+        List<Album> customizedAlbums = playlistService.getCustomizedAlbumsByUser(providerId);
+        model.addAttribute("customizedAlbums", customizedAlbums);
 
-        model.addAttribute("genre", genre);
-        model.addAttribute("providerId", providerId);
-
-        if (playlist.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        // providerId로 사용자 정보를 가져와서 모델에 추가
+        Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);
+        if (userDTOOptional.isPresent()) {
+            UserDTO userDTO = userDTOOptional.get();
+            model.addAttribute("user", userDTO);
+        } else {
+            return "error";  // 유저가 없을 경우 에러 페이지로 리디렉션
         }
-        return ResponseEntity.ok(playlist);
+
+        return "userplaylist_custom_songs";  // 맞춤형 추천 곡 템플릿
     }
-
-    // 사용자 기록을 바탕으로 앨범 추천
-    @GetMapping("/api/recommendation/{providerId}")
-    public ResponseEntity<List<Album>> getRecommendationsBasedOnUserRecord(@PathVariable("providerId") String providerId) {
-        List<Album> recommendedAlbums = playlistService.getRecommendedAlbumsBasedOnUserRecord(providerId);
-
-        if (recommendedAlbums.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(recommendedAlbums);
-    }
-
 
 
 }
