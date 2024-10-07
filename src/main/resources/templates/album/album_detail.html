@@ -205,6 +205,11 @@
         var albumId = document.getElementById('albumId').value;
         var comment = document.getElementById('comment').value;
 
+        // 로그 출력
+        console.log("Provider ID: ", providerId);
+        console.log("Album ID: ", albumId);
+        console.log("Comment: ", comment);
+
         // 데이터를 JSON 형태로 만들어 서버로 전송
         var data = {
             providerId: providerId,
@@ -212,7 +217,6 @@
             comment: comment
         };
 
-        // 서버로 데이터 전송하는 로직
         fetch('/submitComment', {
             method: 'POST',
             headers: {
@@ -220,19 +224,15 @@
             },
             body: JSON.stringify(data)
         }).then(function (response) {
-            // 응답 처리
             if (response.ok) {
                 return response.json();
             } else {
                 throw new Error('댓글 작성에 실패했습니다.');
             }
         }).then(function (data) {
-            // 댓글 작성 성공 시 처리
             alert('댓글이 작성되었습니다.');
-            // 댓글 목록 업데이트 또는 페이지 리로드
             location.reload();
         }).catch(function (error) {
-            // 에러 처리
             console.error('Error:', error);
             alert('댓글 작성 중 오류가 발생했습니다.');
         });
