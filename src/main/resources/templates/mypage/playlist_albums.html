@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>MyPage_Playlist</title>
@@ -15,16 +15,55 @@
             <td style="width: 9%">
                 <img th:src="@{${album.album_image}}" width="50" alt="앨범 이미지"/>
             </td>
-            <td style="width: 50%" class="my_table_padding my_table_body">
+            <td style="width: 48%" class="my_table_padding my_table_body">
                 <span th:text="${album.music_name}"></span>
             </td>
-            <td style="width: 41%">
+            <td style="width: 38%">
                 <span th:text="${album.music_artist_name}"></span>
+            </td>
+            <td style="width: 5%">
+                <button th:data-album-id="${album.albumId}" th:data-playlist-name="${userPlaylistName}" class="delete-btn">삭제</button>
             </td>
         </tr>
     </table>
 </div>
 
 <div th:replace="~{play/under :: footer}"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.stopPropagation(); // 클릭 이벤트 전파 방지
+                const albumId = this.getAttribute('data-album-id');
+                const playlistName = this.getAttribute('data-playlist-name'); // playlistId를 playlistName으로 변경
+
+                // AJAX 요청으로 서버에 삭제 요청 보내기
+                fetch(`/playlist/delete`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ albumId: albumId, playlistName: playlistName }) // payload에 playlistName 추가
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('삭제 중 오류가 발생했습니다.');
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        alert('음악이 플레이리스트에서 삭제되었습니다.');
+                        // 삭제된 행을 화면에서 제거
+                        this.closest('tr').remove();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('삭제 중 오류가 발생했습니다.');
+                    });
+            });
+        });
+    });
+</script>
 </body>
 </html>

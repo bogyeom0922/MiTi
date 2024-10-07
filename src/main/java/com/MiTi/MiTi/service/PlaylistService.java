@@ -146,4 +146,11 @@ public class PlaylistService {
     public void save(Playlist playlist) {
         playlistRepository.save(playlist);
     }
+
+    @Transactional
+    public boolean deleteAlbumFromPlaylist(Long albumId, String userPlaylistName) {
+        // 해당 플레이리스트에서만 앨범 삭제
+        int deletedRows = playlistRepository.deleteByAlbumIdAndUserPlaylistName(albumId, userPlaylistName);
+        return deletedRows > 0;  // 삭제가 정상적으로 이루어졌는지 확인
+    }
 }

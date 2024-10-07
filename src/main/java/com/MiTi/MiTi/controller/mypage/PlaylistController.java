@@ -15,9 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.*;
 import java.util.*;
@@ -75,54 +73,23 @@ public class PlaylistController {
             return "error"; // 유저가 존재하지 않을 경우 에러 페이지로 이동
         }
 
-/*        추천알고리즘
-        List<Long> albumIds = albumList.stream()
-                .map(PlaylistDto::getAlbumId)
-                .collect(Collectors.toList());
-
-        List<Long> recommendedAlbums = runPythonScript(albumIds);
-        model.addAttribute("recommendedAlbums", recommendedAlbums);
-*/
         return "mypage/playlist_albums";
     }
 
-    public List<Long> runPythonScript(List<Long> albumIds) {
-        List<Long> results = new ArrayList<>();
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder("python", "/src/main/scripts/recommendation_algorithm.py");
-            Process process = processBuilder.start();
+    @DeleteMapping("/playlist/delete")
+    public ResponseEntity<String> deleteAlbumFromPlaylist(@RequestBody Map<String, String> payload) {
+        Long albumId = Long.parseLong(payload.get("albumId"));
+        String userPlaylistName = payload.get("playlistName"); // 여기를 userPlaylistName으로 변경
 
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-            writer.write(join("\n", albumIds));
-            writer.close();
+        // 해당 플레이리스트에서만 앨범 삭제
+        boolean isDeleted = playlistService.deleteAlbumFromPlaylist(albumId, userPlaylistName);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            Long line;
-            while ((line = Long.valueOf(reader.readLine())) != null) {
-                results.add(line);
-            }
-            reader.close();
-
-            process.waitFor();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+        if (isDeleted) {
+            return ResponseEntity.ok("삭제 완료");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제 실패");
         }
-        return results;
     }
-
-//    <table class="my_table_playlist_recommended">
-//    <tr th:each="album : ${recommendedAlbums}">
-//        <td style="width: 9%">
-//            <img th:src="@{${album.album_image}}" width="50" alt="앨범 이미지"/>
-//        </td>
-//        <td style="width: 50%" class="my_table_padding my_table_body">
-//            <span th:text="${album.music_name}"></span>
-//        </td>
-//        <td style="width: 41%">
-//            <span th:text="${album.music_artist_name}"></span>
-//        </td>
-//    </tr>
-//</table>
 
     @GetMapping("/playlist/detail/{providerId}/{genre}")
     public String getPlaylistDetail(@PathVariable("providerId") String providerId, @PathVariable("genre") String genre, Model model) {
