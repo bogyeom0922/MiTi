@@ -13,6 +13,7 @@ public class LikeDto {
     private Long id;
     private String providerId;
     private Long albumId;
+    private String detail;
     private String music_name;
     private String album_image;
     private String music_artist_name;
@@ -24,14 +25,16 @@ public class LikeDto {
                 .id(id)
                 .providerId(providerId)
                 .albumId(albumId)
+                .detail(detail)
                 .build();
     }
 
     @Builder
-    public LikeDto(Long id, String providerId, Long albumId, String music_name, String album_image, String music_artist_name, Integer music_duration_ms, String music_uri) {
+    public LikeDto(Long id, String providerId, Long albumId, String detail, String music_name, String album_image, String music_artist_name, Integer music_duration_ms, String music_uri) {
         this.id=id;
         this.providerId = providerId;
         this.albumId = albumId;
+        this.detail = detail;
         this.music_name = music_name;
         this.album_image = album_image;
         this.music_artist_name = music_artist_name;

@@ -30,25 +30,7 @@ public class LikeService {
         return existingLike.isPresent();
     }
 
-    // albumId를 기반으로 좋아요 상태를 토글하는 메서드 (userId 없이)
-    public boolean toggleAlbumLike(Long albumId) {
-        Optional<Like> existingLike = likeRepository.findByAlbumId(albumId);
 
-        if (existingLike.isPresent()) {
-            likeRepository.delete(existingLike.get());
-            return false; // 좋아요 취소
-        } else {
-            Album album = albumRepository.findById(albumId)
-                    .orElseThrow(() -> new RuntimeException("해당 곡을 찾을 수 없습니다: " + albumId));
-
-            Like newLike = Like.builder()
-                    .albumId(albumId)
-                    .album(album)
-                    .build();
-            likeRepository.save(newLike);
-            return true; // 좋아요 추가
-        }
-    }
 
     // 특정 사용자(userId)와 앨범(albumId)에 대한 좋아요 상태를 토글하는 메서드
     public boolean toggleTrackLike(String providerId, Long albumId) {

@@ -25,6 +25,9 @@ public class Like {
     @Column(name = "user_id")
     private String providerId;
 
+    @Column(name = "detail")
+    private String detail;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id", referencedColumnName = "id", insertable = false, updatable = false)
