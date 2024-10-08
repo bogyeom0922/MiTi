@@ -38,17 +38,22 @@ public class PlaylistService {
 
         for (Playlist playlist : playlistList) {
             if (uniqueNames.add(playlist.getUserPlaylistName())) { // 중복이 아니면 추가
-                PlaylistDto playlistDto = PlaylistDto.builder()
-                        .id(playlist.getId())
-                        .providerId(playlist.getProviderId())
-                        .albumId(playlist.getAlbumId())
-                        .userPlaylistName(playlist.getUserPlaylistName())
-                        .userPlaylistImage(playlist.getUserPlaylistImage())
-                        .album_image(playlist.getAlbum().getAlbum_image())
-                        .music_name(playlist.getAlbum().getMusicName())
-                        .music_artist_name(playlist.getAlbum().getMusicArtistName())
-                        .build();
-                playlistDtoList.add(playlistDto);
+                if (playlist.getAlbum() != null) {  // Null 체크 추가
+                    PlaylistDto playlistDto = PlaylistDto.builder()
+                            .id(playlist.getId())
+                            .providerId(playlist.getProviderId())
+                            .albumId(playlist.getAlbumId())
+                            .userPlaylistName(playlist.getUserPlaylistName())
+                            .userPlaylistImage(playlist.getUserPlaylistImage())
+                            .album_image(playlist.getAlbum().getAlbum_image())
+                            .music_name(playlist.getAlbum().getMusicName())
+                            .music_artist_name(playlist.getAlbum().getMusicArtistName())
+                            .build();
+                    playlistDtoList.add(playlistDto);
+                } else {
+                    // 앨범이 null인 경우 처리 (필요 시 로깅 또는 기본 이미지 설정)
+                    System.out.println("Playlist ID: " + playlist.getId() + " has no album associated.");
+                }
             }
         }
         return playlistDtoList;

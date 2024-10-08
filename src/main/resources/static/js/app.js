@@ -258,95 +258,104 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
 
 
 // App 컴포넌트 정의
-// App 컴포넌트 정의
 const App = () => {
-    const [musicInfo, setMusicInfo] = React.useState({
-        musicName: "",
-        musicUri: "",
-        albumImage: "",
-        id: "",
-    });
-    const [recommendedAlbums, setRecommendedAlbums] = React.useState([]); // 추천 앨범 목록 상태
+    const { useState, useEffect } = React;
+    const [currentTrackIndex, setCurrentTrackIndex] = useState(0); // 현재 플레이리스트에서의 트랙 인덱스
+    const [musicInfo, setMusicInfo] = useState({ musicName: "", musicUri: "", albumImage: "", id: "" });
+    const [playlist, setPlaylist] = useState([]); // 플레이리스트 상태
 
+    // root 엘리먼트에서 userId와 mood 값을 추출
     const providerId = document.getElementById('root').getAttribute('data-user-id');
+    const genre =  document.getElementById('root').getAttribute('data-genre');
 
-    // 음악 정보 가져오기
+    console.log(providerId, genre);
+
+    // 음악 정보 가져오기 (외부 클릭 시 사용)
     const fetchMusicInfo = async (id) => {
         try {
             const response = await fetch(`/api/music/${id}`);
             const data = await response.json();
-            setMusicInfo({
-                musicName: data.musicName,
-                musicUri: data.music_uri,
-                albumImage: data.albumImage,
-                id: data.id,
-            });
+            if (data) {
+                setMusicInfo({
+                    musicName: data.musicName,
+                    musicUri: data.music_uri,
+                    albumImage: data.albumImage,
+                    id: data.id,
+                });
+            } else {
+                throw new Error('No music info found');
+            }
         } catch (error) {
-            console.error("Error fetching music info: ", error);
+            console.error('Error fetching music info:', error);
         }
     };
 
-    // 추천 앨범 목록 가져오기
-    const fetchRecommendedAlbums = async (id) => {
-        if (!id) {
-            console.warn('Invalid albumId for fetching recommended albums');
-            return;
-        }
-
+    // 플레이리스트 데이터를 가져오는 함수
+    async function fetchPlaylist() {
         try {
-            const response = await fetch(`/api/recommend/${id}`);
-            const data = await response.json();
-            setRecommendedAlbums(data.recommendedAlbums); // 추천 앨범 목록 상태 업데이트
+            const response = await fetch(`/api/playlist/${providerId}/${genre}`);
+            if (!response.ok) {
+                throw new Error('플레이리스트를 찾을 수 없습니다.');
+            }
+
+            const data = await response.json();  // JSON으로 한 번에 파싱
+            if (data.length > 0) {
+                setPlaylist(data);  // 가져온 데이터를 플레이리스트로 설정
+            } else {
+                console.error('플레이리스트가 비어 있습니다.');
+            }
         } catch (error) {
-            console.error('Error fetching recommended albums:', error);
+            console.error('플레이리스트 가져오기 실패:', error);
         }
-    };
+    }
 
-    // 음악 클릭 시 처리: 음악 정보와 추천 앨범 목록을 동시에 가져오기
-    const handleMusicClick = async (id) => {
-        await fetchMusicInfo(id); // 선택한 음악의 정보 가져오기
-        await fetchRecommendedAlbums(id); // 선택한 음악에 대한 추천 앨범 목록 가져오기
-    };
 
-    // 다음 곡 재생
-    const onNextTrack = async () => {
-        if (recommendedAlbums.length > 0) {
-            const nextAlbumId = recommendedAlbums[0]; // 추천 앨범 목록에서 첫 번째 앨범
-            await fetchMusicInfo(nextAlbumId); // 다음 곡 재생
-            await fetchRecommendedAlbums(nextAlbumId); // 그 곡에 대한 새로운 추천 앨범 목록 가져오기
-        } else {
-            console.warn('No recommended albums found');
-        }
-    };
-
-    // 재생 목록 UI 생성
-    const renderPlaylist = () => {
-        return recommendedAlbums.length > 0 ? (
-            <ul>
-                {recommendedAlbums.map((albumId, index) => (
-                    <li key={index} onClick={() => handleMusicClick(albumId)}>
-                        앨범 {albumId} 재생
-                    </li>
-                ))}
-            </ul>
-        ) : (
-            <p>추천 앨범이 없습니다.</p>
-        );
-    };
-
-    React.useEffect(() => {
-        window.handleMusicClick = handleMusicClick; // 전역 함수로 노출
+    useEffect(() => {
+        fetchPlaylist(); // 컴포넌트가 처음 로드될 때 플레이리스트 가져옴
     }, []);
 
-    return (
+    // 플레이리스트에서 음악 클릭 시 처리
+    const handlePlaylistClick = (id) => {
+        console.log(`Clicked track id: ${id}`);
+        const trackIndex = playlist.findIndex(track => track.id === id);
+        if (trackIndex !== -1) {
+            setCurrentTrackIndex(trackIndex); // 선택한 곡으로 인덱스 변경
+            const track = playlist[trackIndex];
+            setMusicInfo({
+                musicName: track.musicName,
+                musicUri: track.music_uri,
+                albumImage: track.album_image,
+                id: track.id,
+            });
+            console.log('Updated musicInfo:', {
+                musicName: track.musicName,
+                musicUri: track.music_uri,
+                albumImage: track.album_image,
+                id: track.id,
+            });
+        }
+    };
 
+    // 플레이리스트 외부에서 음악 클릭 시 처리
+    const handleMusicClick = async (id) => {
+        await fetchMusicInfo(id); // 음악 정보 가져오기
+    };
+
+
+    // 전역 범위로 노출 (파일 나누면서 필요)
+    window.handleMusicClick = handleMusicClick;
+
+    // 전역 범위로 노출 (파일 나누면서 필요)
+    window.handlePlaylistClick = handlePlaylistClick;
+
+    return (
             <SpotifyPlayer
                 musicInfo={musicInfo}
                 providerId={providerId}
-                onNextTrack={onNextTrack} // 자동으로 다음 트랙 재생
-                onPrevTrack={() => {}} // 이전 트랙 핸들러는 생략
+                onNextTrack={() => setCurrentTrackIndex((prev) => (prev + 1) % playlist.length)}  // 다음 곡으로 이동
+                onPrevTrack={() => setCurrentTrackIndex((prev) => (prev - 1 + playlist.length) % playlist.length)}  // 이전 곡으로 이동
             />
-    );
+    );z
 };
 
 ReactDOM.render(<App />, document.getElementById('root'));

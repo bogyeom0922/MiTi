@@ -8,7 +8,7 @@
 </head>
 <body>
 <div th:fragment="footer">
-    <div id="root" th:attr="data-user-id=${user.providerId}"  th:data-mood="${mood}"></div>
+    <div id="root" th:attr="data-user-id=${user.providerId}"  th:data-genre="${genre}"></div>
 
     <footer>
         <!-- React and ReactDOM from CDN -->
@@ -21,7 +21,7 @@
         <script src="https://sdk.scdn.co/spotify-player.js"></script>
 
         <!-- Link the external JS file -->
-        <script src="/js/App.js" type="text/babel"></script>
+        <script src="/js/app.js" type="text/babel"></script>
     </footer>
 </div>
 

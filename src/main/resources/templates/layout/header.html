@@ -58,35 +58,41 @@
 
 
 
-        <div class="accordion-container">
-            <!-- user가 null이 아닌 경우에만 이름 표시 -->
-            <span th:if="${user != null}" th:text="${user.name}" class="user" onclick="toggleAccordion()"></span>
-        </div>
+        <div class="my_accordion-container">
+            <span th:text="${user.name}" class="user" onclick="toggleAccordion()"></span>
 
             <!-- 아코디언 메뉴 콘텐츠 -->
-            <div class="accordion-content">
+            <div class="my_accordion-content">
                 <a href="/logout">로그아웃</a>
-                <a th:if="${user != null}" th:href="@{/mypage/record/{userId}(userId=${user.providerId})}">재생기록</a>
-                <a th:if="${user != null}" th:href="@{/mypage/like/{userId}(userId=${user.providerId})}">마이페이지</a>
+                <a th:href="@{/mypage/record/{userId}(userId=${user.providerId})}">마이페이지</a>
             </div>
+
+            <script>
+                function toggleAccordion() {
+                    var content = document.querySelector('.my_accordion-content');
+                    var isVisible = content.style.display === 'block';
+
+                    // 모든 아코디언 콘텐츠를 숨기기
+                    document.querySelectorAll('.my_accordion-content').forEach(function (item) {
+                        item.style.display = 'none';
+                    });
+
+                    // 클릭한 아코디언 콘텐츠를 토글
+                    content.style.display = isVisible ? 'none' : 'block';
+                }
+
+                // 이벤트 핸들러에서 사용될 데이터 속성 활용
+                function redirectToMainPage(element) {
+                    const providerId = element.getAttribute('data-provider-id');
+                    window.location.href = '/main';
+                }
+
+                function redirectToMypage(userId, path) {
+                    window.location.href = '/mypage/' + path + '/' + userId;
+                }
+            </script>
         </div>
-    </div>
-
-    <script>
-        function toggleAccordion() {
-            var content = document.querySelector('.accordion-content');
-            var isVisible = content.style.display === 'block';
-
-            // 모든 아코디언 콘텐츠를 숨기기
-            document.querySelectorAll('.accordion-content').forEach(function (item) {
-                item.style.display = 'none';
-            });
-
-            // 클릭한 아코디언 콘텐츠를 토글
-            content.style.display = isVisible ? 'none' : 'block';
-        }
-    </script>
 </div>
-
+</div>
 </body>
 </html>
