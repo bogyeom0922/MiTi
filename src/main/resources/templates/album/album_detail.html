@@ -19,7 +19,7 @@
 <div th:replace="~{play/under :: footer}"></div>
 
 <!-- 앨범 기본 정보 -->
-<div th:if="${firstAlbum != null}" class="album">
+<div th:if="${firstAlbum != null}" class="album" th:onclick="|handleMusicClick(${firstAlbum.id})|">
     <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" class="album_img">
     <div class="album_detail">
         <p th:text="${firstAlbum.detail}" class="album_name"></p>

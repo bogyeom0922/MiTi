@@ -119,6 +119,12 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
         }
     }, []);
 
+    // musicInfo 업데이트 시 로그 출력
+    useEffect(() => {
+        console.log('SpotifyPlayer received new musicInfo:', musicInfo);
+    }, [musicInfo]);
+
+
     useEffect(() => {
         if (player && musicUri && deviceId) {
             player._options.getOAuthToken((token) => {
@@ -299,6 +305,8 @@ const App = () => {
             }
 
             const data = await response.json();  // JSON으로 한 번에 파싱
+            console.log('Fetched playlist:', data);  // 여기서 데이터가 잘 가져와지는지 확인
+
             if (data.length > 0) {
                 setPlaylist(data);  // 가져온 데이터를 플레이리스트로 설정
             } else {
@@ -314,39 +322,43 @@ const App = () => {
         fetchPlaylist(); // 컴포넌트가 처음 로드될 때 플레이리스트 가져옴
     }, []);
 
-    // 플레이리스트에서 음악 클릭 시 처리
-    const handlePlaylistClick = (id) => {
-        console.log(`Clicked track id: ${id}`);
-        const trackIndex = playlist.findIndex(track => track.id === id);
-        if (trackIndex !== -1) {
-            setCurrentTrackIndex(trackIndex); // 선택한 곡으로 인덱스 변경
-            const track = playlist[trackIndex];
+    useEffect(() => {
+        if (playlist.length > 0 && currentTrackIndex >= 0 && currentTrackIndex < playlist.length) {
+            const track = playlist[currentTrackIndex];
+            console.log('Track found:', track);
             setMusicInfo({
                 musicName: track.musicName,
                 musicUri: track.music_uri,
-                albumImage: track.album_image,
-                id: track.id,
-            });
-            console.log('Updated musicInfo:', {
-                musicName: track.musicName,
-                musicUri: track.music_uri,
-                albumImage: track.album_image,
+                albumImage: track.albumImage,
                 id: track.id,
             });
         }
+    }, [currentTrackIndex, playlist]);
+
+
+    // 플레이리스트에서 음악 클릭 시 처리
+    const handlePlaylistClick = (id) => {
+        console.log('Clicked track id: ', id);
+        const trackIndex = playlist.findIndex(track => track.id === id);
+        if (trackIndex !== -1) {
+            setCurrentTrackIndex(trackIndex);
+        }
     };
+
+
+    // 전역 범위로 노출 (파일 나누면서 필요)
+    window.handlePlaylistClick = handlePlaylistClick;
+
 
     // 플레이리스트 외부에서 음악 클릭 시 처리
     const handleMusicClick = async (id) => {
-        await fetchMusicInfo(id); // 음악 정보 가져오기
+        await fetchMusicInfo(id); // 다음 곡의 정보 가져오기
     };
 
 
     // 전역 범위로 노출 (파일 나누면서 필요)
     window.handleMusicClick = handleMusicClick;
 
-    // 전역 범위로 노출 (파일 나누면서 필요)
-    window.handlePlaylistClick = handlePlaylistClick;
 
     return (
             <SpotifyPlayer
@@ -355,7 +367,10 @@ const App = () => {
                 onNextTrack={() => setCurrentTrackIndex((prev) => (prev + 1) % playlist.length)}  // 다음 곡으로 이동
                 onPrevTrack={() => setCurrentTrackIndex((prev) => (prev - 1 + playlist.length) % playlist.length)}  // 이전 곡으로 이동
             />
-    );z
+    );
+
+
 };
+
 
 ReactDOM.render(<App />, document.getElementById('root'));

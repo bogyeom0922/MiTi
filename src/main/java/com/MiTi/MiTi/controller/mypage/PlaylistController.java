@@ -1,5 +1,6 @@
 package com.MiTi.MiTi.controller.mypage;
 
+import com.MiTi.MiTi.dto.AlbumDto;
 import com.MiTi.MiTi.dto.PlaylistDto;
 import com.MiTi.MiTi.dto.RecordDto;
 import com.MiTi.MiTi.dto.UserDTO;
@@ -93,6 +94,39 @@ public class PlaylistController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("삭제 실패");
         }
     }
+
+    //스트리밍에 필요함
+    @GetMapping("/api/playlist/{providerId}/{genre}")
+    public ResponseEntity<List<AlbumDto>> getPlaylistById(@PathVariable("providerId") String providerId, @PathVariable("genre") String genre) {
+        // 장르 기반으로 플레이리스트 생성
+        List<Album> playlist = playlistService.getRecommendedAlbumsByGenre(genre);
+
+        // 유저 정보 확인
+        Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);
+        if (!userDTOOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 유저가 없으면 404 반환
+        }
+
+        if (playlist.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();  // 재생 목록이 비어 있으면 204 반환
+        }
+
+        // Album 객체를 AlbumDto로 변환 (필요한 필드만 포함)
+        List<AlbumDto> playlistDto = playlist.stream()
+                .map(album -> new AlbumDto(
+                        album.getId(),
+                        album.getMusicName(),
+                        album.getAlbum_image(),
+                        album.getMusicArtistName(),
+                        album.getMusic_duration_ms(),
+                        album.getMusic_uri()
+                ))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(playlistDto);  // JSON 형태로 플레이리스트 반환
+    }
+
+
 
     @GetMapping("/playlist/detail/{providerId}/{genre}")
     public String getPlaylistDetail(@PathVariable("providerId") String providerId, @PathVariable("genre") String genre, Model model) {
