@@ -63,9 +63,6 @@ public class AlbumController {
                     album.setIsLiked(isLiked); // 앨범 객체에 좋아요 상태 설정
                 }
 
-                // 첫 번째 앨범에 대한 좋아요 상태 설정
-                boolean isLikedAlbum = likeService.isAlbumLikedByUser(providerId, albums.get(0).getId());
-                model.addAttribute("isLikedAlbum", isLikedAlbum);
             }
 
         }

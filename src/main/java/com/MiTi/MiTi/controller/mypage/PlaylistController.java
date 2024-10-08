@@ -5,6 +5,7 @@ import com.MiTi.MiTi.dto.RecordDto;
 import com.MiTi.MiTi.dto.UserDTO;
 import com.MiTi.MiTi.entity.Album;
 import com.MiTi.MiTi.repository.PlaylistRepository;
+import com.MiTi.MiTi.service.LikeService;
 import com.MiTi.MiTi.service.PlaylistService;
 import com.MiTi.MiTi.service.UserService;
 import org.slf4j.Logger;
@@ -29,13 +30,15 @@ public class PlaylistController {
     private final PlaylistService playlistService;
     private final PlaylistRepository playlistRepository;
     private final UserService userService;
+    private final LikeService likeService;
 
     private static final Logger log = LoggerFactory.getLogger(PlaylistController.class); // Logger 선언
 
-    public PlaylistController(PlaylistService playlistService, PlaylistRepository playlistRepository, UserService userService) {
+    public PlaylistController(PlaylistService playlistService, PlaylistRepository playlistRepository, UserService userService, LikeService likeService) {
         this.playlistService = playlistService;
         this.playlistRepository = playlistRepository;
         this.userService = userService;
+        this.likeService = likeService;
     }
 
     @GetMapping("/mypage/playlist/{providerId}")
@@ -96,6 +99,7 @@ public class PlaylistController {
         // 장르 기반으로 플레이리스트 생성
         List<Album> playlist = playlistService.getRecommendedAlbumsByGenre(genre);
 
+
         Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);
         if (userDTOOptional.isPresent()) {
             UserDTO userDTO = userDTOOptional.get();
@@ -123,6 +127,17 @@ public class PlaylistController {
                 })
                 .collect(Collectors.toList());
 
+        // 좋아요 상태 설정
+        if (providerId != null) {
+            for (Album album : playlist) {
+                boolean isLiked = likeService.isAlbumLikedByUser(providerId, album.getId());
+                album.setIsLiked(isLiked); // 앨범 객체에 좋아요 상태 설정
+            }
+
+            // 첫 번째 앨범에 대한 좋아요 상태 설정
+            boolean isLikedAlbum = likeService.isAlbumLikedByUser(providerId, playlist.get(0).getId());
+            model.addAttribute("isLikedAlbum", isLikedAlbum);
+        }
 
         model.addAttribute("playlist", playlist);
         model.addAttribute("formattedDurations", formattedDurations);  // 미리 계산된 재생 시간을 전달
