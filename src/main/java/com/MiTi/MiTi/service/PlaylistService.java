@@ -2,9 +2,11 @@ package com.MiTi.MiTi.service;
 
 import com.MiTi.MiTi.dto.PlaylistDto;
 import com.MiTi.MiTi.entity.Album;
+import com.MiTi.MiTi.entity.CustomizedRec;
 import com.MiTi.MiTi.entity.Genre;
 import com.MiTi.MiTi.entity.Playlist;
 import com.MiTi.MiTi.repository.AlbumRepository;
+import com.MiTi.MiTi.repository.CustomizedRecRepository;
 import com.MiTi.MiTi.repository.GenreRepository;
 import com.MiTi.MiTi.repository.PlaylistRepository;
 import jakarta.transaction.Transactional;
@@ -19,11 +21,13 @@ public class PlaylistService {
     private final PlaylistRepository playlistRepository;
     private final AlbumRepository albumRepository;
     private final GenreRepository genreRepository;
+    private final CustomizedRecRepository customizedRecRepository;
 
-    public PlaylistService(PlaylistRepository playlistRepository, AlbumRepository albumRepository, GenreRepository genreRepository) {
+    public PlaylistService(PlaylistRepository playlistRepository, AlbumRepository albumRepository, GenreRepository genreRepository, CustomizedRecRepository customizedRecRepository) {
         this.playlistRepository = playlistRepository;
         this.albumRepository = albumRepository;
         this.genreRepository = genreRepository;
+        this.customizedRecRepository = customizedRecRepository;
     }
 
     @Transactional
@@ -149,10 +153,27 @@ public class PlaylistService {
         playlistRepository.save(playlist);
     }
 
+    // 사용자 맞춤 추천 앨범 가져오는 메서드
+    public List<Album> getCustomizedAlbumsByUser(String userId) {
+        List<CustomizedRec> customizedRecs = customizedRecRepository.findByUserId(userId);
+
+        List<Long> albumIds = customizedRecs.stream()
+                .map(CustomizedRec::getAlbumId)
+                .collect(Collectors.toList());
+
+        List<Album> albums = customizedRecRepository.findCustomizedAlbumsByUserId(userId);
+
+        // 로그로 조회된 앨범 확인
+        albums.forEach(album -> System.out.println("Album: " + album.getMusicName()));
+
+        return albums;
+    }
+
     @Transactional
     public boolean deleteAlbumFromPlaylist(Long albumId, String userPlaylistName) {
         // 해당 플레이리스트에서만 앨범 삭제
         int deletedRows = playlistRepository.deleteByAlbumIdAndUserPlaylistName(albumId, userPlaylistName);
         return deletedRows > 0;  // 삭제가 정상적으로 이루어졌는지 확인
     }
+
 }
