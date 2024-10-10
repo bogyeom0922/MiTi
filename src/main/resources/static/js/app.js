@@ -1,12 +1,17 @@
-const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
-    const { musicName, musicUri, albumImage } = musicInfo;
+const SpotifyPlayer = ({ initialMusicInfo= { musicName: "", musicUri: "", albumImage: "" }, providerId, playlist, onNextTrack, onPrevTrack }) => {
     const { useState, useEffect } = React;
+    const [musicInfo, setMusicInfo] = useState(initialMusicInfo); // 초기 음악 정보를 설정합니다.
+    const { musicName, musicUri, albumImage } = musicInfo;
     const [paused, setPaused] = useState(true);
     const [player, setPlayer] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
     const [deviceId, setDeviceId] = useState(null);
+    const [currentTrackIndex, setCurrentTrackIndex] = useState(0); // 현재 플레이리스트에서의 트랙 인덱스
+    const [isFullscreen, setIsFullscreen] = useState(false); // 전체화면 상태
     const [trackPosition, setTrackPosition] = useState(0); // 현재 재생 위치
     const [trackDuration, setTrackDuration] = useState(0); // 트랙 길이
+
+
 
     // 음악 재생 상태를 저장하는 함수
     const saveMusicState = (musicInfo, isPaused) => {
@@ -63,7 +68,7 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
 
                 if (state.track_window.current_track && state.position === 0 && state.paused) {
                     console.log('Track ended, calling onNextTrack');
-                    setTimeout(onNextTrack, 1000); // 1초 딜레이 후 다음 곡으로
+                    handleNextTrack(); // 다음 곡으로 넘어가기
                 }
             });
 
@@ -126,9 +131,9 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
 
 
     useEffect(() => {
-        if (player && musicUri && deviceId) {
+        if (player && musicInfo.musicUri && deviceId) {
             player._options.getOAuthToken((token) => {
-                const sanitizedUri = sanitizeUri(musicUri);
+                const sanitizedUri = sanitizeUri(musicInfo.musicUri);
                 console.log(`Attempting to play track with URI: ${sanitizedUri}`);
                 fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
                     method: 'PUT',
@@ -154,7 +159,24 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
                 });
             });
         }
-    }, [musicUri, deviceId]);
+    }, [musicInfo, deviceId]);
+
+
+
+    // `currentTrackIndex`가 변경될 때 해당 트랙을 재생
+    useEffect(() => {
+        if (playlist.length > 0 && currentTrackIndex >= 0 && currentTrackIndex < playlist.length) {
+            const track = playlist[currentTrackIndex];
+            console.log('Track found:', track);
+            setMusicInfo({
+                musicName: track.musicName,
+                musicUri: track.music_uri,
+                albumImage: track.albumImage,
+                musicArtistName: track.musicArtistName,
+                id: track.id,
+            });
+        }
+    }, [currentTrackIndex, playlist]);
 
     // 음악 uri 공백문자 제거
     const sanitizeUri = (uri) => uri.trim().replace(/\r?\n|\r/g, '');
@@ -231,6 +253,30 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
         saveMusicState(musicInfo, paused); // 재생 상태와 함께 저장
     }, [musicInfo, paused]);
 
+    // 전체화면 토글 함수
+    const toggleFullscreen = () => {
+        setIsFullscreen(!isFullscreen);
+    };
+
+    // onNextTrack 호출 함수 정의
+    const handleNextTrack = () => {
+        setCurrentTrackIndex((prevIndex) => (prevIndex + 1) % playlist.length); // 다음 트랙으로 이동
+    };
+
+    const handlePrevTrack = () => {
+        setCurrentTrackIndex((prevIndex) => (prevIndex - 1 + playlist.length) % playlist.length); // 이전 트랙으로 이동
+    };
+
+
+    // 클릭하면 재생
+    const handlePlaylistClick = (id) => {
+        console.log('Clicked track id: ', id);
+        const trackIndex = playlist.findIndex(track => track.id === id);
+        if (trackIndex !== -1) {
+            setCurrentTrackIndex(trackIndex);
+        }
+    };
+
     return (
         <div className="player-container-1">
             {/* 프로그레스 바 컨테이너를 상단으로 이동 */}
@@ -252,27 +298,97 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
 
             {/* 네비게이션 버튼 */}
             <div className="navigation-buttons">
-                <button onClick={onPrevTrack} className="nav-button">이전 곡</button>
+                <button onClick={handlePrevTrack} className="nav-button">이전 곡</button>
                 <button onClick={togglePlayPause} className="nav-button">
                     {paused ? '재생' : '일시정지'}
                 </button>
-                <button onClick={onNextTrack} className="nav-button">다음 곡</button>
+                <button onClick={handleNextTrack} className="nav-button">다음 곡</button>
+                <button onClick={toggleFullscreen} className="nav-button">{isFullscreen ? '▼' : '▲'}</button>
             </div>
+
+            {/* 전체화면 레이아웃 */}
+            {isFullscreen && (
+                <div className={`fullscreen-overlay ${isFullscreen ? 'fullscreen-active' : ''}`}>
+                    <div className="fullscreen-content">
+                        <div className="player-container-3">
+                            <div className="album-container"> {/* 앨범 이미지와 이름을 감싸는 컨테이너 추가 */}
+                                <div className="album-image-3">
+                                    <img src={albumImage} alt="Album cover"/>
+                                </div>
+                                <p className="music-name-3">{musicName}</p> {/* 앨범 이름을 같은 컨테이너로 이동 */}
+                            </div>
+                            <div className="track-container">
+                            <h3>다음 트랙</h3>
+                            <div className="playlist-3">
+                                <ul>
+                                    {playlist.map((track, index) => (
+                                        <li key={track.id} onClick={() => handlePlaylistClick(track.id)}>
+                                            <img src={track.albumImage} alt={track.musicName}
+                                                 style={{width: '50px', height: '50px'}}/>
+                                            <div className="content-container">
+                                                {track.musicName}|
+                                                {track.musicArtistName}
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            </div>
+                        </div>
+
+
+                        <div className="player-container-1">
+                            {/* 프로그레스 바 컨테이너를 상단으로 이동 */}
+                            <div className="progress-bar-container">
+                                <span>{formatTime(trackPosition)}</span>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value={(trackPosition / trackDuration) * 100 || 0}
+                                    onChange={handleSeek} // 사용자가 슬라이더를 움직이면 위치 이동
+                                />
+                                <span>{formatTime(trackDuration)}</span>
+                            </div>
+
+                            {/* 앨범 이미지 및 음악 정보 */}
+                            <img src={albumImage} alt="Album cover" className="album-cover"/>
+                            <p>Now playing: {musicName}</p>
+
+                            {/* 네비게이션 버튼 */}
+                            <div className="navigation-buttons">
+                                <button onClick={handlePrevTrack} className="nav-button">이전 곡</button>
+                                <button onClick={togglePlayPause} className="nav-button">
+                                    {paused ? '재생' : '일시정지'}
+                                </button>
+                                <button onClick={handleNextTrack} className="nav-button">다음 곡</button>
+                                <button onClick={toggleFullscreen}
+                                        className="nav-button">{isFullscreen ? '▼' : '▲'}</button>
+                                {/* ▲ 클릭시 전체화면 */}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            )}
         </div>
     );
+
+
 };
 
 
 // App 컴포넌트 정의
 const App = () => {
-    const { useState, useEffect } = React;
+    const {useState, useEffect} = React;
     const [currentTrackIndex, setCurrentTrackIndex] = useState(0); // 현재 플레이리스트에서의 트랙 인덱스
-    const [musicInfo, setMusicInfo] = useState({ musicName: "", musicUri: "", albumImage: "", id: "" });
+    const [musicInfo, setMusicInfo] = useState({musicName: "", musicUri: "", albumImage: "", id: ""});
     const [playlist, setPlaylist] = useState([]); // 플레이리스트 상태
 
     // root 엘리먼트에서 userId와 mood 값을 추출
     const providerId = document.getElementById('root').getAttribute('data-user-id');
-    const genre =  document.getElementById('root').getAttribute('data-genre');
+    const genre = document.getElementById('root').getAttribute('data-genre');
 
     console.log(providerId, genre);
 
@@ -286,6 +402,7 @@ const App = () => {
                     musicName: data.musicName,
                     musicUri: data.music_uri,
                     albumImage: data.albumImage,
+                    musicArtistName: data.musicArtistName,
                     id: data.id,
                 });
             } else {
@@ -330,6 +447,7 @@ const App = () => {
                 musicName: track.musicName,
                 musicUri: track.music_uri,
                 albumImage: track.albumImage,
+                musicArtistName : track.musicArtistName,
                 id: track.id,
             });
         }
@@ -353,6 +471,10 @@ const App = () => {
     // 플레이리스트 외부에서 음악 클릭 시 처리
     const handleMusicClick = async (id) => {
         await fetchMusicInfo(id); // 다음 곡의 정보 가져오기
+        const trackIndex = playlist.findIndex(track => track.id === id);
+        if (trackIndex !== -1) {
+            setCurrentTrackIndex(trackIndex); // 음악 정보 업데이트 후 현재 인덱스 설정
+        }
     };
 
 
@@ -362,8 +484,10 @@ const App = () => {
 
     return (
             <SpotifyPlayer
-                musicInfo={musicInfo}
+                key={musicInfo.id || musicInfo.musicUri}  // 음악 정보 변경 시 컴포넌트 리렌더링
+                initialMusicInfo={musicInfo}
                 providerId={providerId}
+                playlist={playlist}  // playlist를 props로 전달
                 onNextTrack={() => setCurrentTrackIndex((prev) => (prev + 1) % playlist.length)}  // 다음 곡으로 이동
                 onPrevTrack={() => setCurrentTrackIndex((prev) => (prev - 1 + playlist.length) % playlist.length)}  // 이전 곡으로 이동
             />

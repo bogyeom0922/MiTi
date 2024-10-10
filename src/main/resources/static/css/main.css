@@ -1042,7 +1042,7 @@ a:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    z-index: 10000;
+    z-index: 1001;
     height: 30px;
 }
 
@@ -1077,6 +1077,7 @@ a:hover {
     font-weight: bold;
     border-radius: 20px;
     cursor: pointer;
+    z-index: 1001; /* 적절히 높여서 다른 요소에 덮이지 않도록 */
 }
 
 .nav-button:hover {
@@ -1092,6 +1093,148 @@ a:hover {
     margin-right: 10px;
 
 }
+
+/* 하단바 여긱까지 */
+/* 스트리밍 전체화면 */
+.player-container-2 {
+    position: relative;
+    padding: 20px;
+}
+
+.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.fullscreen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 999; /* 재생바 아래로 설정 */
+}
+
+.fullscreen-content {
+    width: 90%;
+    background-color: #222;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 1000; /* 재생 목록이 재생바보다 높지 않게 */
+}
+
+.album-cover-2 {
+    width: 1000px;
+}
+/* 스트리밍 전체화면 여기까지 */
+
+
+/* 스트리밍 토글화면 */
+.player-container-3 {
+    display: flex;
+    align-items: center; /* 앨범 이미지와 음악 이름을 위쪽에 정렬 */
+    padding: 20px;
+    background-color: #111; /* 배경 색상 */
+    color: #fff; /* 텍스트 색상 */
+    height: 100vh; /* 화면 전체 높이 */
+}
+
+.album-container {
+    display: flex;
+    flex-direction: column; /* 수직으로 배치 */
+    align-items: center; /* 가운데 정렬 */
+    flex: 1; /* 가로 공간을 차지하게 설정 */
+}
+
+.album-image-3 {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* 이미지 위쪽 정렬 */
+    margin-top: -10px; /* 위로 살짝 조정 */
+}
+
+.fullscreen-content .music-name-3 {
+    color: white; /* 텍스트 색상 */
+    text-align: center; /* 가운데 정렬 */
+    margin-top: 10px; /* 앨범 이미지와의 간격 조정 */
+    width: 100%; /* 부모 요소의 너비에 맞게 설정 */
+    flex: 1; /* 가로 공간을 차지하게 설정 */
+    font-size: 1.5rem; /* 원하는 텍스트 크기 (예: 1.5rem) */
+}
+
+.playlist-3 {
+    flex: 1; /* 재생 목록의 너비를 가변적으로 설정 */
+    margin-left: 20px; /* 왼쪽 마진 추가 */
+    max-width: 90%; /* 최대 너비 설정 */
+    max-height: 600px; /* 원하는 최대 높이 설정 */
+    overflow-y: auto; /* 세로 스크롤 가능 */
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+    align-items: flex-start; /* Flexbox 아이템을 왼쪽으로 정렬 */
+    font-size: 1.5rem; /* 원하는 텍스트 크기 (예: 1.5rem) */
+}
+
+.track-container{
+    display: flex;
+    flex-direction: column; /* 수직으로 배치 */
+    align-items: center; /* 가운데 정렬 */
+    flex: 1; /* 가로 공간을 차지하게 설정 */
+}
+
+.content-container{
+    display: flex;
+    flex-direction: column; /* 수직으로 배치 */
+}
+
+.album-image-3 img {
+    width: 500px; /* 원하는 너비로 설정 */
+    height: 500px; /* 원하는 높이로 설정 */
+    object-fit: cover; /* 이미지 비율을 유지하며 잘리도록 설정 */
+    border-radius: 10px;
+    margin-top: -10px; /* 위로 살짝 조정 */
+}
+
+.playlist-3 h3 {
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    border-bottom: 1px solid #fff;
+}
+
+.playlist-3 ul {
+    list-style: none;
+    padding: 0;
+}
+
+.playlist-3 ul li {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #222;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.playlist-3 ul li:hover {
+    background-color: #333;
+}
+
+/* 스트리밍 토글화면 여기까지 */
+
 /* 중간 정렬을 위한 수정 */
 
 .playlist-header {
