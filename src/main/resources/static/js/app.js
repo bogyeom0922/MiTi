@@ -6,21 +6,24 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
     const [accessToken, setAccessToken] = useState(null);
     const [deviceId, setDeviceId] = useState(null);
     const [trackPosition, setTrackPosition] = useState(0); // 현재 재생 위치
-    const [trackDuration, setTrackDuration] = useState(0); // 트랙 길이
+    const [trackDuration, setTrackDuration] = useState(0);  // 트랙 길이
 
-    // 음악 재생 상태를 저장하는 함수
-    const saveMusicState = (musicInfo, isPaused) => {
+    // 음악 상태를 저장하는 함수
+    const saveMusicState = (musicInfo, isPaused, position, duration) => {
         const musicState = {
             ...musicInfo,
-            paused: isPaused // 재생 중인지 여부도 저장
+            paused: isPaused,
+            trackPosition: position, // 현재 재생 위치 저장
+            trackDuration: duration, // 트랙 길이 저장
         };
         localStorage.setItem('musicState', JSON.stringify(musicState));
     };
 
-    // 페이지 로드 시 저장된 상태를 불러오는 함수
+
+    // 음악 상태를 불러오는 함수
     const loadMusicState = () => {
         const savedState = localStorage.getItem('musicState');
-        return savedState ? JSON.parse(savedState) : { musicName: "", musicUri: "", albumImage: "", id: "", paused: true };
+        return savedState ? JSON.parse(savedState) : { musicName: "", musicUri: "", albumImage: "", id: "", paused: true, trackPosition: 0, trackDuration: 0 };
     };
 
     // 엑세스 토큰 받아오기
@@ -110,10 +113,12 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
         fetchAccessToken();
     }, []);
 
+    // 음악 상태 로드 및 복원
     useEffect(() => {
         const savedMusicInfo = loadMusicState();
         setPaused(savedMusicInfo.paused); // 저장된 재생 상태 복원
         setTrackPosition(savedMusicInfo.trackPosition || 0); // 저장된 위치 복원
+        setTrackDuration(savedMusicInfo.trackDuration || 0); // 저장된 트랙 길이 복원
         if (!savedMusicInfo.paused && player) {
             player.resume(); // 저장된 상태가 재생 중이라면 자동으로 재생
         }
@@ -176,7 +181,7 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
                 player.getCurrentState().then(state => {
                     if (state) {
                         setTrackPosition(state.position);
-                        setTrackDuration(state.track_window.current_track.duration_ms);
+                        setTrackDuration(state.track_window.current_track.duration_ms); // 트랙 길이를 주기적으로 업데이트
                     }
                 });
             }
@@ -184,6 +189,7 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
 
         return () => clearInterval(interval);
     }, [player]);
+
 
     // 일시정지 및 재생
     const togglePlayPause = () => {
@@ -228,8 +234,8 @@ const SpotifyPlayer = ({ musicInfo, providerId, onNextTrack, onPrevTrack }) => {
 
     // 음악 상태 저장
     useEffect(() => {
-        saveMusicState(musicInfo, paused); // 재생 상태와 함께 저장
-    }, [musicInfo, paused]);
+        saveMusicState(musicInfo, paused, trackPosition, trackDuration); // 재생 상태와 함께 저장
+    }, [musicInfo, paused, trackPosition, trackDuration]);
 
     return (
         <div className="player-container-1">
@@ -353,6 +359,7 @@ const App = () => {
     // 플레이리스트 외부에서 음악 클릭 시 처리
     const handleMusicClick = async (id) => {
         await fetchMusicInfo(id); // 다음 곡의 정보 가져오기
+        setCurrentTrackIndex((prev) => prev + 1); // 인덱스를 증가시켜 다음 트랙으로 이동
     };
 
 
