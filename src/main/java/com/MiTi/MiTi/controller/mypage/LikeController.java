@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,7 @@ public class LikeController {
     public String list(@PathVariable String providerId, Model model) {
 
         List<LikeDto> likeDtoList = likeService.getLikeListByUserId(String.valueOf(providerId));
+        Collections.reverse(likeDtoList);
         model.addAttribute("likeList", likeDtoList);
 
         Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,6 +34,7 @@ public class RecordController {
     public String list(@PathVariable String providerId, Model model) {
 
         List<RecordDto> recordDtoList = recordService.getRecordListByProviderId(String.valueOf(providerId));
+        Collections.reverse(recordDtoList);
         model.addAttribute("recordList", recordDtoList);
 
 
