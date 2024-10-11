@@ -8,9 +8,12 @@ import com.MiTi.MiTi.entity.Comment;
 import com.MiTi.MiTi.entity.Playlist;
 import com.MiTi.MiTi.repository.AlbumRepository;
 import com.MiTi.MiTi.service.*;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,8 +21,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
+
+import java.io.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -157,6 +163,70 @@ public class AlbumController {
     }
 
 
+    @GetMapping("/api/streaming/{providerId}/{albumId}")
+    public ResponseEntity<List<AlbumDto>> getSimilarAlbums(@PathVariable("providerId") String providerId, @PathVariable("albumId") Long albumId) {
+        // 유저 확인
+        Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);
+        if (!userDTOOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 유저가 없을 경우 404
+        }
+
+        try {
+            // 파이썬 스크립트 실행
+            ProcessBuilder pb = new ProcessBuilder("python", "C:\\mititest\\src\\main\\scripts\\recommendation_algorithm.py", albumId.toString());
+            Process process = pb.start();
+
+            // 파이썬 스크립트의 출력을 읽음
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+            String result = reader.lines().collect(Collectors.joining());
+            String errorOutput = errorReader.lines().collect(Collectors.joining());
+
+            // 에러 출력을 로그에 기록
+            if (!errorOutput.isEmpty()) {
+                System.err.println("Python script error output: " + errorOutput);
+            }
+
+            // JSON 파싱
+            ObjectMapper mapper = new ObjectMapper();
+            List<AlbumDto> albumDtos = mapper.readValue(result, new TypeReference<List<AlbumDto>>() {});
+
+
+            // 응답 헤더에 Content-Type 설정
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
+
+
+            // AlbumDto 리스트가 비어 있는 경우 204 반환
+            if (albumDtos.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }
+
+            // AlbumDto 리스트를 Album 리스트로 변환
+            List<Album> streaminglist = albumDtos.stream()
+                    .map(dto -> new Album(dto.getId(), dto.getMusicName(), dto.getAlbumImage(), dto.getMusicArtistName(), dto.getMusic_duration_ms(), dto.getMusic_uri()))
+                    .collect(Collectors.toList());
+
+            // Album 리스트를 AlbumDto 리스트로 변환
+            List<AlbumDto> playlistDto = streaminglist.stream()
+                    .map(album -> new AlbumDto(
+                            album.getId(),
+                            album.getMusicName(),
+                            album.getAlbum_image(),
+                            album.getMusicArtistName(),
+                            album.getMusic_duration_ms(),
+                            album.getMusic_uri()
+                    ))
+                    .collect(Collectors.toList());
+
+            return new ResponseEntity<>(playlistDto,headers, HttpStatus.OK);  // JSON 형태로 추천 앨범 리스트 반환
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
+    }
 
 
 }

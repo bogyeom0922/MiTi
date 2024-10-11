@@ -53,6 +53,16 @@ public class Album {
     @Column(name = "is_liked")
     private Boolean isLiked;
 
+    public Album(Long id, String musicName, String albumImage, String musicArtistName, Integer music_duration_ms, String music_uri) {
+        this.id=id;
+        this.musicName=musicName;
+        this.album_image=albumImage;
+        this.musicArtistName=musicArtistName;
+        this.music_duration_ms=music_duration_ms;
+        this.music_uri=music_uri;
+    }
+
+
     // 기존의 getter 메서드를 수정
     public String getAlbum_image() {
         return album_image;

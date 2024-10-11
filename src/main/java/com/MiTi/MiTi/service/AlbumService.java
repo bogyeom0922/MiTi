@@ -5,6 +5,8 @@ import com.MiTi.MiTi.entity.Album;
 import com.MiTi.MiTi.entity.Like;
 import com.MiTi.MiTi.repository.AlbumRepository;
 import com.MiTi.MiTi.repository.LikeRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,8 +14,12 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AlbumService {
@@ -135,4 +141,7 @@ public class AlbumService {
         return albumRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("해당 앨범을 찾을 수 없습니다: " + id));
     }
+
+
+
 }

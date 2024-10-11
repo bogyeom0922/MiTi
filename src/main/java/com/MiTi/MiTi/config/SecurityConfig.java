@@ -18,7 +18,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/", "/login", "/error", "/api/token", "/callback", "/index.html",
                                 "/streaming.html", "/app.js", "/playbar.js","/home", "/main/**").permitAll()
-                        .requestMatchers("/resources/**", "/static/**", "/public/**").permitAll()
+                        .requestMatchers("/resources/**", "/static/**", "/public/**", "/src/main/scripts/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login

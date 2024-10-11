@@ -1,33 +1,64 @@
 import pymysql
 import numpy as np
 from scipy.spatial.distance import cosine
+import json
+import sys
 
-def fetch_album_features(connection, album_ids):
+def fetch_album_features(connection, album_ids=None):
     with connection.cursor() as cursor:
-        format_strings = ','.join(['%s'] * len(album_ids))
-        query = f"SELECT id, music_acousticness, music_danceability, music_energy, music_liveness, music_loudness, music_tempo, music_valence FROM album WHERE id IN ({format_strings})"
-        cursor.execute(query, tuple(album_ids))
+        if album_ids:
+            format_strings = ','.join(['%s'] * len(album_ids))
+            query = f"""
+            SELECT id, music_acousticness, music_danceability, music_energy, 
+                   music_liveness, music_loudness, music_tempo, music_valence,
+                   music_name, music_uri, album_image, music_artist_name, music_duration_ms
+            FROM album WHERE id IN ({format_strings})
+            """
+            cursor.execute(query, tuple(album_ids))
+        else:
+            query = """
+            SELECT id, music_acousticness, music_danceability, music_energy, 
+                   music_liveness, music_loudness, music_tempo, music_valence,
+                   music_name, music_uri, album_image, music_artist_name, music_duration_ms
+            FROM album
+            """
+            cursor.execute(query)
+
         albums = cursor.fetchall()
-        print("Fetched albums:", albums)  # 추가된 코드
-    return {album[0]: np.array(album[1:], dtype=float) for album in albums}
 
-def calculate_average_features(user_records, album_dict, feature_indices):
-    feature_sums = np.zeros(len(feature_indices))
-    count = 0
+    album_dict = {
+        album[0]: {
+            'features': np.array(album[1:8], dtype=float),
+            'music_name': album[8],
+            'music_uri': album[9],
+            'album_image': album[10],
+            'music_artist_name': album[11],
+            'music_duration_ms': album[12]
+        }
+        for album in albums
+    }
 
-    for album_id in user_records:
-        if album_id in album_dict:
-            feature_vector = np.array(album_dict[album_id], dtype=float)
-            selected_features = feature_vector[feature_indices]
-            feature_sums += selected_features
-            count += 1
+    return album_dict
 
-    if count == 0:
-        return np.zeros(len(feature_indices))
-    else:
-        return feature_sums / count
+def calculate_similarity(target_features, album_dict):
+    similarities = []
 
-def main(album_ids):
+    for album_id, album_data in album_dict.items():
+        features = album_data['features']
+        try:
+            if np.all(target_features == 0) or np.all(features == 0):
+                similarity = 0
+            else:
+                similarity = 1 - cosine(target_features, features)
+
+            similarities.append((album_id, similarity))
+
+        except Exception as e:
+            print(f"Error processing album_id {album_id}: {e}")
+
+    return similarities
+
+def main(target_album_id):
     connection = pymysql.connect(
         host='mitidb.cvm64ss6y2xv.ap-northeast-2.rds.amazonaws.com',
         user='minseo',
@@ -35,73 +66,47 @@ def main(album_ids):
         database='mitiDB'
     )
 
-    features_group1_indices = [1, 2, 4, 5, 6]
-    features_group2_indices = [0, 3]
-
     try:
-        album_dict = fetch_album_features(connection, album_ids)
+        album_dict = fetch_album_features(connection, [target_album_id])
 
-        user_records = album_ids  # 예시로 사용자 레코드를 앨범 ID 목록으로 설정
-        average_features_group1 = calculate_average_features(user_records, album_dict, features_group1_indices)
-        average_features_group2 = calculate_average_features(user_records, album_dict, features_group2_indices)
+        if target_album_id not in album_dict:
+            print(f"Album ID {target_album_id} not found in database.")
+            return
 
-        similarities_group1 = []
-        similarities_group2 = []
+        target_features = album_dict[target_album_id]['features']
 
-        for album_id, features in album_dict.items():
-            try:
-                feature_group1 = features[features_group1_indices]
-                feature_group2 = features[features_group2_indices]
+        all_other_albums = fetch_album_features(connection)
 
-                if np.all(feature_group1 == 0) or np.all(average_features_group1 == 0):
-                    similarity_group1 = 0
-                else:
-                    similarity_group1 = 1 - cosine(average_features_group1, feature_group1)
+        similarities = calculate_similarity(target_features, all_other_albums)
 
-                if np.all(feature_group2 == 0) or np.all(average_features_group2 == 0):
-                    similarity_group2 = 0
-                else:
-                    similarity_group2 = 1 - cosine(average_features_group2, feature_group2)
+        sorted_similarities = sorted(similarities, key=lambda x: x[1], reverse=True)
 
-                similarities_group1.append((album_id, similarity_group1))
-                similarities_group2.append((album_id, similarity_group2))
+        top_albums = sorted_similarities[:20]
 
-            except Exception as e:
-                print(f"Error processing album_id {album_id}: {e}")
-
-        sorted_group1 = sorted(similarities_group1, key=lambda x: x[1], reverse=True)
-        sorted_group2 = sorted(similarities_group2, key=lambda x: x[1], reverse=True)
-
-
-        # 추천 앨범 리스트를 출력하기 전, similarities를 확인해 보세요.
-        print("Similarities Group 1:", similarities_group1)
-        print("Similarities Group 2:", similarities_group2)
-        top_albums = []
-        seen_album_ids = set(album_ids)  # 입력한 앨범 ID를 초기화
-
-        # 추천 앨범 리스트 생성
-        for album_id, similarity in sorted_group1 + sorted_group2:
-            print(f"Evaluating album {album_id} with similarity {similarity}")  # 추가된 코드
-            # 현재 앨범을 제외하지 않도록 조건을 수정
-            top_albums.append((album_id, similarity))
-            if len(top_albums) == 20:
-                break
-
-
-        print("Top albums after filtering:", top_albums)  # 추천된 앨범 확인
-
-
-        print("Top albums:", top_albums)  # 여기를 수정했습니다.
+        result = []
         for album_id, similarity in top_albums:
-            print(album_id, similarity)
+            album_data = all_other_albums[album_id]
+            result.append({
+                'id': album_id,
+                'musicName': album_data['music_name'],
+                'music_uri': album_data['music_uri'],
+                'albumImage': album_data['album_image'],
+                'musicArtistName': album_data['music_artist_name'],
+                'music_duration_ms': album_data['music_duration_ms']
+            })
+
+        print(json.dumps(result, indent=4, ensure_ascii=False))
+        sys.stdout.flush()
 
     except pymysql.MySQLError as e:
         print(f"Error: {e}")
+        sys.stdout.flush()
 
     finally:
         connection.close()
 
 if __name__ == "__main__":
     import sys
-    album_ids = list(map(int, sys.stdin.read().split()))
-    main(album_ids)
+    target_album_id = int(sys.argv[1])
+    main(target_album_id)
+    sys.stdout.flush()

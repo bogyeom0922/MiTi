@@ -381,64 +381,59 @@ const SpotifyPlayer = ({ initialMusicInfo= { musicName: "", musicUri: "", albumI
 
 // App 컴포넌트 정의
 const App = () => {
-    const {useState, useEffect} = React;
+    const { useState, useEffect } = React;
     const [currentTrackIndex, setCurrentTrackIndex] = useState(0); // 현재 플레이리스트에서의 트랙 인덱스
-    const [musicInfo, setMusicInfo] = useState({musicName: "", musicUri: "", albumImage: "", id: ""});
+    const [musicInfo, setMusicInfo] = useState({ musicName: "", musicUri: "", albumImage: "", id: "" });
     const [playlist, setPlaylist] = useState([]); // 플레이리스트 상태
 
-    // root 엘리먼트에서 userId와 mood 값을 추출
+    // root 엘리먼트에서 userId와 genre 값을 추출
     const providerId = document.getElementById('root').getAttribute('data-user-id');
     const genre = document.getElementById('root').getAttribute('data-genre');
 
     console.log(providerId, genre);
 
-    // 음악 정보 가져오기 (외부 클릭 시 사용)
-    const fetchMusicInfo = async (id) => {
-        try {
-            const response = await fetch(`/api/music/${id}`);
-            const data = await response.json();
-            if (data) {
-                setMusicInfo({
-                    musicName: data.musicName,
-                    musicUri: data.music_uri,
-                    albumImage: data.albumImage,
-                    musicArtistName: data.musicArtistName,
-                    id: data.id,
-                });
-            } else {
-                throw new Error('No music info found');
-            }
-        } catch (error) {
-            console.error('Error fetching music info:', error);
-        }
-    };
-
-    // 플레이리스트 데이터를 가져오는 함수
-    async function fetchPlaylist() {
+    // 장르 기반 플레이리스트 가져오기
+    const fetchPlaylist = async () => {
         try {
             const response = await fetch(`/api/playlist/${providerId}/${genre}`);
             if (!response.ok) {
                 throw new Error('플레이리스트를 찾을 수 없습니다.');
             }
-
-            const data = await response.json();  // JSON으로 한 번에 파싱
-            console.log('Fetched playlist:', data);  // 여기서 데이터가 잘 가져와지는지 확인
-
-            if (data.length > 0) {
-                setPlaylist(data);  // 가져온 데이터를 플레이리스트로 설정
-            } else {
-                console.error('플레이리스트가 비어 있습니다.');
-            }
+            const data = await response.json();
+            console.log('Fetched playlist:', data);
+            setPlaylist(data);
         } catch (error) {
             console.error('플레이리스트 가져오기 실패:', error);
         }
-    }
+    };
 
+    // 스트리밍 정보 가져오기 (외부 클릭 시 사용)
+    const fetchMusicInfo = async (id) => {
+        try {
+            const response = await fetch(`/api/streaming/${providerId}/${id}`);
+            if (!response.ok) {
+                throw new Error('스트리밍 리스트를 찾을 수 없습니다.');
+            }
+            const data = await response.json();
+            console.log('Fetched streaming list:', data);
 
+            if (data.length > 0) {
+                setPlaylist(data);  // 가져온 스트리밍 리스트를 플레이리스트로 설정
+                setCurrentTrackIndex(0); // 첫 번째 트랙부터 재생
+            } else {
+                console.error('스트리밍 리스트가 비어 있습니다.');
+            }
+        } catch (error) {
+            console.error('스트리밍 리스트 가져오기 실패:', error);
+        }
+    };
+
+    // 컴포넌트가 처음 로드될 때 플레이리스트 가져옴
     useEffect(() => {
-        fetchPlaylist(); // 컴포넌트가 처음 로드될 때 플레이리스트 가져옴
+        fetchPlaylist();
     }, []);
 
+    // 현재 트랙 정보 업데이트
     useEffect(() => {
         if (playlist.length > 0 && currentTrackIndex >= 0 && currentTrackIndex < playlist.length) {
             const track = playlist[currentTrackIndex];
@@ -447,12 +442,11 @@ const App = () => {
                 musicName: track.musicName,
                 musicUri: track.music_uri,
                 albumImage: track.albumImage,
-                musicArtistName : track.musicArtistName,
+                musicArtistName: track.musicArtistName,
                 id: track.id,
             });
         }
     }, [currentTrackIndex, playlist]);
-
 
     // 플레이리스트에서 음악 클릭 시 처리
     const handlePlaylistClick = (id) => {
@@ -463,38 +457,31 @@ const App = () => {
         }
     };
 
-
-    // 전역 범위로 노출 (파일 나누면서 필요)
-    window.handlePlaylistClick = handlePlaylistClick;
-
-
-    // 플레이리스트 외부에서 음악 클릭 시 처리
+    // 외부 음악 클릭 시 처리
     const handleMusicClick = async (id) => {
-        await fetchMusicInfo(id); // 다음 곡의 정보 가져오기
+        await fetchMusicInfo(id); // 스트리밍 정보 가져오기
         const trackIndex = playlist.findIndex(track => track.id === id);
         if (trackIndex !== -1) {
             setCurrentTrackIndex(trackIndex); // 음악 정보 업데이트 후 현재 인덱스 설정
         }
     };
 
-
     // 전역 범위로 노출 (파일 나누면서 필요)
+    window.handlePlaylistClick = handlePlaylistClick;
     window.handleMusicClick = handleMusicClick;
 
-
     return (
-            <SpotifyPlayer
-                key={musicInfo.id || musicInfo.musicUri}  // 음악 정보 변경 시 컴포넌트 리렌더링
-                initialMusicInfo={musicInfo}
-                providerId={providerId}
-                playlist={playlist}  // playlist를 props로 전달
-                onNextTrack={() => setCurrentTrackIndex((prev) => (prev + 1) % playlist.length)}  // 다음 곡으로 이동
-                onPrevTrack={() => setCurrentTrackIndex((prev) => (prev - 1 + playlist.length) % playlist.length)}  // 이전 곡으로 이동
-            />
+        <SpotifyPlayer
+            key={musicInfo.id || musicInfo.musicUri}  // 음악 정보 변경 시 컴포넌트 리렌더링
+            initialMusicInfo={musicInfo}
+            providerId={providerId}
+            playlist={playlist}  // playlist를 props로 전달
+            onNextTrack={() => setCurrentTrackIndex((prev) => (prev + 1) % playlist.length)}  // 다음 곡으로 이동
+            onPrevTrack={() => setCurrentTrackIndex((prev) => (prev - 1 + playlist.length) % playlist.length)}  // 이전 곡으로 이동
+        />
     );
-
-
 };
+
 
 
 ReactDOM.render(<App />, document.getElementById('root'));
