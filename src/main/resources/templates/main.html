@@ -9,60 +9,64 @@
 
 <div th:replace="~{layout/header :: header}"></div>
 
-<div class="recommend_title">Recommended Playlist</div>
-<div class="recommend">
-    <!-- 추천 플레이리스트 섹션 -->
-    <th:block th:each="entry : ${recommendedAlbumsMap}">
-        <div class="recommend_playlist">
-            <a th:href="@{'/playlist/detail/' + ${user != null ? user.providerId : ''} + '/' + ${entry.key}}">
-                <img th:src="${entry.value[0].album_image}" alt="Playlist Image" class="playlist_image">
-            </a>
-            <p class="playlist_name" th:text="${entry.key} + ' 때 듣는 음악'"></p>
-        </div>
-    </th:block>
-</div>
+<div class="main_background"></div>
 
-<!-- 맞춤형 추천 곡들 섹션 -->
-<div class="custom-songs-section">
-    <h2 th:text="${user != null ? user.name : '사용자'} + '님에게 딱 맞는 곡들'"></h2>
-    <div class="songs-container">
-        <!-- 곡 리스트 반복문 -->
-        <div th:each="song : ${customizedAlbums}" class="song-item" th:onclick="|handleMusicClick(${song.id})|">
-            <img th:src="${song.album_image}" alt="앨범 이미지" class="album-cover-thumbnail">
-            <p class="song-title" th:text="${song.musicName}"></p>
-            <p class="song-artist" th:text="${song.musicArtistName}"></p>
-        </div>
-    </div>
-</div>
-
-
-<!-- 인기차트 섹션 -->
-<div class="chart_title">Popular Chart</div>
-<div class="chart">
-    <!-- 왼쪽 열 -->
-    <div class="chart_column">
-        <th:block th:each="album, stat : ${albums}">
-            <div class="chart_item" th:onclick="|handleMusicClick(${album.id})|" th:if="${stat.index < 5}">
-                <img th:src="${album.album_image}" alt="Album Cover" class="chart_image">
-                <div class="chart_info">
-                    <p class="chart_name" th:text="${album.musicName}"></p>
-                    <p th:text="${album.musicArtistName}"></p>
-                </div>
+<div style="position: relative; top: 900px">
+    <div class="recommend_title">Recommended Playlist</div>
+    <div class="recommend">
+        <!-- 추천 플레이리스트 섹션 -->
+        <th:block th:each="entry : ${recommendedAlbumsMap}">
+            <div class="recommend_playlist">
+                <a th:href="@{'/playlist/detail/' + ${user != null ? user.providerId : ''} + '/' + ${entry.key}}">
+                    <img th:src="${entry.value[0].album_image}" alt="Playlist Image" class="playlist_image">
+                </a>
+                <p class="playlist_name" th:text="${entry.key} + ' 때 듣는 음악'"></p>
             </div>
         </th:block>
     </div>
 
-    <!-- 오른쪽 열 -->
-    <div class="chart_column">
-        <th:block th:each="album, stat : ${albums}">
-            <div class="chart_item" th:onclick="|handleMusicClick(${album.id})|" th:if="${stat.index >= 5 && stat.index < 10}">
-                <img th:src="${album.album_image}" alt="Album Cover" class="chart_image">
-                <div class="chart_info">
-                    <p class="chart_name" th:text="${album.musicName}"></p>
-                    <p th:text="${album.musicArtistName}"></p>
-                </div>
+    <!-- 맞춤형 추천 곡들 섹션 -->
+    <div class="custom-songs-section">
+        <h2 th:text="${user != null ? user.name : '사용자'} + '님에게 딱 맞는 곡들'"></h2>
+        <div class="songs-container">
+            <!-- 곡 리스트 반복문 -->
+            <div th:each="song : ${customizedAlbums}" class="song-item" th:onclick="|handleMusicClick(${song.id})|">
+                <img th:src="${song.album_image}" alt="앨범 이미지" class="album-cover-thumbnail">
+                <p class="song-title" th:text="${song.musicName}"></p>
+                <p class="song-artist" th:text="${song.musicArtistName}"></p>
             </div>
-        </th:block>
+        </div>
+    </div>
+
+    <!-- 인기차트 섹션 -->
+    <div class="chart_title">Popular Chart</div>
+    <div class="chart">
+        <!-- 왼쪽 열 -->
+        <div class="chart_column">
+            <th:block th:each="album, stat : ${albums}">
+                <div class="chart_item" th:onclick="|handleMusicClick(${album.id})|" th:if="${stat.index < 5}">
+                    <img th:src="${album.album_image}" alt="Album Cover" class="chart_image">
+                    <div class="chart_info">
+                        <p class="chart_name" th:text="${album.musicName}"></p>
+                        <p th:text="${album.musicArtistName}"></p>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+
+        <!-- 오른쪽 열 -->
+        <div class="chart_column">
+            <th:block th:each="album, stat : ${albums}">
+                <div class="chart_item" th:onclick="|handleMusicClick(${album.id})|"
+                     th:if="${stat.index >= 5 && stat.index < 10}">
+                    <img th:src="${album.album_image}" alt="Album Cover" class="chart_image">
+                    <div class="chart_info">
+                        <p class="chart_name" th:text="${album.musicName}"></p>
+                        <p th:text="${album.musicArtistName}"></p>
+                    </div>
+                </div>
+            </th:block>
+        </div>
     </div>
 </div>
 
