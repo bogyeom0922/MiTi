@@ -4,26 +4,31 @@
     <meta charset="UTF-8">
     <title>MyPage_Record</title>
     <link href="/css/main.css" rel="stylesheet">
+
+    <!-- React와 ReactDOM 불러오기 -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
 </head>
 <body>
 <div th:replace="layout/mypage :: mypage"></div>
-<div class="my_record"></div>
-<div class="my_body">
-    <p class="my_body_title">재생했던 음악</p>
-    <table class="my_table_record">
-        <tr th:each="record : ${recordList}" th:onclick="|handleMusicClick(${record.albumId})|">
-            <td style="width: 10%">
-                <img th:src="@{${record.album_image}}">
-            </td>
-            <td style="width: 50%" class="my_table_padding my_table_body">
-                <span th:text="${record.music_name}"></span>
-            </td>
-            <td style="width: 40%">
-                <span th:text="${record.music_artist_name}"></span>
-            </td>
-        </tr>
-    </table>
-</div>
+
+<!-- React 컴포넌트를 렌더링할 div -->
+<div id="my-record"></div>
+
 <div th:replace="~{play/under :: footer}"></div>
+
+<!-- React 컴포넌트 불러오기 -->
+<script src="/js/components/MyPageRecord.js"></script>
+
+<!-- ReactDOM으로 MyPageRecord 렌더링 -->
+<script type="text/babel">
+    const providerId = '31fwx7bavwuzbuo5h7tm65fax7dy'; // 여기에 providerId 값을 넣습니다.
+
+    ReactDOM.render(
+        <MyPageRecord providerId={providerId} />,
+        document.getElementById('my-record')
+    );
+</script>
 </body>
 </html>
