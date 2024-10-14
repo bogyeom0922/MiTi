@@ -1,11 +1,19 @@
+* {
+    box-sizing: border-box;
+}
+
 html {
-    font-family: sans-serif;
+    font-family: "Noto Sans KR", sans-serif;
+    font-style: normal;
+    scroll-behavior: smooth;
 }
 
 body {
     background-color: #1c1c1c;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
+    color: white;
 }
 
 div {
@@ -47,14 +55,15 @@ a:hover {
     font-size: 25px;
     font-weight: bold;
     color: white;
-    top: -13px;
+    top: -15px;
     left: 3%;
+
 }
 
 /* 검색창 */
 .search_input {
     position: relative;
-    top: -68px;
+    top: -72px;
     left: 30%;
     width: 40%;
     height: 30px;
@@ -113,7 +122,7 @@ a:hover {
 /*사용자 관련 바로가기 메뉴*/
 .user a {
     position: relative;
-    top: -93px;
+    top: -100px;
     left: 88%;
     font-size: 15px;
     font-weight: normal;
@@ -125,14 +134,14 @@ a:hover {
 /*메인1*/
 .main_background {
     background-image: url('https://cdn.imweb.me/thumbnail/20240401/e621c24869cd8.png');
-    background-position: 50% 50%;
-    background-size: cover;
     background-repeat: no-repeat;
     position: absolute;
     left: 0;
-    top: -20px;
+    top: 0;
     right: 0;
     bottom: 0;
+    width: 100vw;
+    margin: 0;
 }
 
 .main1_title {
@@ -142,6 +151,7 @@ a:hover {
     font-size: 70px;
     font-weight: 900;
     color: black;
+    width: 300px;
 }
 
 .main1_comment {
@@ -158,7 +168,7 @@ a:hover {
 
 .move {
     position: relative;
-    top: 430px;
+    top: 440px;
     left: 65%;
     font-size: 13px;
     font-weight: normal;
@@ -170,11 +180,20 @@ a:hover {
     border: none;
 }
 
+/*메인2*/
+.main2 {
+    position: relative;
+    top: 900px;
+    width: 100%;
+    color: white;
+    height: 500px;
+}
+
 .recommend_title {
     position: relative;
     left: 8%;
-    top: 100px;
-    font-size: 25px;
+    top: 190px;
+    font-size: 30px;
     font-weight: bolder;
     margin-bottom: 50px;
 }
@@ -183,11 +202,25 @@ a:hover {
     color: rgba(34, 34, 34, 0.83);
     display: flex;
     position: relative;
-    top: 100px;
+    top: 210px;
+    width: 84%;
+    left: 3%;
+    margin: 0;
+}
+
+.section {
+    opacity: 0; /* 초기 투명도 */
+    transform: translateY(60px); /* 아래에서 위로 이동 */
+    transition: opacity 1s ease-out, transform 0.8s ease-out; /* 부드러운 전환 */
+}
+
+.section.show {
+    opacity: 1; /* 완전히 보임 */
+    transform: translateY(0); /* 원래 위치로 이동 */
 }
 
 .recommend_playlist {
-    width: 12%;
+    width: auto;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -201,21 +234,148 @@ a:hover {
 }
 
 .playlist_name {
-    margin-top: 5px;
-    color: #1e1e1e;
-    font-size: 15px;
+    margin-top: 15px;
+    color: #cdcdcd;
+    font-weight: bold;
+    font-size: 16px;
 }
 
-.album_ranking {
+/*메인3*/
+.main3 {
     position: relative;
+    top: 1100px;
+    color: white;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.18);
+    height: 710px;
+    clear: both;
+}
+
+.custom-songs-title {
+    position: relative;
+    top: 160px;
     left: 8%;
-    top: 200px;
-    font-size: 25px;
+    font-size: 30px;
     font-weight: bolder;
     margin-bottom: 50px;
 }
 
-/* accordion menu */
+.songs-container {
+    position: relative;
+    top: 190px;
+    display: flex;
+    gap: 30px;
+    overflow-x: auto;
+    width: 84%;
+    left: 8%;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.05);
+    height: 500px;
+}
+
+.songs-container::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.songs-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.songs-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.songs-container::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.songs-container:hover {
+    scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.05);
+}
+
+.song-item {
+    text-align: center;
+}
+
+.album-cover-thumbnail {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.song-title {
+    font-weight: bold;
+    color: #cdcdcd;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.song-artist {
+    font-size: 12px;
+    color: #6b777c;
+}
+
+/*메인4*/
+.main4 {
+    position: relative;
+    top: 1270px;
+    padding: 0;
+    height: 910px;
+}
+
+.chart_title {
+    position: relative;
+    left: 8%;
+    font-size: 30px;
+    font-weight: bolder;
+}
+
+.chart {
+    position: relative;
+    left: 8%;
+    top: 70px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25%;
+    max-width: 84%;
+}
+
+.chart_item {
+    display: flex;
+    align-items: center;
+    width: auto;
+    margin-bottom: 30px;
+}
+
+.chart_item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 2px;
+    margin-right: 20px;
+}
+
+.chart_info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.chart_name {
+    font-weight: bold;
+    color: #cdcdcd;
+    font-size: 15px;
+}
+
+.chart_artist {
+    font-size: 13px;
+    color: #6b777c;
+}
+
+/*아코디언 메뉴*/
 .accordion_block {
     display: flex;
     justify-content: space-between;
@@ -996,72 +1156,47 @@ a:hover {
     font-weight: 900;
 }
 
-/* 인기차트 섹션 */
-.chart_title {
-    position: relative;
-    text-align: center;
-    font-size: 25px;
-    font-weight: bolder;
-    margin-top: 150px;
-    margin-bottom: 50px;
-}
-
-/* 인기차트 영역 */
-.chart {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap; /* 여러 줄로 감싸도록 설정 */
-    gap: 20px; /* 아이템 사이 간격 설정 */
-    max-width: 80%;
-    margin: 50px auto;
-}
-
-/* 차트 아이템 */
-.chart_item {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* 앨범 이미지와 텍스트 사이 간격 설정 */
-    width: auto;
-}
-
-.chart_item img {
-    width: 50px; /* 앨범 이미지 크기 설정 */
-    height: 50px;
-    object-fit: cover;
-    border-radius: 5px;
-}
-
-.chart_info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.chart_name {
-    font-size: 14px;
-    font-weight: bold;
-    color: white;
-}
-
-.chart_artist {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.7);
-}
-
 /* 하단에 고정되는 재생바 (playbar) */
 .player-container-1 {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #ffffff;
-    padding: 8px;
+    background-color: #000000;
+    padding: 1px;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: space-between;
     z-index: 1001;
-    height: 30px;
+    height: 60px;
+    color: white;
+}
+
+.progress-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 20%;
+    margin-left: 2%;
+}
+
+.progress-bar-container input[type="range"] {
+    flex-grow: 1;
+    height: 6px;
+    margin: 0 10px;
+    appearance: none;
+    background-color: #cfcfcf;
+    border-radius: 5px;
+}
+
+.progress-bar-container input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background-color: #7290ac;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
 /* 중앙에 위치하는 앨범 이미지와 음악 제목 */
@@ -1070,49 +1205,43 @@ a:hover {
     align-items: center;
     justify-content: center;
     flex-grow: 1;
+    position: relative;
+    left: -4%;
 }
 
 /* 앨범 이미지 크기 조정 */
 .album-cover {
-    width: 3%;
-    height: auto;
-    border-radius: 8px;
-    margin-right: 10px; /* 음악 제목과의 간격 조정 */
+    width: 5%;
+    height: 45px;
+    border-radius: 3px;
+    margin-right: 20px;
 }
 
 /* 음악 제목 스타일 */
 .player-container-1 p {
-    color: black;
     margin: 0;
 }
 
 /* 재생바 내 버튼 스타일 */
+.navigation-buttons {
+    margin-right: 2%;
+}
+
 .nav-button {
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0);
     border: none;
     padding: 8px 16px;
-    color: #1DB954;
+    color: #bdd2e4;
     font-weight: bold;
     border-radius: 20px;
     cursor: pointer;
-    z-index: 1001; /* 적절히 높여서 다른 요소에 덮이지 않도록 */
+    z-index: 1001;
 }
 
 .nav-button:hover {
-    background-color: #e0e0e0;
+    background-color: rgba(255, 173, 173, 0);
 }
 
-/* 좌우 버튼은 중앙의 앨범/음악 제목과 분리 */
-.player-container-1 .nav-button:first-child {
-    margin-left: 10px;
-}
-
-.player-container-1 .nav-button:last-child {
-    margin-right: 10px;
-
-}
-
-/* 하단바 여긱까지 */
 /* 스트리밍 전체화면 */
 .player-container-2 {
     position: relative;
@@ -1348,86 +1477,11 @@ a:hover {
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* 호버 시 그림자 강조 */
 }
 
-
-.album-cover-thumbnail {
-    width: 50px; /* 원하는 크기로 이미지 조정 */
-    height: 50px;
-    object-fit: cover; /* 이미지가 비율을 유지하면서 크기에 맞춰집니다 */
-    border-radius: 5px; /* 이미지에 모서리 둥글기 적용 */
-}
-
-/* Webkit 브라우저 (Chrome, Safari)에서 스크롤바 스타일 */
-.songs-container::-webkit-scrollbar {
-    width: 6px; /* 스크롤바의 너비를 약간 더 얇게 설정 */
-    height: 6px; /* 가로 스크롤바의 높이 */
-}
-
-.songs-container::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.3); /* 스크롤바의 기본 색상 */
-    border-radius: 10px; /* 스크롤바의 둥근 모서리 */
-}
-
-.songs-container::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0, 0, 0, 0.5); /* 스크롤바에 마우스를 올렸을 때 더 어두운 색 */
-}
-
-.songs-container::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.05); /* 스크롤 트랙의 옅은 색상 */
-}
-
-/* Firefox에서 스크롤바 스타일 */
-.songs-container {
-    scrollbar-width: thin; /* 얇은 스크롤바 */
-    scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.05); /* 스크롤바 및 트랙 색상 */
-}
-
-/* 스크롤바에 마우스를 올렸을 때 */
-.songs-container:hover {
-    scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.05); /* 마우스가 올려졌을 때 더 진한 색상 */
-}
-
-/* 맞춤형 추천 곡들 섹션 스타일 */
-.custom-songs-section {
-    margin-top: 200px; /* 위에 플레이리스트와의 간격을 100px로 설정 */
-    padding-left: 3%;
-    clear: both; /* 플로팅 요소로 인해 발생하는 겹침 방지 */
-}
-
-.custom-songs-section h2 {
-    font-size: 25px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-.songs-container {
-    display: flex;
-    gap: 30px; /* 곡 간 간격을 조정합니다 */
-    overflow-x: auto; /* 곡들이 가로로 넘쳐흐를 때 스크롤이 가능하도록 합니다 */
-    padding-bottom: 20px;
-}
-
-.song-item {
-    text-align: center;
-    width: 150px; /* 곡 이미지 및 정보 블록의 너비 설정 */
-    margin-right: 20px; /* 곡 사이 간격 */
-}
-
-.album-cover-thumbnail {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 8px;
-}
-
-.song-title {
-    font-size: 14px;
-    font-weight: bold;
-    color: #1e1e1e;
-    margin-top: 10px;
-}
-
-.song-artist {
-    font-size: 12px;
-    color: #666;
-}
+/*.album_ranking {*/
+/*    position: relative;*/
+/*    left: 8%;*/
+/*    top: 200px;*/
+/*    font-size: 25px;*/
+/*    font-weight: bolder;*/
+/*    margin-bottom: 50px;*/
+/*}*/

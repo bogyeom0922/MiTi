@@ -293,8 +293,10 @@ const SpotifyPlayer = ({ initialMusicInfo= { musicName: "", musicUri: "", albumI
             </div>
 
             {/* 앨범 이미지 및 음악 정보 */}
-            <img src={albumImage} alt="Album cover" className="album-cover"/>
-            <p>Now playing: {musicName}</p>
+            <div className="track-info">
+                <img src={albumImage} alt="Album cover" className="album-cover"/>
+                <p>Now playing: {musicName}</p>
+            </div>
 
             {/* 네비게이션 버튼 */}
             <div className="navigation-buttons">
