@@ -11,88 +11,54 @@
 
 <div th:fragment="header">
     <div class="header">
-        <p class="logo" th:if="${user != null}" data-provider-id="${user.providerId}" onclick="redirectToMain(this)">MITI</p>
-        <script>
-            function redirectToMain() {
-                window.location.href = `/main`;
-            }
-        </script>
+        <!-- 로고 -->
+        <p class="logo" th:if="${user != null}" data-provider-id="${user.providerId}" onclick="location.href='/main'">
+            MITI</p>
 
         <!-- 음악 검색 -->
-        <!-- 검색 입력 필드와 자동완성 결과 표시 부분 -->
-        <input type="text" class="search_input" id="search" placeholder="Search for music or artist" autocomplete="off"/>
+        <!-- 검색 입력 필드, 자동완성 결과 표시 -->
+        <input type="text" class="search_input" id="search" placeholder="Search for music or artist"
+               autocomplete="off"/>
+        <!-- 유저 메뉴 -->
+        <div class="user">
+            <a href="/logout">로그아웃</a>
+            <a th:href="@{/mypage/record/{userId}(userId=${user.providerId})}">마이페이지</a>
+        </div>
         <div id="autocomplete-results">
             <!-- 검색 결과 아이템 -->
             <div class="autocomplete-item">
             </div>
-        </div>
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-            $(document).ready(function () {
-                // 검색 입력 필드에 입력이 있을 때마다 AJAX 요청을 보냅니다.
-                $('#search').on('input', function() {
-                    var query = $(this).val();
-
-                    if (query.length > 1) {
-                        // 자동완성 결과 보여주기
-                        $('#autocomplete-results').css('display', 'block'); // 검색어 입력 시 자동완성 보이기
-                        $.ajax({
-                            url: '/find/autocomplete',
-                            type: 'GET',
-                            data: { query: query },
-                            success: function(data) {
-                                $('#autocomplete-results').html(data);
-                            },
-                            error: function() {
-                                $('#autocomplete-results').html('<p>자동완성 결과를 불러오는 중 오류가 발생했습니다.</p>');
-                            }
-                        });
-                    } else {
-                        // 검색어가 없으면 자동완성 결과 숨기기
-                        $('#autocomplete-results').css('display', 'none'); // 검색어 없을 시 자동완성 숨기기
-                    }
-                });
-            });
-        </script>
-
-
-
-        <div class="my_accordion-container">
-            <span th:text="${user.name}" class="user" onclick="toggleAccordion()"></span>
-
-            <!-- 아코디언 메뉴 콘텐츠 -->
-            <div class="my_accordion-content">
-                <a href="/logout">로그아웃</a>
-                <a th:href="@{/mypage/record/{userId}(userId=${user.providerId})}">마이페이지</a>
-            </div>
-
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script>
-                function toggleAccordion() {
-                    var content = document.querySelector('.my_accordion-content');
-                    var isVisible = content.style.display === 'block';
+                $(document).ready(function () {
+                    // 검색 입력 필드에 입력이 있을 때마다 AJAX 요청을 보냅니다.
+                    $('#search').on('input', function () {
+                        var query = $(this).val();
 
-                    // 모든 아코디언 콘텐츠를 숨기기
-                    document.querySelectorAll('.my_accordion-content').forEach(function (item) {
-                        item.style.display = 'none';
+                        if (query.length > 1) {
+                            // 자동완성 결과 보여주기
+                            $('#autocomplete-results').css('display', 'block'); // 검색어 입력 시 자동완성 보이기
+                            $.ajax({
+                                url: '/find/autocomplete',
+                                type: 'GET',
+                                data: {query: query},
+                                success: function (data) {
+                                    $('#autocomplete-results').html(data);
+                                },
+                                error: function () {
+                                    $('#autocomplete-results').html('<p>자동완성 결과를 불러오는 중 오류가 발생했습니다.</p>');
+                                }
+                            });
+                        } else {
+                            // 검색어가 없으면 자동완성 결과 숨기기
+                            $('#autocomplete-results').css('display', 'none'); // 검색어 없을 시 자동완성 숨기기
+                        }
                     });
-
-                    // 클릭한 아코디언 콘텐츠를 토글
-                    content.style.display = isVisible ? 'none' : 'block';
-                }
-
-                // 이벤트 핸들러에서 사용될 데이터 속성 활용
-                function redirectToMainPage(element) {
-                    const providerId = element.getAttribute('data-provider-id');
-                    window.location.href = '/main';
-                }
-
-                function redirectToMypage(userId, path) {
-                    window.location.href = '/mypage/' + path + '/' + userId;
-                }
+                });
             </script>
         </div>
-</div>
+    </div>
 </div>
 </body>
 </html>

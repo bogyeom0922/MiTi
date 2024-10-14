@@ -3,29 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <link href="/css/main.css" rel="stylesheet">
-    <title>Miti Main</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100..900&display=swap"
+          rel="stylesheet">
+    <title>Miti</title>
 </head>
 <body>
-
 <div th:replace="~{layout/header :: header}"></div>
 
-<div class="recommend_title">Recommended Playlist</div>
-<div class="recommend">
-    <!-- 추천 플레이리스트 섹션 -->
-    <th:block th:each="entry : ${recommendedAlbumsMap}">
-        <div class="recommend_playlist">
-            <a th:href="@{'/playlist/detail/' + ${user != null ? user.providerId : ''} + '/' + ${entry.key}}">
-                <img th:src="${entry.value[0].album_image}" alt="Playlist Image" class="playlist_image">
-            </a>
-            <p class="playlist_name" th:text="${entry.key} + ' 때 듣는 음악'"></p>
-        </div>
-    </th:block>
+<!--main part1-->
+<div class="main_background">
+    <div class="main1_title">MI TIPO</div>
+    <div class="main1_comment">당신의 감정을 채우는<br>개인화된 음악 경험</div>
+    <button class="move">더 알아보기</button>
 </div>
 
-<!-- 맞춤형 추천 곡들 섹션 -->
-<div class="custom-songs-section">
-    <h2 th:text="${user != null ? user.name : '사용자'} + '님에게 딱 맞는 곡들'"></h2>
-    <div class="songs-container">
+<!--main part2-->
+<div id="main2" class="main2">
+    <div class="recommend_title">추천 플레이리스트</div>
+    <div class="recommend section">
+        <!-- 추천 플레이리스트 섹션 -->
+        <th:block th:each="entry : ${recommendedAlbumsMap}">
+            <div class="recommend_playlist">
+                <a th:href="@{'/playlist/detail/' + ${user != null ? user.providerId : ''} + '/' + ${entry.key}}">
+                    <img th:src="${entry.value[0].album_image}" alt="Playlist Image" class="playlist_image">
+                </a>
+                <p class="playlist_name" th:text="${entry.key} + '을 위한 음악'"></p>
+            </div>
+        </th:block>
+    </div>
+</div>
+
+<!--main part3-->
+<div class="main3">
+    <!-- 맞춤형 추천 곡들 섹션 -->
+    <p class="custom-songs-title" th:text="${user != null ? user.name : '사용자'} + '님에게 딱 맞는 곡들'"></p>
+    <div class="songs-container section">
         <!-- 곡 리스트 반복문 -->
         <div th:each="song : ${customizedAlbums}" class="song-item" th:onclick="|handleMusicClick(${song.id})|">
             <img th:src="${song.album_image}" alt="앨범 이미지" class="album-cover-thumbnail">
@@ -35,37 +49,66 @@
     </div>
 </div>
 
-
-<!-- 인기차트 섹션 -->
-<div class="chart_title">Popular Chart</div>
-<div class="chart">
-    <!-- 왼쪽 열 -->
-    <div class="chart_column">
-        <th:block th:each="album, stat : ${albums}">
-            <div class="chart_item" th:onclick="|handleMusicClick(${album.id})|" th:if="${stat.index < 5}">
-                <img th:src="${album.album_image}" alt="Album Cover" class="chart_image">
-                <div class="chart_info">
-                    <p class="chart_name" th:text="${album.musicName}"></p>
-                    <p th:text="${album.musicArtistName}"></p>
+<!--main part4-->
+<div class="main4">
+    <div class="chart_title">인기 차트 top 10</div>
+    <div class="chart section">
+        <!-- 왼쪽 열 -->
+        <div class="chart_column">
+            <th:block th:each="album, stat : ${albums}">
+                <div class="chart_item" th:onclick="|handleMusicClick(${album.id})|" th:if="${stat.index < 5}">
+                    <img th:src="${album.album_image}" alt="Album Cover">
+                    <div class="chart_info">
+                        <p class="chart_name" th:text="${album.musicName}"></p>
+                        <p class="chart_artist" th:text="${album.musicArtistName}"></p>
+                    </div>
                 </div>
-            </div>
-        </th:block>
-    </div>
+            </th:block>
+        </div>
 
-    <!-- 오른쪽 열 -->
-    <div class="chart_column">
-        <th:block th:each="album, stat : ${albums}">
-            <div class="chart_item" th:onclick="|handleMusicClick(${album.id})|" th:if="${stat.index >= 5 && stat.index < 10}">
-                <img th:src="${album.album_image}" alt="Album Cover" class="chart_image">
-                <div class="chart_info">
-                    <p class="chart_name" th:text="${album.musicName}"></p>
-                    <p th:text="${album.musicArtistName}"></p>
+        <!-- 오른쪽 열 -->
+        <div class="chart_column">
+            <th:block th:each="album, stat : ${albums}">
+                <div class="chart_item" th:onclick="|handleMusicClick(${album.id})|"
+                     th:if="${stat.index >= 5 && stat.index < 10}">
+                    <img th:src="${album.album_image}" alt="Album Cover" class="chart_image">
+                    <div class="chart_info">
+                        <p class="chart_name" th:text="${album.musicName}"></p>
+                        <p class="chart_artist" th:text="${album.musicArtistName}"></p>
+                    </div>
                 </div>
-            </div>
-        </th:block>
+            </th:block>
+        </div>
     </div>
 </div>
 
 <div th:replace="~{play/under :: footer}"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sections = document.querySelectorAll('.section');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show'); // 애니메이션 시작
+                } else {
+                    entry.target.classList.remove('show'); // 필요 시 초기화
+                }
+            });
+        }, {threshold: 0.15}); // 15% 보일 때 트리거
+
+        sections.forEach((section) => observer.observe(section));
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const moveButton = document.querySelector('.move'); // 버튼 선택
+        const main2Section = document.getElementById('main2'); // 이동할 섹션 선택
+
+        moveButton.addEventListener('click', () => {
+            main2Section.scrollIntoView({ behavior: 'smooth' }); // 부드러운 스크롤
+        });
+    });
+</script>
 </body>
 </html>
