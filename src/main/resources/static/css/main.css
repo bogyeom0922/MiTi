@@ -474,8 +474,8 @@ a:hover {
 .panel {
     display: none; /* 기본적으로 패널 숨김 */
     position: absolute; /* 버튼에 상대적인 위치 설정 */
-    left: 102%; /* 버튼의 오른쪽에 위치하도록 설정 */
-    top: 15px; /* 버튼과 같은 높이로 설정 */
+    left: 40px; /* 버튼의 오른쪽에 위치하도록 설정 */
+    top: 0; /* 버튼과 같은 높이로 설정 */
     padding: 10px; /* 패딩 설정 */
     background-color: #f9f9f9; /* Added background color for better visibility */
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Added shadow for better visibility */
