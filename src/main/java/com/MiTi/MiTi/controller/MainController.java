@@ -36,7 +36,6 @@ public class MainController {
         this.playlistService = playlistService;
     }
 
-
     // 사용자 정보가 포함된 메인 페이지
     @GetMapping("/main")
     public String mainPage(Model model) {
