@@ -24,11 +24,12 @@
         댓글
     </div>
     <div th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${user.providerId})}'|"
-         class="my_shortcuts my_record">플레이리스트
+         class="my_shortcuts current">플레이리스트
     </div>
 </div>
 <div class="my_body">
-    <p th:text="${userPlaylistName}" class="my_body_title_playlist_albums"></p>
+<!--    class="my_body_title_playlist_albums-->
+    <p th:text="${userPlaylistName}" class="my_body_title"></p>
     <table class="my_table_playlist_albums">
         <tr th:each="album : ${albumList}" th:onclick="|handleMusicClick(${album.albumId})|">
             <td style="width: 9%">
@@ -41,7 +42,7 @@
                 <span th:text="${album.music_artist_name}"></span>
             </td>
             <td style="width: 7%">
-                <button th:data-album-id="${album.albumId}" th:data-playlist-name="${userPlaylistName}" class="delete-btn">삭제</button>
+                <button th:data-album-id="${album.albumId}" th:data-playlist-name="${userPlaylistName}" class="delete-btn my_table_button">삭제</button>
             </td>
         </tr>
     </table>

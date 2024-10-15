@@ -6,8 +6,24 @@
     <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
-<div th:replace="layout/mypage :: mypage"></div>
-<div class="my_genre"></div>
+<div th:replace="~{layout/header :: header}"></div>
+<div class="my_category">
+    <div th:onclick="|location.href='@{/mypage/record/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
+        음악 기록
+    </div>
+    <div th:onclick="|location.href='@{/mypage/like/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
+        좋아요
+    </div>
+    <div th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${user.providerId})}'|" class="my_shortcuts current">선호
+        장르
+    </div>
+    <div th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
+        댓글
+    </div>
+    <div th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${user.providerId})}'|"
+         class="my_shortcuts">플레이리스트
+    </div>
+</div>
 <div class="my_body">
     <p class="my_body_title">선택한 선호 장르</p>
     <table class="my_table_genre">
@@ -19,15 +35,11 @@
                 <span th:text="${genre.genre}"></span>
             </td>
             <td style="width: 25%">
-                <button th:onclick="'deleteGenre(' + ${genre.id} + ')'" class="btn btn-danger">삭제</button>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <button onclick="showAddGenreList()" class="btn btn-danger">장르 추가</button>
+                <button th:onclick="'deleteGenre(' + ${genre.id} + ')'" class="btn btn-danger my_table_button">삭제</button>
             </td>
         </tr>
     </table>
+    <button onclick="showAddGenreList()" class="btn btn-danger my_table_button my_genre_button">장르 추가</button>
 
     <!-- 사용자가 선택하지 않은 장르를 표시할 영역 -->
     <div id="addGenreList" class="add_genre_list">
