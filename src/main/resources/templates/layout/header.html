@@ -12,16 +12,36 @@
 <div th:fragment="header">
     <div class="header">
         <!-- 로고 -->
-        <p class="logo" th:if="${user != null}" data-provider-id="${user.providerId}" onclick="location.href='/main'">
-            MITI</p>
-
+        <p class="logo" th:if="${user != null}" data-provider-id="${user.providerId}" onclick="location.href='/main'">MITI</p>
         <!-- 음악 검색 -->
         <!-- 검색 입력 필드, 자동완성 결과 표시 -->
         <input type="text" class="search_input" id="search" placeholder="Search for music or artist"
                autocomplete="off"/>
         <!-- 유저 메뉴 -->
         <div class="user">
-            <a href="/logout" class="logout">로그아웃</a>
+            <a href="#" class="logout" onclick="logout(); return false;">로그아웃</a>
+            <script>
+                document.querySelector('.logout').addEventListener('click', function(event) {
+                    event.preventDefault(); // 기본 동작 방지
+                    logout(); // 로그아웃 함수 호출
+                });
+
+                function logout() {
+                    // 로컬 스토리지에서 토큰 삭제
+                    localStorage.removeItem("accessToken");
+
+                    // 로그아웃 요청을 서버에 전송
+                    fetch("/logout", {
+                        method: "POST",
+                        credentials: "include", // 쿠키를 포함하여 요청
+                    }).then(response => {
+                        if (response.ok) {
+                            // 로그아웃 후 리다이렉트
+                            window.location.href = "/login"; // 로그인 페이지로 리다이렉트
+                        }
+                    });
+                }
+            </script>
             <a th:href="@{/mypage/record/{userId}(userId=${user.providerId})}">마이페이지</a>
         </div>
         <div id="autocomplete-results">
