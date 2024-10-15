@@ -776,7 +776,7 @@ a:hover {
     height: 50px;
 }
 
-.my_record {
+.current {
     color: #6c96ac;
 }
 
@@ -802,7 +802,7 @@ a:hover {
     font-weight: 600;
     font-size: 30px;
     position: relative;
-    top: 190px;
+    top: 200px;
     left: 18.5%;
     margin: 0;
 }
@@ -812,7 +812,7 @@ a:hover {
     font-weight: 600;
     font-size: 18px;
     position: relative;
-    top: 200px;
+    top: 270px;
     left: 18%;
     color: rgba(49, 55, 49, 0.77);
 }
@@ -848,7 +848,7 @@ a:hover {
     font-weight: 600;
     font-size: 18px;
     position: relative;
-    top: 200px;
+    top: 270px;
     left: 18%;
     color: rgba(49, 55, 49, 0.77);
 }
@@ -874,7 +874,7 @@ a:hover {
     font-weight: 600;
     font-size: 18px;
     position: relative;
-    top: 200px;
+    top: 270px;
     left: 18%;
     color: rgba(49, 55, 49, 0.77);
 }
@@ -900,7 +900,7 @@ a:hover {
     font-weight: 600;
     font-size: 18px;
     position: relative;
-    top: 220px;
+    top: 270px;
     left: 18%;
     color: rgba(49, 55, 49, 0.77);
 }
@@ -962,7 +962,7 @@ a:hover {
     font-weight: 300;
     font-size: 18px;
     position: relative;
-    top: 250px;
+    top: 270px;
     left: 18%;
     color: #6b777c;
 }

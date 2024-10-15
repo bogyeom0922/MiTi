@@ -6,7 +6,24 @@
     <link href="/css/main.css" rel="stylesheet">
 </head>
 <body>
-<div th:replace="layout/mypage :: mypage"></div>
+<div th:replace="~{layout/header :: header}"></div>
+<div class="my_category">
+    <div th:onclick="|location.href='@{/mypage/record/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
+        음악 기록
+    </div>
+    <div th:onclick="|location.href='@{/mypage/like/{userId}(userId=${user.providerId})}'|" class="my_shortcuts current">
+        좋아요
+    </div>
+    <div th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">선호
+        장르
+    </div>
+    <div th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
+        댓글
+    </div>
+    <div th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${user.providerId})}'|"
+         class="my_shortcuts">플레이리스트
+    </div>
+</div>
 <div class="my_like"></div>
 <div class="my_body">
     <p class="my_body_title">좋아요 누른 음악</p>

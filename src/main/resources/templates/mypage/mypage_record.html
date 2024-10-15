@@ -11,7 +11,7 @@
 <body>
 <div th:replace="~{layout/header :: header}"></div>
 <div class="my_category">
-    <div th:onclick="|location.href='@{/mypage/record/{userId}(userId=${user.providerId})}'|" class="my_shortcuts my_record">
+    <div th:onclick="|location.href='@{/mypage/record/{userId}(userId=${user.providerId})}'|" class="my_shortcuts current">
         음악 기록
     </div>
     <div th:onclick="|location.href='@{/mypage/like/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
