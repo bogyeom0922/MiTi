@@ -809,12 +809,12 @@ a:hover {
 
 .my_table_comment {
     width: 100%;
-    font-weight: 600;
-    font-size: 18px;
+    color: #6b777c;
+    font-weight: 300;
+    font-size: 17px;
     position: relative;
     top: 270px;
     left: 18%;
-    color: rgba(49, 55, 49, 0.77);
 }
 
 .my_table_comment img {
@@ -825,12 +825,19 @@ a:hover {
     height: 60px;
 }
 
-.my_table_comment button {
-    font-weight: 600;
+.my_table_button {
+    font-weight: 900;
     font-size: 18px;
+    color: rgba(197, 197, 197, 0.77);
     border: none;
     background-color: rgba(255, 255, 255, 0);
-    color: rgba(49, 55, 49, 0.77);
+}
+
+.my_genre_button {
+    position: relative;
+    top: 330px;
+    left: 18%;
+    width: 100px;
 }
 
 .my_table_padding {
@@ -844,13 +851,13 @@ a:hover {
 }
 
 .my_table_genre {
-    width: 50%;
-    font-weight: 600;
-    font-size: 18px;
+    width: 40%;
+    color: #6b777c;
+    font-weight: 300;
+    font-size: 17px;
     position: relative;
     top: 270px;
     left: 18%;
-    color: rgba(49, 55, 49, 0.77);
 }
 
 .my_table_genre img {
@@ -861,22 +868,14 @@ a:hover {
     height: 60px;
 }
 
-.my_table_genre button {
-    font-weight: 600;
-    font-size: 18px;
-    border: none;
-    background-color: rgba(255, 255, 255, 0);
-    color: rgba(49, 55, 49, 0.77);
-}
-
 .my_table_like {
     width: 80%;
-    font-weight: 600;
-    font-size: 18px;
+    color: #6b777c;
+    font-weight: 300;
+    font-size: 17px;
     position: relative;
     top: 270px;
     left: 18%;
-    color: rgba(49, 55, 49, 0.77);
 }
 
 .my_table_like img {
@@ -887,22 +886,14 @@ a:hover {
     height: 60px;
 }
 
-.my_table_like button {
-    font-weight: 600;
-    font-size: 18px;
-    border: none;
-    background-color: rgba(255, 255, 255, 0);
-    color: rgba(49, 55, 49, 0.77);
-}
-
 .my_table_playlist {
     width: 80%;
-    font-weight: 600;
-    font-size: 18px;
+    color: #6b777c;
+    font-weight: 300;
+    font-size: 17px;
     position: relative;
     top: 270px;
     left: 18%;
-    color: rgba(49, 55, 49, 0.77);
 }
 
 .my_table_playlist img {
@@ -913,20 +904,12 @@ a:hover {
     height: 60px;
 }
 
-.my_table_playlist button {
-    font-weight: 600;
-    font-size: 18px;
-    border: none;
-    background-color: rgba(255, 255, 255, 0);
-    color: rgba(49, 55, 49, 0.77);
-}
-
 .my_table_playlist_albums {
     width: 83%;
     font-weight: 600;
     font-size: 18px;
     position: relative;
-    top: 250px;
+    top: 270px;
     left: 18%;
     color: rgba(195, 195, 195, 0.77);
 }
@@ -937,14 +920,6 @@ a:hover {
 
 .my_table_playlist_albums tr {
     height: 60px;
-}
-
-.my_table_playlist_albums button {
-    font-weight: 600;
-    font-size: 18px;
-    border: none;
-    background-color: rgba(255, 255, 255, 0);
-    color: rgba(255, 255, 255, 0.77);
 }
 
 .my_body_title_playlist_albums {
@@ -958,13 +933,14 @@ a:hover {
 }
 
 .my_table_record {
-    width: 70%;
-    font-weight: 300;
-    font-size: 18px;
+    width: 100%;
     position: relative;
     top: 270px;
     left: 18%;
     color: #6b777c;
+    font-weight: 300;
+    font-size: 17px;
+    margin-bottom: 500px;
 }
 
 .my_table_record img {
@@ -972,63 +948,8 @@ a:hover {
 }
 
 .my_table_record tr {
-    height: 60px;
-}
-
-.my_table_record button {
-    font-weight: 600;
-    font-size: 18px;
-    border: none;
-    background-color: rgba(255, 255, 255, 0);
-    color: rgba(49, 55, 49, 0.77);
-}
-
-.my_like {
-    position: fixed;
-    float: left;
-    top: 360px;
-    left: 2.5%;
-    margin: 0;
-    background-color: rgba(90, 108, 90, 0.42);
-    width: 9%;
     height: 50px;
-    z-index: 501;
-}
-
-.my_genre {
-    position: fixed;
-    float: left;
-    top: 410px;
-    left: 2.5%;
-    margin: 0;
-    background-color: rgba(90, 108, 90, 0.42);
-    width: 9%;
-    height: 50px;
-    z-index: 501;
-}
-
-.my_comment {
-    position: fixed;
-    float: left;
-    top: 460px;
-    left: 2.5%;
-    margin: 0;
-    background-color: rgba(90, 108, 90, 0.42);
-    width: 9%;
-    height: 50px;
-    z-index: 501;
-}
-
-.my_playlist {
-    position: fixed;
-    float: left;
-    top: 510px;
-    left: 2.5%;
-    margin: 0;
-    background-color: rgba(90, 108, 90, 0.42);
-    width: 9%;
-    height: 50px;
-    z-index: 501;
+    margin-bottom: 30px;
 }
 
 .my_playlist_back {

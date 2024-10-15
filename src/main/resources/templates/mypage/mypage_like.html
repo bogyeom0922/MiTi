@@ -24,7 +24,6 @@
          class="my_shortcuts">플레이리스트
     </div>
 </div>
-<div class="my_like"></div>
 <div class="my_body">
     <p class="my_body_title">좋아요 누른 음악</p>
     <table class="my_table_like">
@@ -39,7 +38,7 @@
                 <span th:text="${like.music_artist_name}"></span>
             </td>
             <td style="width: 8%">
-                <button th:onclick="'deleteLike(' + ${like.id} + ')'" class="btn btn-danger">삭제</button>
+                <button th:onclick="'deleteLike(' + ${like.id} + ')'" class="btn btn-danger my_table_button">삭제</button>
             </td>
         </tr>
     </table>
