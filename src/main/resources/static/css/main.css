@@ -426,6 +426,7 @@ a:hover {
     position: relative;
     padding: 0; /* Removed padding for a tighter button */
     background-color: rgba(0, 0, 0, 0);
+    color: white;
 }
 
 .accordion2:hover, .accordion2.active {
