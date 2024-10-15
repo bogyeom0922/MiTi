@@ -93,7 +93,6 @@ a:hover {
 
 /* 검색 결과 항목 */
 .autocomplete-item {
-    padding: 10px;
     cursor: pointer;
     font-size: 14px; /* 글씨 크기 조정 */
     border-bottom: 1px solid #ddd; /* 아이템 간의 구분선 */
@@ -106,17 +105,9 @@ a:hover {
     background-color: #f0f0f0; /* 호버 시 배경색 변경 */
 }
 
-.autocomplete-item img {
-    width: 40px; /* 앨범 커버 이미지 크기 설정 */
-    height: 40px;
-    object-fit: cover; /* 이미지 비율 유지 */
-    border-radius: 5px; /* 이미지 모서리 둥글게 */
-    margin-right: 10px; /* 이미지와 텍스트 사이 간격 */
-}
-
 .autocomplete-item p {
-    margin: 0; /* 기본 마진 제거 */
     color: #333; /* 텍스트 색상 */
+    margin-left: 10px;
 }
 
 /*사용자 관련 바로가기 메뉴*/
@@ -579,7 +570,7 @@ a:hover {
 .album_img {
     position: absolute; /* 절대 위치를 사용하여 정확한 위치 설정 */
     left: 15%; /* 화면 왼쪽에서 20% 떨어진 위치 */
-    width: 22%; /* 너비 설정 */
+    width: 21%; /* 너비 설정 */
     height: 360px; /* 높이 설정 */
 }
 
@@ -587,13 +578,14 @@ a:hover {
     position: absolute; /* 절대 위치를 사용하여 정확한 위치 설정 */
     right: 15%; /* 화면 오른쪽에서 20% 떨어진 위치 */
     width: 10%; /* 너비 설정 */
+    opacity: 0.8;
 }
 
 .album_detail {
     position: absolute; /* 절대 위치를 사용하여 정확한 위치 설정 */
     left: 55%; /* 화면의 중앙에 위치 */
     transform: translateX(-50%); /* 수평으로 중앙 정렬 */
-    width: 25%;
+    width: 30%;
     font-size: 20px;
     font-weight: bold;
     color: #858585;
@@ -671,14 +663,13 @@ a:hover {
 
 .album_comments {
     position: relative;
-    top: 420px;
+    top: 450px;
     display: flex; /* Flexbox를 사용하여 자식 요소들을 정렬 */
     flex-direction: column; /* 자식 요소들을 수직으로 정렬 */
     justify-content: center; /* 세로 중앙 정렬 */
     align-items: center; /* 가로 중앙 정렬 */
     width: 100%; /* 전체 너비 */
-    height: auto; /* 내용에 따라 높이 조정 */
-    margin-bottom: 500px;
+    margin-bottom: 630px;
 }
 
 
