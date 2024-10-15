@@ -1,7 +1,13 @@
-const SpotifyPlayer = ({ initialMusicInfo= { musicName: "", musicUri: "", albumImage: "" }, providerId, playlist, onNextTrack, onPrevTrack }) => {
-    const { useState, useEffect } = React;
+const SpotifyPlayer = ({
+                           initialMusicInfo = {musicName: "", musicUri: "", albumImage: ""},
+                           providerId,
+                           playlist,
+                           onNextTrack,
+                           onPrevTrack
+                       }) => {
+    const {useState, useEffect} = React;
     const [musicInfo, setMusicInfo] = useState(initialMusicInfo); // 초기 음악 정보를 설정합니다.
-    const { musicName, musicUri, albumImage } = musicInfo;
+    const {musicName, musicUri, albumImage} = musicInfo;
     const [paused, setPaused] = useState(true);
     const [player, setPlayer] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
@@ -10,7 +16,6 @@ const SpotifyPlayer = ({ initialMusicInfo= { musicName: "", musicUri: "", albumI
     const [isFullscreen, setIsFullscreen] = useState(false); // 전체화면 상태
     const [trackPosition, setTrackPosition] = useState(0); // 현재 재생 위치
     const [trackDuration, setTrackDuration] = useState(0); // 트랙 길이
-
 
 
     // 음악 재생 상태를 저장하는 함수
@@ -25,7 +30,13 @@ const SpotifyPlayer = ({ initialMusicInfo= { musicName: "", musicUri: "", albumI
     // 페이지 로드 시 저장된 상태를 불러오는 함수
     const loadMusicState = () => {
         const savedState = localStorage.getItem('musicState');
-        return savedState ? JSON.parse(savedState) : { musicName: "", musicUri: "", albumImage: "", id: "", paused: true };
+        return savedState ? JSON.parse(savedState) : {
+            musicName: "",
+            musicUri: "",
+            albumImage: "",
+            id: "",
+            paused: true
+        };
     };
 
     // 엑세스 토큰 받아오기
@@ -48,11 +59,13 @@ const SpotifyPlayer = ({ initialMusicInfo= { musicName: "", musicUri: "", albumI
         if (window.Spotify && accessToken) {
             const playerInstance = new window.Spotify.Player({
                 name: 'Web Playback SDK',
-                getOAuthToken: cb => { cb(accessToken); },
+                getOAuthToken: cb => {
+                    cb(accessToken);
+                },
                 volume: 0.5,
             });
 
-            playerInstance.addListener('ready', ({ device_id }) => {
+            playerInstance.addListener('ready', ({device_id}) => {
                 console.log('Ready with Device ID', device_id);
                 setDeviceId(device_id);
                 if (musicUri) {
@@ -137,7 +150,7 @@ const SpotifyPlayer = ({ initialMusicInfo= { musicName: "", musicUri: "", albumI
                 console.log(`Attempting to play track with URI: ${sanitizedUri}`);
                 fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
                     method: 'PUT',
-                    body: JSON.stringify({ uris: [sanitizedUri] }),
+                    body: JSON.stringify({uris: [sanitizedUri]}),
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`,
@@ -160,7 +173,6 @@ const SpotifyPlayer = ({ initialMusicInfo= { musicName: "", musicUri: "", albumI
             });
         }
     }, [musicInfo, deviceId]);
-
 
 
     // `currentTrackIndex`가 변경될 때 해당 트랙을 재생
@@ -234,7 +246,7 @@ const SpotifyPlayer = ({ initialMusicInfo= { musicName: "", musicUri: "", albumI
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ providerId, albumId }),
+                body: JSON.stringify({providerId, albumId}),
             });
             const responseText = await response.text();
             console.log('Server response:', responseText);
@@ -313,32 +325,29 @@ const SpotifyPlayer = ({ initialMusicInfo= { musicName: "", musicUri: "", albumI
                 <div className={`fullscreen-overlay ${isFullscreen ? 'fullscreen-active' : ''}`}>
                     <div className="fullscreen-content">
                         <div className="player-container-3">
-                            <div className="album-container"> {/* 앨범 이미지와 이름을 감싸는 컨테이너 추가 */}
+                            <div className="album-container" style={{flex: 0.6}}>
                                 <div className="album-image-3">
                                     <img src={albumImage} alt="Album cover"/>
                                 </div>
-                                <p className="music-name-3">{musicName}</p> {/* 앨범 이름을 같은 컨테이너로 이동 */}
                             </div>
-                            <div className="track-container">
-                            <h3>다음 트랙</h3>
-                            <div className="playlist-3">
-                                <ul>
-                                    {playlist.map((track, index) => (
-                                        <li key={track.id} onClick={() => handlePlaylistClick(track.id)}>
-                                            <img src={track.albumImage} alt={track.musicName}
-                                                 style={{width: '50px', height: '50px'}}/>
-                                            <div className="content-container">
-                                                {track.musicName}|
-                                                {track.musicArtistName}
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                            <div className="track-container" style={{ flex: 0.4 }}>
+                                <p className="next_track">다음 트랙</p>
+                                <div className="playlist-3">
+                                    <ul>
+                                        {playlist.map((track, index) => (
+                                            <li key={track.id} onClick={() => handlePlaylistClick(track.id)} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+                                                <img src={track.albumImage} alt={track.musicName}
+                                                     style={{width: '60px', height: '60px', marginRight: '20px', marginLeft: '10px'}} />
+                                                <div className="content-container">
+                                                    <p className="content-container-music">{track.musicName}</p>
+                                                    <p className="content-container-artist">{track.musicArtistName}</p>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-
-
                         <div className="player-container-1">
                             {/* 프로그레스 바 컨테이너를 상단으로 이동 */}
                             <div className="progress-bar-container">
@@ -372,7 +381,6 @@ const SpotifyPlayer = ({ initialMusicInfo= { musicName: "", musicUri: "", albumI
                         </div>
                     </div>
                 </div>
-
             )}
         </div>
     );
@@ -383,9 +391,9 @@ const SpotifyPlayer = ({ initialMusicInfo= { musicName: "", musicUri: "", albumI
 
 // App 컴포넌트 정의
 const App = () => {
-    const { useState, useEffect } = React;
+    const {useState, useEffect} = React;
     const [currentTrackIndex, setCurrentTrackIndex] = useState(0); // 현재 플레이리스트에서의 트랙 인덱스
-    const [musicInfo, setMusicInfo] = useState({ musicName: "", musicUri: "", albumImage: "", id: "" });
+    const [musicInfo, setMusicInfo] = useState({musicName: "", musicUri: "", albumImage: "", id: ""});
     const [playlist, setPlaylist] = useState([]); // 플레이리스트 상태
 
     // root 엘리먼트에서 userId와 genre 값을 추출
@@ -485,5 +493,4 @@ const App = () => {
 };
 
 
-
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<App/>, document.getElementById('root'));
