@@ -47,44 +47,48 @@ a:hover {
     height: 55px;
     z-index: 10000;
     border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 3%;
 }
 
 /*사이트 로고*/
 .logo {
+    position: relative;
     font-size: 25px;
     font-weight: bold;
     color: white;
+    top: -15px;
+    left: 3%;
+
 }
 
 /* 검색창 */
 .search_input {
-    margin: 0 auto;
+    position: relative;
+    top: -72px;
+    left: 30%;
     width: 40%;
     height: 30px;
     font-size: 16px;
+    padding-left: 4%;
+    border-radius: 5px;
+    box-shadow: none;
     border: none;
     background-color: rgba(255, 250, 250, 0);
-    color: white;
-    padding-left: 10px;
-    border-radius: 5px;
+    color: #ffffff;
 }
 
 /* 검색 자동완성 결과 컨테이너 */
 #autocomplete-results {
-    position: absolute;
-    top: 55px;
-    left: 32.7%;
-    width: 37.9%;
+    position: relative;
+    top: -75px;
+    left: 30%;
+    width: 43%;
     display: none;
     max-height: 200px;
     overflow-y: auto;
     background-color: rgba(244, 244, 244, 0.83);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
+    padding-left: 1%;
 }
 
 /* 검색 결과 항목 */
@@ -95,10 +99,6 @@ a:hover {
     color: #333; /* 텍스트 색상 */
     display: flex; /* 플렉스 레이아웃 사용 */
     align-items: center; /* 텍스트 수직 정렬 */
-    padding: 0; /* 상하, 좌우 패딩 조정 */
-    margin: 0; /* 여백 제거 */
-    box-sizing: border-box; /* 패딩과 보더를 요소 크기에 포함 */
-    width: 100%; /* 부모 컨테이너에 맞추기 */
 }
 
 .autocomplete-item:hover {
@@ -107,21 +107,19 @@ a:hover {
 
 .autocomplete-item p {
     color: #333; /* 텍스트 색상 */
-    margin-left: 20px;
+    margin-left: 10px;
 }
 
 /*사용자 관련 바로가기 메뉴*/
 .user a {
-    position: absolute;
-    right: 3%;
+    position: relative;
+    top: -100px;
+    left: 88%;
     font-size: 15px;
+    font-weight: normal;
     color: white;
-    cursor: pointer;
-    margin-top: -10px;
-}
-
-.logout {
-    margin-right: 6%;
+    cursor: pointer; /* 클릭 가능하게 설정 */
+    margin-right: 1%;
 }
 
 /*메인1*/
