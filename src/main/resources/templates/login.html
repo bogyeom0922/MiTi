@@ -3,10 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/intro.css" rel="stylesheet">
     <title>Login</title>
 </head>
-<body>
-<h1>Login with Spotify</h1>
-<a href="/oauth2/authorization/spotify">Login with Spotify</a>
+<body style="background-color: #121212; margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;">
+<p style="color: white; font-size: 80px; font-weight: 900; ">MITI</p>
 </body>
+
+<script>
+    setTimeout('move_page()', 1500); //4초 후 이동
+    function move_page() {
+        location.href = "/oauth2/authorization/spotify"
+    }
+</script>
 </html>
