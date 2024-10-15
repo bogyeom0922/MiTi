@@ -4,10 +4,29 @@
     <meta charset="UTF-8">
     <title>MyPage_Playlist</title>
     <link href="/css/main.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body>
-<div th:replace="layout/mypage :: mypage"></div>
-<div class="my_playlist"></div>
+<div th:replace="~{layout/header :: header}"></div>
+<div class="my_category">
+    <div th:onclick="|location.href='@{/mypage/record/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
+        음악 기록
+    </div>
+    <div th:onclick="|location.href='@{/mypage/like/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
+        좋아요
+    </div>
+    <div th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">선호
+        장르
+    </div>
+    <div th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
+        댓글
+    </div>
+    <div th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${user.providerId})}'|"
+         class="my_shortcuts my_record">플레이리스트
+    </div>
+</div>
 <div class="my_body">
     <p th:text="${userPlaylistName}" class="my_body_title_playlist_albums"></p>
     <table class="my_table_playlist_albums">
@@ -18,10 +37,10 @@
             <td style="width: 48%" class="my_table_padding my_table_body">
                 <span th:text="${album.music_name}"></span>
             </td>
-            <td style="width: 38%">
+            <td style="width: 36%">
                 <span th:text="${album.music_artist_name}"></span>
             </td>
-            <td style="width: 5%">
+            <td style="width: 7%">
                 <button th:data-album-id="${album.albumId}" th:data-playlist-name="${userPlaylistName}" class="delete-btn">삭제</button>
             </td>
         </tr>

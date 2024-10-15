@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <link href="/css/main.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
     <title>Album Detail</title>
     <!-- 음악 재생 시간 분:초 단위로 변경 -->
     <script type="text/javascript">
@@ -112,7 +115,7 @@
         <form>
             <input type="hidden" name="providerId" id="providerId" th:value="${user.providerId}"/>
             <input type="hidden" name="albumId" id="albumId" th:value="${firstAlbum.id}"/>
-            <textarea name="comment" id="comment"></textarea>
+            <textarea name="comment" id="comment" class="comment"></textarea>
             <button type="button" onclick="submitComment()">post</button>
         </form>
     </div>
