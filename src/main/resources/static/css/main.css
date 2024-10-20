@@ -798,6 +798,7 @@ a:hover {
     position: relative;
     left: 12%;
     width: 65%;
+    margin-bottom: 500px;
 }
 
 .my_body_title {
@@ -817,6 +818,7 @@ a:hover {
     position: relative;
     top: 270px;
     left: 18%;
+    margin-bottom: 500px;
 }
 
 .my_table_comment img {
@@ -878,6 +880,7 @@ a:hover {
     position: relative;
     top: 270px;
     left: 18%;
+    margin-bottom: 500px;
 }
 
 .my_table_like img {
@@ -896,6 +899,7 @@ a:hover {
     position: relative;
     top: 270px;
     left: 18%;
+    margin-bottom: 500px;
 }
 
 .my_table_playlist img {
