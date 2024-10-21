@@ -12,7 +12,9 @@
 <div th:fragment="header">
     <div class="header">
         <!-- 로고 -->
-        <p class="logo" th:if="${user != null}" data-provider-id="${user.providerId}" onclick="location.href='/main'">MITI</p>
+        <p class="logo" th:if="${user != null}" data-provider-id="${user.providerId}" onclick="location.href='/main'">
+            MITI</p>
+
         <!-- 음악 검색 -->
         <!-- 검색 입력 필드, 자동완성 결과 표시 -->
         <input type="text" class="search_input" id="search" placeholder="Search for music or artist"
