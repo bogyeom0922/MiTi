@@ -70,7 +70,6 @@
                             <span th:text="${song.isLiked != null ? (song.isLiked ? '♥' : '♡') : '♡'}"></span>
                         </button>
                         <button>재생 목록에 추가</button>
-                        <button>다음에 재생</button>
                         <a th:href="@{/album/{detail}/{id}(detail=${song.detail}, id=${user != null ? user.providerId : ''})}">
                             <button>앨범 정보</button>
                         </a>

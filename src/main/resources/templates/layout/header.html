@@ -21,7 +21,7 @@
                autocomplete="off"/>
         <!-- 유저 메뉴 -->
         <div class="user">
-            <a href="/logout" class="logout">로그아웃</a>
+            <a href="/logout">로그아웃</a>
             <a th:href="@{/mypage/record/{userId}(userId=${user.providerId})}">마이페이지</a>
         </div>
         <div id="autocomplete-results">
