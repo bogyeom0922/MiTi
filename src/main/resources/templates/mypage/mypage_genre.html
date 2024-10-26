@@ -9,121 +9,92 @@
     <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-<div th:replace="~{layout/header :: header}"></div>
-<div class="my_category">
-    <div th:onclick="|location.href='@{/mypage/record/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
-        음악 기록
+<div id="content">
+    <div class="my_category">
+        <a class="my_shortcuts" th:attr="data-url='/mypage/record/' + ${user.providerId}">음악 기록</a>
+        <a class="my_shortcuts" th:attr="data-url='/mypage/like/' + ${user.providerId}">좋아요</a>
+        <a class="my_shortcuts current" th:attr="data-url='/mypage/genre/' + ${user.providerId}">선호 장르</a>
+        <a class="my_shortcuts" th:attr="data-url='/mypage/comment/' + ${user.providerId}">댓글</a>
+        <a class="my_shortcuts" th:attr="data-url='/mypage/playlist/' + ${user.providerId}">플레이리스트</a>
     </div>
-    <div th:onclick="|location.href='@{/mypage/like/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
-        좋아요
-    </div>
-    <div th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${user.providerId})}'|" class="my_shortcuts current">선호
-        장르
-    </div>
-    <div th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
-        댓글
-    </div>
-    <div th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${user.providerId})}'|"
-         class="my_shortcuts">플레이리스트
+    <div class="my_body">
+        <p class="my_body_title">선택한 선호 장르</p>
+        <table class="my_table_genre">
+            <tr th:each="genre : ${genreList}">
+                <td style="width: 15%">
+                    <img th:src="@{${genre.genre_image}}">
+                </td>
+                <td style="width: 60%" class="my_table_padding my_table_body">
+                    <span th:text="${genre.genre}"></span>
+                </td>
+                <td style="width: 25%">
+                    <button onclick="deleteGenre('${genre.id}')" class="btn btn-danger my_table_button">삭제</button>
+                </td>
+            </tr>
+        </table>
+        <button onclick="showAddGenreList()" class="btn btn-danger my_table_button my_genre_button">장르 추가</button>
+
+        <!-- 사용자가 선택하지 않은 장르를 표시할 영역 -->
+        <div id="addGenreList" class="add_genre_list" style="display: none;">
+            <p class="add_genre">추가할 장르 선택</p>
+            <ul id="nonSelectedGenreList"></ul>
+        </div>
+
+        <!-- JavaScript에 필요한 값 전달 -->
+        <script th:inline="javascript">
+            var providerId = /*[[${user.providerId}]]*/ 'defaultProviderId';
+        </script>
     </div>
 </div>
-<div class="my_body">
-    <p class="my_body_title">선택한 선호 장르</p>
-    <table class="my_table_genre">
-        <tr th:each="genre : ${genreList}">
-            <td style="width: 15%">
-                <img th:src="@{${genre.genre_image}}">
-            </td>
-            <td style="width: 60%" class="my_table_padding my_table_body">
-                <span th:text="${genre.genre}"></span>
-            </td>
-            <td style="width: 25%">
-                <button th:onclick="'deleteGenre(' + ${genre.id} + ')'" class="btn btn-danger my_table_button">삭제</button>
-            </td>
-        </tr>
-    </table>
-    <button onclick="showAddGenreList()" class="btn btn-danger my_table_button my_genre_button">장르 추가</button>
 
-    <!-- 사용자가 선택하지 않은 장르를 표시할 영역 -->
-    <div id="addGenreList" class="add_genre_list">
-        <p class="add_genre">추가할 장르 선택</p>
-        <ul id="nonSelectedGenreList">
-            <!-- 사용자가 선택하지 않은 장르 리스트가 여기 들어감 -->
-        </ul>
-    </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/main.js"></script>
 
-    <!-- userId를 JavaScript로 전달 -->
-    <script th:inline="javascript">
-        var providerId = /*[[${providerId}]]*/ 'defaultProviderId';
-    </script>
-
-    <script>
-        function deleteGenre(id) {
-            console.log(`Deleting genre with id: ${id}`);
-            fetch(`/mypage/genre/${id}`, {
-                method: 'DELETE'
+<script>
+    function deleteGenre(id) {
+        fetch(`/mypage/genre/${id}`, { method: 'DELETE' })
+            .then(response => response.text())
+            .then(result => {
+                if (result === 'success') location.reload();
+                else alert('삭제 실패');
             })
-                .then(response => response.text())
-                .then(result => {
-                    console.log(`Response: ${result}`);
-                    if (result === 'success') {
-                        location.reload();
-                    } else {
-                        alert('삭제 실패');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+            .catch(error => console.error('Error:', error));
+    }
+
+    function showAddGenreList() {
+        fetch(`/mypage/genre/non-selected/${providerId}`)
+            .then(response => response.json())
+            .then(nonSelectedGenres => {
+                const list = document.getElementById('nonSelectedGenreList');
+                list.innerHTML = '';
+                nonSelectedGenres.forEach(genre => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <img src="${genre.genre_image}" width="50">
+                        <span>${genre.genre}</span>
+                        <button onclick="addGenre('${genre.genre}', '${genre.genre_image}')">추가</button>
+                    `;
+                    list.appendChild(listItem);
                 });
-        }
-
-        function showAddGenreList() {
-            fetch(`/mypage/genre/non-selected/${providerId}`)
-                .then(response => response.json())
-                .then(nonSelectedGenres => {
-                    const list = document.getElementById('nonSelectedGenreList');
-                    list.innerHTML = '';
-                    nonSelectedGenres.forEach(genre => {
-                        const listItem = document.createElement('li');
-                        listItem.innerHTML = `
-                    <img src="${genre.genre_image}" width="50">
-                    <span>${genre.genre}</span>
-                    <button onclick="addGenre('${genre.genre}', '${genre.genre_image}')">추가</button>
-                `;
-                        list.appendChild(listItem);
-                    });
-                    document.getElementById('addGenreList').style.display = 'block';
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
-
-        function addGenre(genre, genre_image) {
-            const genreDto = {providerId, genre, genre_image};
-
-            fetch(`/mypage/genre/add`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(genreDto)
+                document.getElementById('addGenreList').style.display = 'block';
             })
-                .then(response => response.text())
-                .then(result => {
-                    console.log(`Response: ${result}`);
-                    if (result === 'success') {
-                        location.reload();
-                    } else {
-                        alert('추가 실패');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
-    </script>
-</div>
+            .catch(error => console.error('Error:', error));
+    }
 
-<div th:replace="play/under :: footer"></div></body>
+    function addGenre(genre, genre_image) {
+        const genreDto = { providerId, genre, genre_image };
+        fetch(`/mypage/genre/add`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(genreDto)
+        })
+            .then(response => response.text())
+            .then(result => {
+                if (result === 'success') location.reload();
+                else alert('추가 실패');
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+</body>
 </html>

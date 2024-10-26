@@ -9,64 +9,68 @@
     <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-<div th:replace="~{layout/header :: header}"></div>
-<div class="my_category">
-    <div th:onclick="|location.href='@{/mypage/record/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
-        음악 기록
+<div id="content">
+    <div class="my_category">
+        <a class="my_shortcuts" th:attr="data-url='/mypage/record/' + ${user.providerId}">음악 기록</a>
+        <a class="my_shortcuts current" th:attr="data-url='/mypage/like/' + ${user.providerId}">좋아요</a>
+        <a class="my_shortcuts" th:attr="data-url='/mypage/genre/' + ${user.providerId}">선호 장르</a>
+        <a class="my_shortcuts" th:attr="data-url='/mypage/comment/' + ${user.providerId}">댓글</a>
+        <a class="my_shortcuts" th:attr="data-url='/mypage/playlist/' + ${user.providerId}">플레이리스트</a>
     </div>
-    <div th:onclick="|location.href='@{/mypage/like/{userId}(userId=${user.providerId})}'|" class="my_shortcuts current">
-        좋아요
-    </div>
-    <div th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">선호
-        장르
-    </div>
-    <div th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
-        댓글
-    </div>
-    <div th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${user.providerId})}'|"
-         class="my_shortcuts">플레이리스트
+    <div class="my_body">
+        <p class="my_body_title">좋아요 누른 음악</p>
+        <table class="my_table_like">
+            <tr th:each="like : ${likeList}">
+                <td style="width: 8%">
+                    <img th:src="@{${like.album_image}}" width="50">
+                </td>
+                <td style="width: 44%" class="my_table_padding my_table_body">
+                    <span th:text="${like.music_name}"></span>
+                </td>
+                <td style="width: 30%">
+                    <span th:text="${like.music_artist_name}"></span>
+                </td>
+                <td style="width: 8%">
+                    <button class="delete-button btn btn-danger my_table_button" type="button" th:attr="data-id='${like.id}'">삭제</button>
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
-<div class="my_body">
-    <p class="my_body_title">좋아요 누른 음악</p>
-    <table class="my_table_like">
-        <tr th:each="like : ${likeList}" th:onclick="|handleMusicClick(${like.albumId})|">
-            <td style="width: 8%">
-                <img th:src="@{${like.album_image}}" width="50">
-            </td>
-            <td style="width: 44%"  class="my_table_padding my_table_body">
-                <span th:text="${like.music_name}"></span>
-            </td>
-            <td style="width: 30%">
-                <span th:text="${like.music_artist_name}"></span>
-            </td>
-            <td style="width: 8%">
-                <button th:onclick="'deleteLike(' + ${like.id} + ')'" class="btn btn-danger my_table_button">삭제</button>
-            </td>
-        </tr>
-    </table>
 
-    <script>
-        function deleteLike(id) {
-            console.log(`Deleting like for userId: ${id}`);
-            fetch(`/mypage/like/${id}`, {
-                method: 'DELETE'
-            })
-                .then(response => response.text())
-                .then(result => {
-                    console.log(`Response: ${result}`);
-                    if (result === 'success') {
-                        location.reload();
-                    } else {
-                        alert('삭제 실패');
-                    }
+<script src="/js/main.js"></script> <!-- JavaScript 파일 연결 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    // 모든 삭제 버튼에 클릭 이벤트 리스너 추가
+    document.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.getAttribute('data-id'); // data-id 속성에서 ID를 가져옴
+
+            // deleteLike 함수를 이곳에 정의
+            function deleteLike(id) {
+                console.log(`Deleting like for userId: ${id}`);
+                fetch(`/mypage/like/${id}`, {
+                    method: 'DELETE'
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
-    </script>
-</div>
-<div th:replace="~{play/under :: footer}"></div>
+                    .then(response => response.text())
+                    .then(result => {
+                        console.log(`Response: ${result}`);
+                        if (result === 'success') {
+                            location.reload();
+                        } else {
+                            alert('삭제 실패');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+
+            // deleteLike 함수 호출
+            deleteLike(id);
+        });
+    });
+</script>
 </body>
 </html>

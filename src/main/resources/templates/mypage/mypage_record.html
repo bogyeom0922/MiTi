@@ -2,32 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MyPage_Record</title>
+    <title>MyPage_Playlist</title>
     <link href="/css/main.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-<div th:replace="~{layout/header :: header}"></div>
-<div class="my_category">
-    <div th:onclick="|location.href='@{/mypage/record/{userId}(userId=${user.providerId})}'|"
-         class="my_shortcuts current">
-        음악 기록
+<div id="content">
+    <div class="my_category">
+        <a class="my_shortcuts current" th:attr="data-url='/mypage/record/' + ${user.providerId}">음악 기록</a>
+        <a class="my_shortcuts" th:attr="data-url='/mypage/like/' + ${user.providerId}">좋아요</a>
+        <a class="my_shortcuts" th:attr="data-url='/mypage/genre/' + ${user.providerId}">선호 장르</a>
+        <a class="my_shortcuts" th:attr="data-url='/mypage/comment/' + ${user.providerId}">댓글</a>
+        <a class="my_shortcuts" th:attr="data-url='/mypage/playlist/' + ${user.providerId}">플레이리스트</a>
     </div>
-    <div th:onclick="|location.href='@{/mypage/like/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
-        좋아요
-    </div>
-    <div th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">선호
-        장르
-    </div>
-    <div th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
-        댓글
-    </div>
-    <div th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">플레이리스트
-    </div>
-</div>
-<div class="my_body">
+    <div class="my_body">
     <p class="my_body_title">재생했던 음악</p>
     <table class="my_table_record">
         <tr th:each="record : ${recordList}" th:onclick="|handleMusicClick(${record.albumId})|">
@@ -42,7 +32,9 @@
             </td>
         </tr>
     </table>
+    </div>
 </div>
-<div th:replace="~{play/under :: footer}"></div>
+<script src="/js/main.js"></script> <!-- JavaScript 파일 연결 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>

@@ -9,30 +9,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-<div th:replace="~{layout/header :: header}"></div>
-<div class="my_category">
-    <div th:onclick="|location.href='@{/mypage/record/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
-        음악 기록
-    </div>
-    <div th:onclick="|location.href='@{/mypage/like/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
-        좋아요
-    </div>
-    <div th:onclick="|location.href='@{/mypage/genre/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">선호
-        장르
-    </div>
-    <div th:onclick="|location.href='@{/mypage/comment/{userId}(userId=${user.providerId})}'|" class="my_shortcuts">
-        댓글
-    </div>
-    <div th:onclick="|location.href='@{/mypage/playlist/{userId}(userId=${user.providerId})}'|"
-         class="my_shortcuts current">플레이리스트
-    </div>
+<div id="content">
+    <div class="my_category">
+    <a class="my_shortcuts" th:attr="data-url='/mypage/record/' + ${user.providerId}">음악 기록</a>
+    <a class="my_shortcuts" th:attr="data-url='/mypage/like/' + ${user.providerId}">좋아요</a>
+    <a class="my_shortcuts" th:attr="data-url='/mypage/genre/' + ${user.providerId}">선호 장르</a>
+    <a class="my_shortcuts" th:attr="data-url='/mypage/comment/' + ${user.providerId}">댓글</a>
+    <a class="my_shortcuts current" th:attr="data-url='/mypage/playlist/' + ${user.providerId}">플레이리스트</a>
 </div>
-<div class="my_body">
+    <div class="my_body">
     <p class="my_body_title">내 플레이리스트</p>
     <table class="my_table_playlist">
         <tr th:each="playlist : ${playlistList}">
             <td style="width: 10%">
-                <a th:href="@{'/mypage/playlist/albums/' + ${user.providerId} + '?userPlaylistName=' + ${playlist.userPlaylistName}}">
+                <a class="my_shortcuts" th:attr="data-url='/mypage/playlist/albums/' + ${user.providerId} + '?userPlaylistName=' + ${playlist.userPlaylistName}">
                     <img th:src="@{${playlist.userPlaylistImage}}" width="50">
                 </a>
             </td>
@@ -42,6 +32,9 @@
         </tr>
     </table>
 </div>
-<div th:replace="~{play/under :: footer}"></div>
+</div>
+
+<script src="/js/main.js"></script> <!-- JavaScript 파일 연결 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>

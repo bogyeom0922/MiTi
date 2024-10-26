@@ -15,14 +15,13 @@
             return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
         }
     </script>
-    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+
 </head>
 <body>
-<div th:replace="layout/header :: header"></div>
-<div th:replace="~{play/under :: footer}"></div>
 
-<!-- 앨범 기본 정보 -->
-<div th:if="${firstAlbum != null}" class="album" th:onclick="|handleMusicClick(${firstAlbum.id})|">
+<div id="content">
+    <!-- 앨범 기본 정보 -->
+    <div th:if="${firstAlbum != null}" class="album" th:onclick="|handleMusicClick(${firstAlbum.id})|">
     <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" class="album_img">
     <div class="album_detail">
         <p th:text="${firstAlbum.detail}" class="album_name"></p>
@@ -40,8 +39,8 @@
     <img src="/images/play.png" class="album_play_img" id="play-all-button">
 </div>
 
-<!-- 앨범에 해당되는 곡 목록 -->
-<div class="album_list">
+    <!-- 앨범에 해당되는 곡 목록 -->
+    <div class="album_list">
     <table>
         <tbody>
         <tr th:each="album, iterStat : ${albums}">
@@ -107,7 +106,7 @@
 </div>
 
 <!-- 댓글 -->
-<div class="album_comments">
+    <div class="album_comments">
     <!-- 댓글 작성 -->
     <div class="album_comments_form">
         <p>Comments</p>
@@ -126,7 +125,10 @@
         </div>
     </div>
 </div>
+</div>
 
+<script src="/js/main.js"></script> <!-- JavaScript 파일 연결 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 
 <!-- 좋아요 기능 -->
