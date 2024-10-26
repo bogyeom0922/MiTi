@@ -44,7 +44,8 @@
         <p class="custom-songs-title" th:text="${user != null ? user.name : '사용자'} + '님에게 딱 맞는 곡들'"></p>
         <div class="songs-container section">
             <!-- 곡 리스트 반복문 -->
-            <div th:each="song : ${customizedAlbums}" class="song-item" th:onclick="|handleMusicClick(${song.id})|">
+            <!-- data-song-id 속성으로 곡 ID를 설정 -->
+            <div th:each="song : ${customizedAlbums}" class="song-item music-click" th:attr="data-song-id=${song.id}">
                 <img th:src="${song.album_image}" alt="앨범 이미지" class="album-cover-thumbnail">
                 <p class="song-title" th:text="${song.musicName}"></p>
                 <p class="song-artist" th:text="${song.musicArtistName}"></p>
@@ -57,7 +58,7 @@
                             <span th:text="${song.isLiked != null ? (song.isLiked ? '♥' : '♡') : '♡'}"></span>
                         </button>
                         <button>재생 목록에 추가</button>
-                        <a th:href="@{/album/{detail}/{id}(detail=${song.detail}, id=${user != null ? user.providerId : ''})}">
+                        <a class="my_shortcuts" th:attr="data-url='/album/' + ${song.detail} + '/' + (${user != null ? user.providerId : ''})" onclick="event.stopPropagation();">
                             <button>앨범 정보</button>
                         </a>
                         <button class="accordion3">공유</button>
@@ -81,7 +82,7 @@
             <!-- 왼쪽 열 -->
             <div class="chart_column">
                 <th:block th:each="album, stat : ${albums}">
-                    <div class="chart_item" th:onclick="|handleMusicClick(${album.id})|" th:if="${stat.index < 5}">
+                    <div class="chart_item music-click" th:attr="data-song-id=${album.id}" th:if="${stat.index < 5}">
                         <img th:src="${album.album_image}" alt="Album Cover">
                         <div class="chart_info">
                             <p class="chart_name" th:text="${album.musicName}"></p>
@@ -96,7 +97,7 @@
                                     <span th:text="${album.isLiked != null ? (album.isLiked ? '♥' : '♡') : '♡'}"></span>
                                 </button>
                                 <button>재생 목록에 추가</button>
-                                <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${user != null ? user.providerId : ''})}">
+                                <a class="my_shortcuts" th:attr="data-url='/album/' + ${album.detail} + '/' + (${user != null ? user.providerId : ''})" onclick="event.stopPropagation();">
                                     <button>앨범 정보</button>
                                 </a>
                                 <button class="accordion3">공유</button>
@@ -116,8 +117,7 @@
             <!-- 오른쪽 열 -->
             <div class="chart_column">
                 <th:block th:each="album, stat : ${albums}">
-                    <div class="chart_item" th:onclick="|handleMusicClick(${album.id})|"
-                         th:if="${stat.index >= 5 && stat.index < 10}">
+                    <div class="chart_item music-click" th:attr="data-song-id=${album.id}" th:if="${stat.index >= 5 && stat.index < 10}">
                         <img th:src="${album.album_image}" alt="Album Cover" class="chart_image">
                         <div class="chart_info">
                             <p class="chart_name" th:text="${album.musicName}"></p>
@@ -132,7 +132,7 @@
                                     <span th:text="${album.isLiked != null ? (album.isLiked ? '♥' : '♡') : '♡'}"></span>
                                 </button>
                                 <button>재생 목록에 추가</button>
-                                <a th:href="@{/album/{detail}/{id}(detail=${album.detail}, id=${user != null ? user.providerId : ''})}">
+                                <a class="my_shortcuts" th:attr="data-url='/album/' + ${album.detail} + '/' + (${user != null ? user.providerId : ''})" onclick="event.stopPropagation();">
                                     <button>앨범 정보</button>
                                 </a>
                                 <button class="accordion3">공유</button>
@@ -281,5 +281,19 @@
         });
     });
 </script>
+
+<script>
+    document.querySelectorAll('.music-click').forEach(item => {
+        item.addEventListener('click', function(event) {
+            // 아코디언 메뉴 내부 클릭 시 handleMusicClick을 실행하지 않음
+            if (!event.target.closest('.accordion_container')) {
+                const songId = this.getAttribute('data-song-id'); // songId 추출
+                handleMusicClick(songId);
+            }
+        });
+    });
+</script>
+
+
 </body>
 </html>
