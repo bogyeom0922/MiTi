@@ -470,12 +470,36 @@ a:hover {
 .accordion4.active + .panel {
     display: block;
 }
+.accordion_container2 {
+    display: flex;
+    justify-content: center; /* 버튼을 중앙에 정렬 */
+    align-items: center; /* 세로로도 중앙에 정렬 */
+    position: relative;
+    width: 100%; /* 부모 요소 기준으로 중앙 정렬 */
+}
+.accordion5 {
+    cursor: pointer;
+    border: none;
+    text-align: center;
+    outline: none;
+    transition: 0.4s;
+    position: relative;
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    margin-top: 10px; /* 버튼의 상단 마진으로 위치 조정 */
+}
+.accordion5:hover, .accordion5.active {
+    background-color: rgba(255, 255, 255, 0);
+}
 
+/* Show panel when accordion is active */
+.accordion5.active + .panel {
+    display: block;
+}
 .panel {
     display: none; /* 기본적으로 패널 숨김 */
     position: absolute; /* 버튼에 상대적인 위치 설정 */
-    left: 40px; /* 버튼의 오른쪽에 위치하도록 설정 */
-    top: 0; /* 버튼과 같은 높이로 설정 */
     padding: 10px; /* 패딩 설정 */
     background-color: #f9f9f9; /* Added background color for better visibility */
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Added shadow for better visibility */
@@ -506,8 +530,6 @@ a:hover {
     z-index: 2000; /* Ensure the panel is on top */
     display: none; /* 기본적으로 패널 숨김 */
     position: absolute; /* 버튼에 상대적인 위치 설정 */
-    left: 100%; /* 버튼의 오른쪽에 위치하도록 설정 */
-    top: 78%; /* 버튼과 같은 높이로 설정 */
 }
 
 .panel2 button {
@@ -534,8 +556,6 @@ a:hover {
     z-index: 2000; /* Ensure the panel is on top */
     display: none; /* 기본적으로 패널 숨김 */
     position: absolute; /* 버튼에 상대적인 위치 설정 */
-    left: 100%; /* 버튼의 오른쪽에 위치하도록 설정 */
-    top: 21%; /* 버튼과 같은 높이로 설정 */
 }
 
 .panel3 button {
@@ -930,7 +950,7 @@ a:hover {
     font-weight: 900;
     font-size: 26px;
     position: relative;
-    top: 220px;
+    top: 300px;
     left: 18.5%;
     margin: 0;
     color: rgba(255, 255, 255, 0.77);
