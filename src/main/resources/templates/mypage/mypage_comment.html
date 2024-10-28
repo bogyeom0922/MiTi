@@ -50,65 +50,7 @@
     </div>
 
     <script>
-        function editComment(id) {
-            const commentTextElement = document.getElementById(`comment-text-${id}`);
-            const commentText = commentTextElement ? commentTextElement.innerText : '';
-            document.getElementById('editCommentId').value = id;
-            document.getElementById('editCommentText').value = commentText;
-            document.getElementById('editModal').style.display = 'flex';
-        }
 
-        function closeEditModal() {
-            document.getElementById('editModal').style.display = 'none';
-        }
-
-        function saveComment() {
-            const id = document.getElementById('editCommentId').value;
-            const comment = document.getElementById('editCommentText').value;
-
-            fetch(`/comment/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ comment }),
-            })
-                .then(response => {
-                    if (response.ok) {
-                        return response.text();
-                    } else {
-                        throw new Error('Failed to update comment');
-                    }
-                })
-                .then(result => {
-                    if (result === 'Comment updated successfully') {
-                        location.reload();
-                    } else {
-                        alert('수정 실패');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('수정 실패');
-                });
-        }
-
-        function deleteMyComment(id) {
-            fetch(`/mypage/comment/${id}`, {
-                method: 'DELETE'
-            })
-                .then(response => response.text())
-                .then(result => {
-                    if (result === 'success') {
-                        location.reload();
-                    } else {
-                        alert('삭제 실패');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
     </script>
 </div>
 </div>

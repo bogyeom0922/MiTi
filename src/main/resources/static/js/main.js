@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Error:', error));
     };
 
-// 장르 추가 기능
+    // 장르 추가 기능
     window.addGenre = function(genre, genre_image, button) {
         const genreDto = { providerId, genre, genre_image };
         fetch(`/mypage/genre/add`, {
@@ -364,6 +364,71 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(error => console.error('Error:', error));
+    };
+
+    //mypage_comment
+    // 댓글 수정 모달 열기
+    window.editComment = function(id) {
+        const commentTextElement = document.getElementById(`comment-text-${id}`);
+        const commentText = commentTextElement ? commentTextElement.innerText : '';
+        document.getElementById('editCommentId').value = id;
+        document.getElementById('editCommentText').value = commentText;
+        document.getElementById('editModal').style.display = 'flex';
+    };
+
+    // 댓글 수정 모달 닫기
+    window.closeEditModal = function() {
+        document.getElementById('editModal').style.display = 'none';
+    };
+
+    // 댓글 저장 기능
+    window.saveComment = function() {
+        const id = document.getElementById('editCommentId').value;
+        const comment = document.getElementById('editCommentText').value;
+
+        fetch(`/comment/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ comment }),
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Failed to update comment');
+                }
+            })
+            .then(result => {
+                if (result === 'Comment updated successfully') {
+                    location.reload();
+                } else {
+                    alert('수정 실패');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('수정 실패');
+            });
+    };
+
+    // 댓글 삭제 기능
+    window.deleteMyComment = function(id) {
+        fetch(`/mypage/comment/${id}`, {
+            method: 'DELETE'
+        })
+            .then(response => response.text())
+            .then(result => {
+                if (result === 'success') {
+                    location.reload();
+                } else {
+                    alert('삭제 실패');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     };
 
 });
