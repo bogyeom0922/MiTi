@@ -55,7 +55,7 @@ a:hover {
     font-size: 25px;
     font-weight: bold;
     color: white;
-    top: -15px;
+    top: -13px;
     left: 3%;
 
 }
@@ -63,7 +63,7 @@ a:hover {
 /* 검색창 */
 .search_input {
     position: relative;
-    top: -72px;
+    top: -70px;
     left: 30%;
     width: 40%;
     height: 30px;
@@ -113,10 +113,10 @@ a:hover {
 /*사용자 관련 바로가기 메뉴*/
 .user a {
     position: relative;
-    top: -100px;
-    left: 88%;
+    top: -95px;
+    left: 92%;
     font-size: 15px;
-    font-weight: normal;
+    font-weight: bold;
     color: white;
     cursor: pointer; /* 클릭 가능하게 설정 */
     margin-right: 1%;
