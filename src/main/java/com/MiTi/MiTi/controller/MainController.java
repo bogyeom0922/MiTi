@@ -1,6 +1,7 @@
 package com.MiTi.MiTi.controller;
 
 import com.MiTi.MiTi.OAuth2.CustomOAuth2User;
+import com.MiTi.MiTi.dto.PlaylistDto;
 import com.MiTi.MiTi.dto.UserDTO;
 import com.MiTi.MiTi.entity.Album;
 import com.MiTi.MiTi.repository.AlbumRepository;
@@ -69,6 +70,9 @@ public class MainController {
         // 맞춤형 추천 앨범 추가
         List<Album> customizedAlbums = playlistService.getCustomizedAlbumsByUser(providerId);
         model.addAttribute("customizedAlbums", customizedAlbums);
+
+        List<PlaylistDto> playlistDtoList = playlistService.getPlaylistListByProviderId(providerId);
+        model.addAttribute("playlists", playlistDtoList); // 재생 목록을 모델에 추가
 
         return "main"; // main.html 템플릿 반환
     }
