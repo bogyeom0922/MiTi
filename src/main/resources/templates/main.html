@@ -53,8 +53,8 @@
 
                 <!-- 아코디언 메뉴 -->
                 <div class="accordion_container2">
-                    <button class="accordion5">..</button> <!-- 아코디언 버튼 -->
-                    <div class="panel" style="display: none;"> <!-- 숨겨진 패널 -->
+                    <button class="accordion5">:</button> <!-- 아코디언 버튼 -->
+                    <div class="panel" style="display: none; margin-top: 210px"> <!-- 숨겨진 패널 -->
                         <button class="like-button" th:data-album-id="${song.id}">
                             <span th:text="${song.isLiked != null ? (song.isLiked ? '♥' : '♡') : '♡'}"></span>
                         </button>
@@ -77,7 +77,7 @@
                             <button>앨범 정보</button>
                         </a>
                         <button class="accordion3">공유</button>
-                        <div class="panel2" style="display: none;"> <!-- 공유 패널 -->
+                        <div class="panel2" style="display: none; overflow: visible; z-index: 2000; position: absolute;"> <!-- 공유 패널 -->
                             <button><a href="#" onclick="clip(); return false;">링크 복사</a></button>
                             <button><a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a></button>
                             <button><a href="javascript:shareTwitter();">트위터에 공유</a></button>
@@ -348,10 +348,12 @@
 
             fetch('/playlist/create', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(playlistDto)
             })
-                .then(response => response.ok ? response.text() : response.text().then(error => { throw new Error(error); }))
+                .then(response => response.ok ? response.text() : response.text().then(error => {
+                    throw new Error(error);
+                }))
                 .then(data => {
                     alert(data);
                     document.getElementById('newPlaylistName').value = '';
@@ -376,10 +378,12 @@
 
                 fetch('/playlist/add', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(playlistDto)
                 })
-                    .then(response => response.ok ? response.text() : response.text().then(error => { throw new Error(error); }))
+                    .then(response => response.ok ? response.text() : response.text().then(error => {
+                        throw new Error(error);
+                    }))
                     .then(data => alert(data))
                     .catch(error => alert('오류 발생: ' + error.message));
             });
