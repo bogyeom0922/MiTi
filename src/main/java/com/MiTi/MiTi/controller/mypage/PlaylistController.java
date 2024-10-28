@@ -119,7 +119,8 @@ public class PlaylistController {
                         album.getAlbum_image(),
                         album.getMusicArtistName(),
                         album.getMusic_duration_ms(),
-                        album.getMusic_uri()
+                        album.getMusic_uri(),
+                        album.getDetail()
                 ))
                 .collect(Collectors.toList());
 

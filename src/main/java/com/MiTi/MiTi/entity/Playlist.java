@@ -31,8 +31,6 @@ public class Playlist {
     @Column(name = "user_playlist_image")
     private String userPlaylistImage;
 
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Album album;

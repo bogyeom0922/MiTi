@@ -121,6 +121,7 @@ public class AlbumService {
                         .musicArtistName(album.getMusicArtistName())
                         .music_duration_ms(album.getMusic_duration_ms())
                         .music_uri(album.getMusic_uri())
+                        .detail(album.getDetail())
                         .build())
                 .orElse(null);
     }
@@ -135,6 +136,7 @@ public class AlbumService {
                 .musicArtistName(album.getMusicArtistName())
                 .music_duration_ms(album.getMusic_duration_ms())
                 .music_uri(album.getMusic_uri())
+                .detail(album.getDetail())
                 .build());
     }
     public Album findById(Long id) {

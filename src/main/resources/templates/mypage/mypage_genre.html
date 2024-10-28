@@ -28,7 +28,12 @@
                     <span th:text="${genre.genre}"></span>
                 </td>
                 <td style="width: 25%">
-                    <button onclick="deleteGenre('${genre.id}')" class="btn btn-danger my_table_button">삭제</button>
+                    <button
+                            th:data-url="'/mypage/genre/' + ${user.providerId}"
+                            th:onclick="'deleteGenre(' + ${genre.id} + ', this)'"
+                            class="btn btn-danger my_table_button my_shortcuts">
+                        삭제
+                    </button>
                 </td>
             </tr>
         </table>
@@ -50,51 +55,5 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/js/main.js"></script>
 
-<script>
-    function deleteGenre(id) {
-        fetch(`/mypage/genre/${id}`, { method: 'DELETE' })
-            .then(response => response.text())
-            .then(result => {
-                if (result === 'success') location.reload();
-                else alert('삭제 실패');
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    function showAddGenreList() {
-        fetch(`/mypage/genre/non-selected/${providerId}`)
-            .then(response => response.json())
-            .then(nonSelectedGenres => {
-                const list = document.getElementById('nonSelectedGenreList');
-                list.innerHTML = '';
-                nonSelectedGenres.forEach(genre => {
-                    const listItem = document.createElement('li');
-                    listItem.innerHTML = `
-                        <img src="${genre.genre_image}" width="50">
-                        <span>${genre.genre}</span>
-                        <button onclick="addGenre('${genre.genre}', '${genre.genre_image}')">추가</button>
-                    `;
-                    list.appendChild(listItem);
-                });
-                document.getElementById('addGenreList').style.display = 'block';
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    function addGenre(genre, genre_image) {
-        const genreDto = { providerId, genre, genre_image };
-        fetch(`/mypage/genre/add`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(genreDto)
-        })
-            .then(response => response.text())
-            .then(result => {
-                if (result === 'success') location.reload();
-                else alert('추가 실패');
-            })
-            .catch(error => console.error('Error:', error));
-    }
-</script>
 </body>
 </html>

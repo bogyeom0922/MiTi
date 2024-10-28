@@ -1,5 +1,5 @@
 const SpotifyPlayer = ({
-                           initialMusicInfo = {musicName: "", musicUri: "", albumImage: ""},
+                           initialMusicInfo = {musicName: "", musicUri: "", albumImage: "", detail:""},
                            providerId,
                            playlist,
                            onNextTrack,
@@ -7,7 +7,7 @@ const SpotifyPlayer = ({
                        }) => {
     const {useState, useEffect} = React;
     const [musicInfo, setMusicInfo] = useState(initialMusicInfo); // 초기 음악 정보를 설정합니다.
-    const {musicName, musicUri, albumImage} = musicInfo;
+    const {musicName, musicUri, albumImage, detail} = musicInfo;
     const [paused, setPaused] = useState(true);
     const [player, setPlayer] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
@@ -84,6 +84,7 @@ const SpotifyPlayer = ({
             musicUri: "",
             albumImage: "",
             id: "",
+            detail:"",
             paused: true
         };
     };
@@ -235,6 +236,7 @@ const SpotifyPlayer = ({
                 albumImage: track.albumImage,
                 musicArtistName: track.musicArtistName,
                 id: track.id,
+                detail: track.detail
             });
         }
     }, [currentTrackIndex, playlist]);
@@ -424,9 +426,13 @@ const SpotifyPlayer = ({
                                                         </button>
                                                         <button>재생 목록에 추가</button>
                                                         <button
-                                                            onClick={() => window.location.href = `/album/${track.detail}/${track.id}`}>
+                                                            onClick={() => {
+                                                                window.location.href = `/album/${track.detail}/${providerId}`;
+                                                            }}
+                                                            data-url={`/album/${track.detail}/${providerId}`}>
                                                             앨범 정보
                                                         </button>
+
                                                         <button className="accordion3">공유</button>
                                                         <div className="panel2" style={{display: 'none'}}>
                                                             <button><a href="#" onClick={() => { /* 클립보드 복사 로직 */
@@ -493,7 +499,7 @@ const SpotifyPlayer = ({
 const App = () => {
     const {useState, useEffect} = React;
     const [currentTrackIndex, setCurrentTrackIndex] = useState(0); // 현재 플레이리스트에서의 트랙 인덱스
-    const [musicInfo, setMusicInfo] = useState({musicName: "", musicUri: "", albumImage: "", id: ""});
+    const [musicInfo, setMusicInfo] = useState({musicName: "", musicUri: "", albumImage: "", id: "", detail: ""});
     const [playlist, setPlaylist] = useState([]); // 플레이리스트 상태
 
     // root 엘리먼트에서 userId와 genre 값을 추출
@@ -554,6 +560,7 @@ const App = () => {
                 albumImage: track.albumImage,
                 musicArtistName: track.musicArtistName,
                 id: track.id,
+                detail: track.detail
             });
         }
     }, [currentTrackIndex, playlist]);

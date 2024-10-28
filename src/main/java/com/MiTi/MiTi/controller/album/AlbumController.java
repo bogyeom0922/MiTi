@@ -205,7 +205,7 @@ public class AlbumController {
 
             // AlbumDto 리스트를 Album 리스트로 변환
             List<Album> streaminglist = albumDtos.stream()
-                    .map(dto -> new Album(dto.getId(), dto.getMusicName(), dto.getAlbumImage(), dto.getMusicArtistName(), dto.getMusic_duration_ms(), dto.getMusic_uri()))
+                    .map(dto -> new Album(dto.getId(), dto.getMusicName(), dto.getAlbumImage(), dto.getMusicArtistName(), dto.getMusic_duration_ms(), dto.getMusic_uri(), dto.getDetail()))
                     .collect(Collectors.toList());
 
             // Album 리스트를 AlbumDto 리스트로 변환
@@ -216,7 +216,8 @@ public class AlbumController {
                             album.getAlbum_image(),
                             album.getMusicArtistName(),
                             album.getMusic_duration_ms(),
-                            album.getMusic_uri()
+                            album.getMusic_uri(),
+                            album.getDetail()
                     ))
                     .collect(Collectors.toList());
 

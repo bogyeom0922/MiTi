@@ -25,11 +25,11 @@
         }
         /* 메인 이미지 */
         .main {
-            animation: fadeInMain 2s forwards; /* 2초 동안 서서히 나타나는 애니메이션 */
+            animation: fadeInMain 1s forwards; /* 2초 동안 서서히 나타나는 애니메이션 */
         }
         /* 로고 이미지 */
         .logo {
-            animation: fadeInLogo 2s forwards 2s; /* 메인 이미지 후 2초 후에 애니메이션 시작 */
+            animation: fadeInLogo 1s forwards 2s; /* 메인 이미지 후 2초 후에 애니메이션 시작 */
         }
         /* 헤드셋 이미지 */
         .miti {
@@ -72,7 +72,7 @@
 </div>
 
 <script>
-    setTimeout(move_page, 8000); // 8초 후 이동
+    setTimeout(move_page, 1000); // 8초 후 이동
     function move_page() {
         location.href = "/oauth2/authorization/spotify"; // 이동할 URL
     }

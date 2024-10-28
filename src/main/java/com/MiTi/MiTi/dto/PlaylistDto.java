@@ -18,6 +18,7 @@ public class PlaylistDto {
     private String music_name;
     private String album_image;
     private String music_artist_name;
+    private String detail;
 
     // 필요한 setter 메서드
     // 추가된 필드
@@ -25,6 +26,7 @@ public class PlaylistDto {
     private int totalSongs;
     @Setter
     private int totalDuration;
+
 
 
     public Playlist toEntity() {
@@ -39,7 +41,7 @@ public class PlaylistDto {
 
     @Builder
     public PlaylistDto(Long id, String providerId, Long albumId, String userPlaylistName,
-                       String userPlaylistImage, String music_name, String album_image, String music_artist_name) {
+                       String userPlaylistImage, String music_name, String album_image, String music_artist_name, String detail) {
         this.id=id;
         this.providerId = providerId;
         this.albumId = albumId;
@@ -48,7 +50,7 @@ public class PlaylistDto {
         this.music_name = music_name;
         this.album_image = album_image;
         this.music_artist_name = music_artist_name;
-
+        this.detail = detail;
     }
 
 }

@@ -39,15 +39,22 @@ public class PlaylistService {
         for (Playlist playlist : playlistList) {
             if (uniqueNames.add(playlist.getUserPlaylistName())) { // 중복이 아니면 추가
                 if (playlist.getAlbum() != null) {  // Null 체크 추가
+                    // 첫 번째 앨범의 이미지 가져오기
+                    List<Playlist> albumsInPlaylist = playlistRepository.findByUserPlaylistName(playlist.getUserPlaylistName());
+                    String firstAlbumImage = (albumsInPlaylist.isEmpty() || albumsInPlaylist.get(0).getAlbum() == null)
+                            ? "/default-image-path.jpg" // 기본 이미지 설정
+                            : albumsInPlaylist.get(0).getAlbum().getAlbum_image();
+
                     PlaylistDto playlistDto = PlaylistDto.builder()
                             .id(playlist.getId())
                             .providerId(playlist.getProviderId())
                             .albumId(playlist.getAlbumId())
                             .userPlaylistName(playlist.getUserPlaylistName())
-                            .userPlaylistImage(playlist.getUserPlaylistImage())
+                            .userPlaylistImage(firstAlbumImage) // 첫 번째 앨범 이미지를 표지로 설정
                             .album_image(playlist.getAlbum().getAlbum_image())
                             .music_name(playlist.getAlbum().getMusicName())
                             .music_artist_name(playlist.getAlbum().getMusicArtistName())
+                            .detail(playlist.getAlbum().getDetail())
                             .build();
                     playlistDtoList.add(playlistDto);
                 } else {
@@ -58,6 +65,7 @@ public class PlaylistService {
         }
         return playlistDtoList;
     }
+
 
     @Transactional
     public List<PlaylistDto> getAlbumsByPlaylistName(String userPlaylistName) {
@@ -71,6 +79,7 @@ public class PlaylistService {
                     .music_name(playlist.getAlbum().getMusicName())
                     .album_image(playlist.getAlbum().getAlbum_image())
                     .music_artist_name(playlist.getAlbum().getMusicArtistName())
+                    .detail(playlist.getAlbum().getDetail())
                     .build();
             playlistDtoList.add(playlistDto);
         }

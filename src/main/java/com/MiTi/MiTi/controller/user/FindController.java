@@ -46,21 +46,28 @@ public class FindController {
             providerId = oauthUser.getAttribute("id"); // 고유 ID를 가져옴
         }
         for (Album album : albums) {
-            sb.append("<div class='autocomplete-item'>")
-                    .append("<a href=\"/album/") // 앨범 상세 페이지로의 링크
-                    .append(album.getDetail()) // 앨범 ID로 변경
-                    .append("/") // 슬래시 추가
-                    .append(providerId) // 유저 ID 추가
-                    .append("\">")
+            sb.append("<a class=\"autocomplete-item my_shortcuts\" ")
+                    .append("href=\"/album/")  // 앨범 상세 페이지로의 링크
+                    .append(album.getDetail())  // 앨범 ID
+                    .append("/")  // 슬래시 추가
+                    .append(providerId)  // 유저 ID
+                    .append("\" ")  // 닫는 따옴표 추가
+                    .append("data-url='/album/")  // data-url 속성 추가
+                    .append(album.getDetail())  // 앨범 ID
+                    .append("/")  // 슬래시 추가
+                    .append(providerId)  // 유저 ID
+                    .append("'>")  // 태그 닫기
                     .append("<p>")
-                    .append(album.getMusicName())
+                    .append(album.getMusicName())  // 음악 제목
                     .append(" - ")
-                    .append(album.getMusicArtistName())
+                    .append(album.getMusicArtistName())  // 아티스트 이름
                     .append("</p>")
-                    .append("</a>")
-                    .append("</div>");
+                    .append("</a>");
+
         }
         return sb.toString();
+
+
     }
 
     @GetMapping("/find/album/{id}/{providerId}")

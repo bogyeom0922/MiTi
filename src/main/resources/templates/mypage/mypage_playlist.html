@@ -18,20 +18,20 @@
         <a class="my_shortcuts my_shortcuts_d current" th:attr="data-url='/mypage/playlist/' + ${user.providerId}">플레이리스트</a>
     </div>
     <div class="my_body">
-    <p class="my_body_title">내 플레이리스트</p>
-    <table class="my_table_playlist">
-        <tr th:each="playlist : ${playlistList}">
-            <td style="width: 10%">
-                <a class="my_shortcuts" th:attr="data-url='/mypage/playlist/albums/' + ${user.providerId} + '?userPlaylistName=' + ${playlist.userPlaylistName}">
-                    <img th:src="@{${playlist.userPlaylistImage}}" width="50">
-                </a>
-            </td>
-            <td style="width: 90%" class="my_table_padding my_table_body">
-                <span th:text="${playlist.userPlaylistName}"></span>
-            </td>
-        </tr>
-    </table>
-</div>
+        <p class="my_body_title">내 플레이리스트</p>
+        <table class="my_table_playlist">
+            <tr th:each="playlist : ${playlistList}">
+                <td style="width: 10%">
+                    <a class="my_shortcuts" th:attr="data-url='/mypage/playlist/albums/' + ${user.providerId} + '?userPlaylistName=' + ${playlist.userPlaylistName}">
+                        <img th:src="${playlist.userPlaylistImage}" alt="Playlist Cover" width="50">
+                    </a>
+                </td>
+                <td style="width: 90%" class="my_table_padding my_table_body">
+                    <span th:text="${playlist.userPlaylistName}"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 <script src="/js/main.js"></script> <!-- JavaScript 파일 연결 -->
