@@ -76,7 +76,9 @@
                             <input type="text" id="newPlaylistName" placeholder="새로운 플레이리스트"/>
                             <button id="addPlaylistBtn">추가</button>
                         </div>
-                        <a th:href="@{/album/{detail}/{providerId}(detail=${album.detail}, providerId=${user.providerId})}">
+                        <a class="my_shortcuts"
+                           th:attr="data-url='/album/' + ${album.detail} + '/' + (${user != null ? user.providerId : ''})"
+                           onclick="event.stopPropagation();">
                             <button>앨범 정보</button>
                         </a>
                         <button class="accordion3">공유</button>

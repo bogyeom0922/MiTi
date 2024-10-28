@@ -37,10 +37,19 @@
                 </td>
             </tr>
         </table>
-        <button onclick="showAddGenreList()" class="btn btn-danger my_table_button my_genre_button">장르 추가</button>
+        <button
+                th:attr="data-url='/mypage/genre/' + ${user.providerId}"
+                th:data-user-id="${user.providerId}"
+                th:onclick="'showAddGenreList(this)'"
+                class="btn btn-danger my_table_button my_genre_button">
+            장르추가
+        </button>
+
+
+
 
         <!-- 사용자가 선택하지 않은 장르를 표시할 영역 -->
-        <div id="addGenreList" class="add_genre_list" style="display: none;">
+        <div id="addGenreList" class="add_genre_list" style="display: block;">
             <p class="add_genre">추가할 장르 선택</p>
             <ul id="nonSelectedGenreList"></ul>
         </div>

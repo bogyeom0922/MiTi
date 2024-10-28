@@ -162,18 +162,6 @@ public class PlaylistController {
                 })
                 .collect(Collectors.toList());
 
-        // 좋아요 상태 설정
-        if (providerId != null) {
-            for (Album album : playlist) {
-                boolean isLiked = likeService.isAlbumLikedByUser(providerId, album.getId());
-                album.setIsLiked(isLiked); // 앨범 객체에 좋아요 상태 설정
-            }
-
-            // 첫 번째 앨범에 대한 좋아요 상태 설정
-            boolean isLikedAlbum = likeService.isAlbumLikedByUser(providerId, playlist.get(0).getId());
-            model.addAttribute("isLikedAlbum", isLikedAlbum);
-        }
-
         model.addAttribute("playlist", playlist);
         model.addAttribute("formattedDurations", formattedDurations);  // 미리 계산된 재생 시간을 전달
         model.addAttribute("totalSongs", totalSongs);

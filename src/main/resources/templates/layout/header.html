@@ -12,7 +12,7 @@
 <div th:fragment="header">
     <div class="header">
         <!-- 로고 -->
-        <p class="logo my_shortcuts" th:if="${user != null}" th:attr="data-url='/main'" href="/main" data-provider-id="${user.providerId}">
+        <p class="logo my_shortcuts" th:if="${user != null}" th:attr="data-url='/main'" data-provider-id="${user.providerId}" onclick=window.location.href='/main';>
             MITI
         </p>
 
@@ -22,18 +22,17 @@
 
         <!-- 유저 메뉴 -->
         <div class="user">
-            <a href="/logout" class="logout">로그아웃</a>
             <a class="my_shortcuts" th:attr="data-url='/mypage/record/' + ${user.providerId}">마이페이지</a>
         </div>
 
         <div id="autocomplete-results">
             <!-- 검색 결과 아이템 -->
             <div class="autocomplete-item">
+            </div>
         </div>
+
+
     </div>
-
-
-</div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/js/main.js"></script> <!-- JavaScript 파일 연결 -->

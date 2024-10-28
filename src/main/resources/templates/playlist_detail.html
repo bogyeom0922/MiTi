@@ -37,7 +37,7 @@
 
 </head>
 <body>
-
+<div th:replace="~{layout/header :: header}"></div>
 <!--플레이 리스트 제목 -->
 <div id="content">
     <div class="playlist-header">
@@ -69,7 +69,9 @@
                             <span th:text="${song.isLiked != null ? (song.isLiked ? '♥' : '♡') : '♡'}"></span>
                         </button>
                         <button>재생 목록에 추가</button>
-                        <a class="my_shortcuts" th:attr="data-url='/album/{detail}/{id}(detail=${song.detail}', id=${user != null ? user.providerId : ''}">
+                        <a class="my_shortcuts"
+                           th:attr="data-url='/album/' + ${song.detail} + '/' + (${user != null ? user.providerId : ''})"
+                           onclick="event.stopPropagation();">
                             <button>앨범 정보</button>
                         </a>
                         <button class="accordion3">공유</button>
@@ -88,6 +90,9 @@
     </table>
     </div>
 </div>
+
+
+<div th:replace="~{play/under :: footer}"></div>
 <!-- 좋아요 기능 -->
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function () {

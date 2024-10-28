@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(data, 'text/html');
-                console.log("Loaded document:", doc); // 로드된 전체 페이지 로그
                 const newContent = doc.getElementById('content');
 
                 if (newContent) {
@@ -56,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault(); // 기본 링크 동작 방지
             console.log("Button clicked:", button);
             const url = button.getAttribute('data-url'); // 링크의 URL 가져오기
-            console.log("URL to load:", url);
             fetch(url)
                 .then(response => response.text())
                 .then(html => {
@@ -71,8 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (button) {
             event.preventDefault(); // 기본 링크 동작 방지
             const url = button.getAttribute('data-url');
-            console.log("Button clicked:", button);
-            console.log("URL to load:", url);
             if (url) loadPage(url);
         }
 
@@ -225,20 +221,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // 카카오톡 공유
-        Kakao.init('YOUR_KAKAO_API_KEY');
-        document.getElementById('btnKakao')?.addEventListener('click', () => {
-            Kakao.Link.createDefaultButton({
-                container: '#btnKakao',
-                objectType: 'feed',
-                content: {
-                    title: '앨범 공유 제목',
-                    description: '앨범 공유 설명',
-                    imageUrl: `${window.location.origin}/images/album_image.jpg`,
-                    link: { mobileWebUrl: window.location.href, webUrl: window.location.href }
-                }
-            });
-        });
 
         // SNS 공유 함수들
         const share = (url) => window.open(url, '_blank');
@@ -292,30 +274,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error:', error);
             });
     };
-    <!-- JavaScript에 필요한 값 전달 -->
-    var providerId = /*[[${user.providerId}]]*/ 'defaultProviderId';
+    <!-- JavaScript에 필요한 값 전달 var providerId = /*[[${user.providerId}]]*/ 'defaultProviderId'; -->
+
 
     //마이페이지 선호장르
-    // 장르 목록 표시 기능
-    window.showAddGenreList = function() {
-        fetch(`/mypage/genre/non-selected/${providerId}`)
-            .then(response => response.json())
-            .then(nonSelectedGenres => {
-                const list = document.getElementById('nonSelectedGenreList');
-                list.innerHTML = '';
-                nonSelectedGenres.forEach(genre => {
-                    const listItem = document.createElement('li');
-                    listItem.innerHTML = `
-                    <img src="${genre.genre_image}" width="50">
-                    <span>${genre.genre}</span>
-                    <button onclick="window.addGenre('${genre.genre}', '${genre.genre_image}', this)">추가</button>
-                `;
-                    list.appendChild(listItem);
-                });
-                document.getElementById('addGenreList').style.display = 'block';
-            })
-            .catch(error => console.error('Error:', error));
-    };
 
 
     // 장르 삭제 기능
@@ -341,9 +303,38 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Error:', error));
     };
 
-    // 장르 추가 기능
-    window.addGenre = function(genre, genre_image, button) {
-        const genreDto = { providerId, genre, genre_image };
+    // 장르 목록 표시 기능
+    window.showAddGenreList = function(button) {
+        const id = button.getAttribute('data-user-id');
+
+        fetch(`/mypage/genre/non-selected/${id}`)
+            .then(response => response.json())
+            .then(nonSelectedGenres => {
+                const list = document.getElementById('nonSelectedGenreList');
+                list.innerHTML = '';
+                nonSelectedGenres.forEach(genre => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                    <img src="${genre.genre_image}" width="50">
+                    <span>${genre.genre}</span>
+                    <button 
+                        onclick="window.addGenre('${genre.genre}', '${genre.genre_image}', this, '${id}')" 
+                        data-url="/mypage/genre/${id}"> <!-- data-url을 직접 설정 -->
+                        추가
+                    </button>
+                `;
+                    list.appendChild(listItem);
+                });
+                document.getElementById('addGenreList').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
+
+// 장르 추가 기능
+    window.addGenre = function(genre, genre_image, button, id) {
+        const genreDto = { providerId: id, genre, genre_image };
         fetch(`/mypage/genre/add`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -353,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(result => {
                 if (result === 'success') {
                     // 장르 목록 페이지로 이동 (my_shortcuts 기능과 통합)
-                    const url = button.getAttribute('data-url');
+                    const url = button.getAttribute('data-url'); // data-url을 직접 설정했으므로 이제 올바른 값을 가져옴
                     fetch(url)
                         .then(response => response.text())
                         .then(html => {
@@ -365,6 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => console.error('Error:', error));
     };
+
 
     //mypage_comment
     // 댓글 수정 모달 열기
@@ -382,9 +374,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // 댓글 저장 기능
-    window.saveComment = function() {
+    window.saveComment = function(event) {
         const id = document.getElementById('editCommentId').value;
         const comment = document.getElementById('editCommentText').value;
+        const button = event.target; // 클릭한 버튼을 참조
 
         fetch(`/comment/${id}`, {
             method: 'PUT',
@@ -401,17 +394,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .then(result => {
-                if (result === 'Comment updated successfully') {
-                    location.reload();
+                if (result === 'success') {
+                    // 장르 목록 페이지로 이동
+                    const url = button.getAttribute('data-url');
+                    fetch(url)
+                        .then(response => response.text())
+                        .then(html => {
+                            document.getElementById('content').innerHTML = html;
+                        });
                 } else {
-                    alert('수정 실패');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('수정 실패');
             });
     };
+
+
 
     // 댓글 삭제 기능
     window.deleteMyComment = function(id) {
@@ -421,15 +420,59 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.text())
             .then(result => {
                 if (result === 'success') {
-                    location.reload();
+                    // 삭제된 항목을 DOM에서 제거
+                    document.querySelector(`tr[data-id="${id}"]`).remove();
+
+                    // 좋아요 목록 페이지로 이동 (my_shortcuts 기능과 통합)
+                    const url = button.getAttribute('data-url');
+                    fetch(url)
+                        .then(response => response.text())
+                        .then(html => {
+                            document.getElementById('content').innerHTML = html;
+                        });
                 } else {
                     alert('삭제 실패');
+                }
+            });
+    };
+
+    //mypage_playlist(playlist_album)
+    // 마이페이지 플레이리스트 삭제 기능
+    window.deleteFromPlaylist = function(albumId, button) {
+        const playlistName = button.getAttribute('data-playlist-name'); // data-* 속성으로 문자열 값 가져오기
+        const url = button.getAttribute('data-url');
+
+        console.log(`Deleting albumId: ${albumId} from playlist: ${playlistName}`);
+
+        fetch(`/playlist/delete`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ albumId: albumId, playlistName: playlistName })
+        })
+            .then(response => response.text())
+            .then(result => {
+                console.log(`Response: ${result}`);
+                if (result === 'success') {
+                    document.querySelector(`tr[data-album-id="${albumId}"]`).remove();
+
+                    // 페이지 업데이트
+                    fetch(url)
+                        .then(response => response.text())
+                        .then(html => {
+                            document.getElementById('content').innerHTML = html;
+                        });
+                } else {
+
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
+                alert('삭제 중 오류가 발생했습니다.');
             });
     };
+
 
 });
 
