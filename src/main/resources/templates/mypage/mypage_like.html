@@ -20,14 +20,14 @@
     <div class="my_body">
         <p class="my_body_title">좋아요 누른 음악</p>
         <table class="my_table_like">
-            <tr th:each="like : ${likeList}" th:onclick="|handleMusicClick(${like.albumId})|">
-                <td style="width: 8%">
+            <tr th:each="like : ${likeList}">
+                <td style="width: 8%" th:onclick="|handleMusicClick(${like.albumId})|">
                     <img th:src="@{${like.album_image}}" width="50">
                 </td>
-                <td style="width: 44%" class="my_table_padding my_table_body">
+                <td style="width: 44%" class="my_table_padding my_table_body" th:onclick="|handleMusicClick(${like.albumId})|">
                     <span th:text="${like.music_name}"></span>
                 </td>
-                <td style="width: 30%">
+                <td style="width: 30%" th:onclick="|handleMusicClick(${like.albumId})|">
                     <span th:text="${like.music_artist_name}"></span>
                 </td>
                 <td style="width: 8%">

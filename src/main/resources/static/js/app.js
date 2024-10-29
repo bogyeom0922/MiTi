@@ -386,7 +386,7 @@ const SpotifyPlayer = ({
                                 <div className="playlist-3">
                                     <ul>
                                         {playlist.map((track, index) => (
-                                            <li key={track.id} onClick={() => handlePlaylistClick(track.id)}
+                                            <li key={track.id}
                                                 style={{display: 'flex', alignItems: 'center', marginBottom: '10px'}}>
                                                 <div
                                                     onClick={() => handlePlaylistClick(track.id)}

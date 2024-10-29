@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 entry.target.classList.remove('show'); // 필요 시 초기화
             }
         });
-    }, { threshold: 0.15 });
+    }, {threshold: 0.15});
 
     sections.forEach((section) => observer.observe(section));
 
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (moveButton && main2Section) {
         moveButton.addEventListener('click', () => {
-            main2Section.scrollIntoView({ behavior: 'smooth' });
+            main2Section.scrollIntoView({behavior: 'smooth'});
         });
     }
 
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             fetch('/submitComment', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(data)
             })
                 .then(response => response.ok ? response.json() : Promise.reject('댓글 작성 실패'))
@@ -156,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
         }
+
         initAccordion('.accordion2');
         initAccordion('.accordion3');
         initAccordion('.accordion4');
@@ -186,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             fetch('/playlist/create', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(playlistDto)
             })
                 .then(response => response.ok ? response.text() : Promise.reject('플레이리스트 생성 실패'))
@@ -209,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 fetch('/playlist/add', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify(playlistDto)
                 })
                     .then(response => response.ok ? response.text() : Promise.reject('추가 실패'))
@@ -247,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //마이페이지 좋아요 삭제 기능
-    window.deleteLike = function(id, button) {
+    window.deleteLike = function (id, button) {
         console.log(`Deleting like for userId: ${id}`);
         fetch(`/mypage/like/${id}`, {
             method: 'DELETE'
@@ -281,8 +282,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // 장르 삭제 기능
-    window.deleteGenre = function(id, button) {
-        fetch(`/mypage/genre/${id}`, { method: 'DELETE' })
+    window.deleteGenre = function (id, button) {
+        fetch(`/mypage/genre/${id}`, {method: 'DELETE'})
             .then(response => response.text())
             .then(result => {
                 if (result === 'success') {
@@ -304,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // 장르 목록 표시 기능
-    window.showAddGenreList = function(button) {
+    window.showAddGenreList = function (button) {
         const id = button.getAttribute('data-user-id');
 
         fetch(`/mypage/genre/non-selected/${id}`)
@@ -317,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     listItem.innerHTML = `
                     <img src="${genre.genre_image}" width="50">
                     <span>${genre.genre}</span>
-                    <button 
+                    <button
                         onclick="window.addGenre('${genre.genre}', '${genre.genre_image}', this, '${id}')" 
                         data-url="/mypage/genre/${id}"> <!-- data-url을 직접 설정 -->
                         추가
@@ -333,11 +334,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
 // 장르 추가 기능
-    window.addGenre = function(genre, genre_image, button, id) {
-        const genreDto = { providerId: id, genre, genre_image };
+    window.addGenre = function (genre, genre_image, button, id) {
+        const genreDto = {providerId: id, genre, genre_image};
         fetch(`/mypage/genre/add`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(genreDto)
         })
             .then(response => response.text())
@@ -360,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //mypage_comment
     // 댓글 수정 모달 열기
-    window.editComment = function(id) {
+    window.editComment = function (id) {
         const commentTextElement = document.getElementById(`comment-text-${id}`);
         const commentText = commentTextElement ? commentTextElement.innerText : '';
         document.getElementById('editCommentId').value = id;
@@ -369,12 +370,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // 댓글 수정 모달 닫기
-    window.closeEditModal = function() {
+    window.closeEditModal = function () {
         document.getElementById('editModal').style.display = 'none';
     };
 
     // 댓글 저장 기능
-    window.saveComment = function(event) {
+    window.saveComment = function (event) {
         const id = document.getElementById('editCommentId').value;
         const comment = document.getElementById('editCommentText').value;
         const button = event.target; // 클릭한 버튼을 참조
@@ -384,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ comment }),
+            body: JSON.stringify({comment}),
         })
             .then(response => {
                 if (response.ok) {
@@ -411,9 +412,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
 
-
     // 댓글 삭제 기능
-    window.deleteMyComment = function(id) {
+    window.deleteMyComment = function (id) {
         fetch(`/mypage/comment/${id}`, {
             method: 'DELETE'
         })
@@ -438,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //mypage_playlist(playlist_album)
     // 마이페이지 플레이리스트 삭제 기능
-    window.deleteFromPlaylist = function(albumId, button) {
+    window.deleteFromPlaylist = function (albumId, button) {
         const playlistName = button.getAttribute('data-playlist-name'); // data-* 속성으로 문자열 값 가져오기
         const url = button.getAttribute('data-url');
 
@@ -449,7 +449,7 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ albumId: albumId, playlistName: playlistName })
+            body: JSON.stringify({albumId: albumId, playlistName: playlistName})
         })
             .then(response => response.text())
             .then(result => {
