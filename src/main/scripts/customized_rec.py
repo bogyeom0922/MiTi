@@ -115,6 +115,7 @@ def main():
 
         # 결과를 customized_rec 테이블에 삽입
         with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM customized_rec")
             for user_id, top_albums in user_recommendations.items():
                 for album_id, _ in top_albums:
                     # album_id는 int로 변환
