@@ -313,23 +313,42 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const addPlaylistBtn = document.getElementById('addPlaylistBtn');
+        const panel3Buttons = document.querySelectorAll('.panel3 button[data-user-id]');
+
+        // 새로운 플레이리스트 추가 버튼에 이벤트 리스너 중복 방지
+        if (!addPlaylistBtn.hasAttribute('data-listener')) {
+            addPlaylistBtn.addEventListener('click', handleNewPlaylist);
+            addPlaylistBtn.setAttribute('data-listener', 'true'); // 중복 방지 플래그
+        }
+
+        // 기존 플레이리스트에 추가 버튼에 이벤트 리스너 등록
+        panel3Buttons.forEach(button => {
+            if (!button.hasAttribute('data-listener')) {
+                button.addEventListener('click', handleAddToPlaylist);
+                button.setAttribute('data-listener', 'true'); // 중복 방지 플래그
+            }
+        });
+
+        // 아코디언 토글 버튼 이벤트
         const accordion = document.querySelector('.accordion4');
         const panel = document.querySelector('.panel3');
 
-        // 아코디언 토글 이벤트 추가
         accordion.addEventListener('click', function (event) {
             event.stopPropagation(); // 이벤트 전파 방지
             const isVisible = panel.style.display === 'block';
-            panel.style.display = isVisible ? 'none' : 'block'; // 토글
+            panel.style.display = isVisible ? 'none' : 'block'; // 토글 기능
         });
 
-        // 새로운 플레이리스트 추가 버튼 클릭 이벤트
-        const addPlaylistBtn = document.getElementById('addPlaylistBtn');
-        addPlaylistBtn.addEventListener('click', function (event) {
+        // 새로운 플레이리스트 추가 처리
+        function handleNewPlaylist(event) {
             event.stopPropagation();
             const newPlaylistName = document.getElementById('newPlaylistName').value.trim();
 
-            console.log('New Playlist Name:', newPlaylistName);
+            if (!newPlaylistName) {
+                alert('플레이리스트 이름을 입력하세요.');
+                return;
+            }
 
             const firstButton = document.querySelector('.panel3 button[data-user-id]');
             if (!firstButton) {
@@ -348,46 +367,46 @@
 
             fetch('/playlist/create', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(playlistDto)
             })
                 .then(response => response.ok ? response.text() : response.text().then(error => {
                     throw new Error(error);
                 }))
                 .then(data => {
-                    alert(data);
-                    document.getElementById('newPlaylistName').value = '';
+                    alert(data); // 성공 메시지 표시
+                    document.getElementById('newPlaylistName').value = ''; // 입력 필드 초기화
                 })
                 .catch(error => alert('오류 발생: ' + error.message));
-        });
+        }
 
-        // 기존 플레이리스트에 추가 버튼 클릭 이벤트
-        document.querySelectorAll('.panel3 button[data-user-id]').forEach(button => {
-            button.addEventListener('click', function (event) {
-                event.stopPropagation();
+        // 기존 플레이리스트에 앨범 추가 처리
+        function handleAddToPlaylist(event) {
+            event.stopPropagation();
 
-                const providerId = this.dataset.userId;
-                const albumId = this.dataset.albumId;
-                const userPlaylistName = this.innerText;
+            const providerId = this.dataset.userId;
+            const albumId = this.dataset.albumId;
+            const userPlaylistName = this.innerText;
 
-                const playlistDto = {
-                    providerId: providerId,
-                    albumId: albumId,
-                    userPlaylistName: userPlaylistName
-                };
+            const playlistDto = {
+                providerId: providerId,
+                albumId: albumId,
+                userPlaylistName: userPlaylistName
+            };
 
-                fetch('/playlist/add', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(playlistDto)
+            fetch('/playlist/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(playlistDto)
+            })
+                .then(response => response.ok ? response.text() : response.text().then(error => {
+                    throw new Error(error);
+                }))
+                .then(data => {
+                    alert(data); // 성공 메시지 표시
                 })
-                    .then(response => response.ok ? response.text() : response.text().then(error => {
-                        throw new Error(error);
-                    }))
-                    .then(data => alert(data))
-                    .catch(error => alert('오류 발생: ' + error.message));
-            });
-        });
+                .catch(error => alert('오류 발생: ' + error.message));
+        }
     });
 </script>
 
