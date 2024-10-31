@@ -229,5 +229,37 @@ public class AlbumController {
         }
     }
 
+    //앨범 전체 스트리밍
+    @GetMapping("/api/album/{providerId}/{detail}")
+    public ResponseEntity<List<AlbumDto>> getAllAlbumList(@PathVariable("providerId") String providerId, @PathVariable("detail") String detail) {
+        // 장르 기반으로 플레이리스트 생성
+        List<Album> albumlist = albumService.findByDetail(detail);
+
+        // 유저 정보 확인
+        Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);
+        if (!userDTOOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 유저가 없으면 404 반환
+        }
+
+        if (albumlist.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();  // 재생 목록이 비어 있으면 204 반환
+        }
+
+        // Album 객체를 AlbumDto로 변환 (필요한 필드만 포함)
+        List<AlbumDto> playlistDto = albumlist.stream()
+                .map(album -> new AlbumDto(
+                        album.getId(),
+                        album.getMusicName(),
+                        album.getAlbum_image(),
+                        album.getMusicArtistName(),
+                        album.getMusic_duration_ms(),
+                        album.getMusic_uri(),
+                        album.getDetail()
+                ))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(playlistDto);  // JSON 형태로 플레이리스트 반환
+    }
+
 
 }

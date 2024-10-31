@@ -539,6 +539,23 @@ const App = () => {
         }
     };
 
+    // 나의 플레이리스트 가져오기
+    const fetchAlbumlist = async () => {
+        const detail = event.currentTarget.getAttribute('data-detail');
+        console.log('Album Detail:', detail); // 값 확인
+        try {
+            const response = await fetch(`/api/album/${providerId}/${detail}`);
+            if (!response.ok) {
+                throw new Error('플레이리스트를 찾을 수 없습니다.');
+            }
+            const data = await response.json();
+            console.log('Fetched playlist:', data);
+            setPlaylist(data);
+        } catch (error) {
+            console.error('플레이리스트 가져오기 실패:', error);
+        }
+    };
+
     // 스트리밍 정보 가져오기 (외부 클릭 시 사용)
     const fetchMusicInfo = async (id) => {
         try {
@@ -563,7 +580,6 @@ const App = () => {
      // 컴포넌트가 처음 로드될 때 플레이리스트 가져옴
      useEffect(() => {
          fetchPlaylist();
-         fetchMyPlaylist();
      }, []);
 
     // 현재 트랙 정보 업데이트
@@ -585,6 +601,16 @@ const App = () => {
     // 플레이리스트에서 음악 클릭 시 처리
     const handlePlaylistClick =  async (id) => {
         await fetchPlaylist(id); // 스트리밍 정보 가져오기
+        console.log('Clicked track id: ', id);
+        const trackIndex = playlist.findIndex(track => track.id === id);
+        if (trackIndex !== -1) {
+            setCurrentTrackIndex(trackIndex);
+        }
+    };
+
+    //마이페이지 플레이리스트 클릭 시 처리
+    const handleAlbumlistClick = async (id) => {
+        await fetchAlbumlist(id); // 스트리밍 정보 가져오기
         console.log('Clicked track id: ', id);
         const trackIndex = playlist.findIndex(track => track.id === id);
         if (trackIndex !== -1) {
@@ -615,6 +641,7 @@ const App = () => {
     window.handlePlaylistClick = handlePlaylistClick;
     window.handleMusicClick = handleMusicClick;
     window.handleMyPlaylistClick = handleMyPlaylistClick;
+    window.handleAlbumlistClick =handleAlbumlistClick;
 
     return (
         <SpotifyPlayer

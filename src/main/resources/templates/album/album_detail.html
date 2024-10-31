@@ -21,7 +21,7 @@
 
 <div id="content">
     <!-- 앨범 기본 정보 -->
-    <div th:if="${firstAlbum != null}" class="album" th:onclick="|handleMusicClick(${firstAlbum.id})|">
+    <div th:if="${firstAlbum != null}" class="album" th:onclick="|handleAlbumlistClick(${firstAlbum.id})|" th:data-detail="${firstAlbum.detail}">
     <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" class="album_img">
     <div class="album_detail">
         <p th:text="${firstAlbum.detail}" class="album_name"></p>
