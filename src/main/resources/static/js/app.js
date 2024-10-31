@@ -609,7 +609,7 @@ const App = () => {
         }
     };
 
-    //마이페이지 플레이리스트 클릭 시 처리
+    //앨범 수록곡 클릭 시 처리
     const handleAlbumlistClick = async (id) => {
         await fetchAlbumlist(id); // 스트리밍 정보 가져오기
         console.log('Clicked track id: ', id);

@@ -474,5 +474,16 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
 
+    // 이벤트 위임을 사용하여 동적 콘텐츠 로딩 문제 해결
+    document.querySelector('.music-click-2').addEventListener('click', function(event) {
+        const item = event.target.closest('tr'); // 클릭된 요소 중 가장 가까운 tr 찾기
+        if (item && !event.target.closest('.accordion_container') && !event.target.closest('.accordion_container2')) {
+            const songId = item.getAttribute('data-song-id'); // songId 추출
+            handlePlaylistClick(songId);
+        }
+    });
+
+
+
 });
 

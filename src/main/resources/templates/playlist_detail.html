@@ -49,9 +49,9 @@
 
     <!--플레이 리스트 음악들 -->
     <div class="playlist_songs">
-    <table class="playlist_table">
+    <table class="playlist_table music-click-2">
         <tbody>
-        <tr th:each="song, iterStat : ${playlist}" th:onclick="|handlePlaylistClick(${song.id})|">
+        <tr th:each="song, iterStat : ${playlist}" th:data-song-id="${song.id}">
             <td th:text="${iterStat.index + 1}"></td>
             <td>
                 <img th:src="${song.album_image}" alt="앨범 이미지" class="playlist_album_cover">
