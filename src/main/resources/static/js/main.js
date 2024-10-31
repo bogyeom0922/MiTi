@@ -72,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (url) loadPage(url);
         }
 
-
         // 앨범에 대한 좋아요 버튼
         const albumHeartButton = document.querySelector('.albumHeartButton');
         if (albumHeartButton) {
@@ -100,27 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // 개별 곡 좋아요 버튼
-        document.querySelectorAll('.like-button').forEach(button => {
-            button.addEventListener('click', function () {
-                const albumId = this.getAttribute('data-album-id');
-                const providerId = this.getAttribute('data-user-id');
-
-                fetch(`/mypage/like/album/toggleTrack?albumId=${albumId}&providerId=${providerId}`, {
-                    method: 'POST',
-                    cache: 'no-cache'
-                })
-                    .then(response => response.text())
-                    .then(result => {
-                        this.querySelector('span').innerText = result === "liked" ? '♥' : '♡';
-                    })
-                    .catch(error => {
-                        console.error('Error toggling like:', error);
-                        alert("좋아요 처리 중 오류가 발생했습니다.");
-                    });
-            });
-        });
-
         // 댓글 생성
         function submitComment() {
             const data = {
@@ -144,107 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('댓글 작성 중 오류가 발생했습니다.');
                 });
         }
-
-        // 아코디언 메뉴 초기화
-        function initAccordion(className) {
-            document.querySelectorAll(className).forEach(button => {
-                button.addEventListener('click', function (event) {
-                    event.stopPropagation();
-                    this.classList.toggle('active');
-                    const panel = this.nextElementSibling;
-                    panel.style.display = panel.style.display === "block" ? "none" : "block";
-                });
-            });
-        }
-
-        initAccordion('.accordion2');
-        initAccordion('.accordion3');
-        initAccordion('.accordion4');
-
-        document.addEventListener('click', event => {
-            document.querySelectorAll('.accordion2').forEach(button => {
-                const panel = button.nextElementSibling;
-                if (panel.style.display === "block" && !button.contains(event.target)) {
-                    panel.style.display = "none";
-                    button.classList.remove("active");
-                }
-            });
-        });
-
-        // 플레이리스트 추가
-        document.getElementById('addPlaylistBtn')?.addEventListener('click', event => {
-            event.stopPropagation();
-            const newPlaylistName = document.getElementById('newPlaylistName').value.trim();
-            const firstButton = document.querySelector('.panel3 button[data-user-id]');
-
-            if (!firstButton) return alert('플레이리스트가 없습니다.');
-
-            const playlistDto = {
-                providerId: firstButton.dataset.userId,
-                albumId: firstButton.dataset.albumId,
-                userPlaylistName: newPlaylistName
-            };
-
-            fetch('/playlist/create', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(playlistDto)
-            })
-                .then(response => response.ok ? response.text() : Promise.reject('플레이리스트 생성 실패'))
-                .then(alert)
-                .catch(error => {
-                    console.error('Fetch error:', error);
-                    alert('오류 발생: ' + error);
-                });
-        });
-
-        document.querySelectorAll('.panel3 button[data-user-id]').forEach(button => {
-            button.addEventListener('click', event => {
-                event.stopPropagation();
-
-                const playlistDto = {
-                    providerId: button.dataset.userId,
-                    albumId: button.dataset.albumId,
-                    userPlaylistName: button.innerText
-                };
-
-                fetch('/playlist/add', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(playlistDto)
-                })
-                    .then(response => response.ok ? response.text() : Promise.reject('추가 실패'))
-                    .then(alert)
-                    .catch(error => {
-                        console.error('Fetch error:', error);
-                        alert('오류 발생: ' + error);
-                    });
-            });
-        });
-
-
-        // SNS 공유 함수들
-        const share = (url) => window.open(url, '_blank');
-        document.getElementById('btnTwitter')?.addEventListener('click', () => {
-            share(`https://twitter.com/intent/tweet?text=${encodeURIComponent('앨범 공유 텍스트')}&url=${encodeURIComponent(window.location.href)}&hashtags=${encodeURIComponent('음악,앨범')}`);
-        });
-        document.getElementById('btnFacebook')?.addEventListener('click', () => {
-            share(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`);
-        });
-        document.getElementById('btnBand')?.addEventListener('click', () => {
-            share(`https://band.us/plugin/share?body=${encodeURIComponent(window.location.href)}&route=${encodeURIComponent(window.location.href)}`);
-        });
-
-        // 링크 복사 기능
-        document.getElementById('btnCopyLink')?.addEventListener('click', () => {
-            const textarea = document.createElement('textarea');
-            document.body.appendChild(textarea);
-            textarea.value = window.location.href;
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            alert('링크가 복사되었습니다.');
-        });
     });
 
     //마이페이지 좋아요 삭제 기능
@@ -276,10 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     };
     <!-- JavaScript에 필요한 값 전달 var providerId = /*[[${user.providerId}]]*/ 'defaultProviderId'; -->
-
-
-    //마이페이지 선호장르
-
 
     // 장르 삭제 기능
     window.deleteGenre = function (id, button) {
@@ -333,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     };
 
-// 장르 추가 기능
+    // 장르 추가 기능
     window.addGenre = function (genre, genre_image, button, id) {
         const genreDto = {providerId: id, genre, genre_image};
         fetch(`/mypage/genre/add`, {
@@ -475,14 +348,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // 이벤트 위임을 사용하여 동적 콘텐츠 로딩 문제 해결
-    document.querySelector('.music-click-2').addEventListener('click', function(event) {
+    document.querySelector('.music-click-2').addEventListener('click', function (event) {
         const item = event.target.closest('tr'); // 클릭된 요소 중 가장 가까운 tr 찾기
         if (item && !event.target.closest('.accordion_container') && !event.target.closest('.accordion_container2')) {
             const songId = item.getAttribute('data-song-id'); // songId 추출
             handlePlaylistClick(songId);
         }
     });
-
 
 
 });

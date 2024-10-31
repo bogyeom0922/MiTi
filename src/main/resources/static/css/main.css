@@ -569,7 +569,6 @@ a:hover {
 }
 
 .panel3 button {
-    display: block;
     background: none;
     border: none;
     padding: 8px; /* Reduced padding */
