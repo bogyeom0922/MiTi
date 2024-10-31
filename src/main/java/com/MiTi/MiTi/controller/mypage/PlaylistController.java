@@ -166,7 +166,6 @@ public class PlaylistController {
     }
 
 
-
     @GetMapping("/playlist/detail/{providerId}/{genre}")
     public String getPlaylistDetail(@PathVariable("providerId") String providerId, @PathVariable("genre") String genre, Model model) {
         // 장르 기반으로 플레이리스트 생성
@@ -205,12 +204,14 @@ public class PlaylistController {
         model.addAttribute("totalSongs", totalSongs);
         model.addAttribute("totalDuration", totalDuration);
 
-
         // entry 객체 추가
         Map<String, String> entry = new HashMap<>();
         entry.put("key", genre); // key 값을 genre로 설정
         model.addAttribute("entry", entry);
         model.addAttribute("providerId", providerId);  // providerId를 모델에 추가
+
+        List<PlaylistDto> playlistDtoList = playlistService.getPlaylistListByProviderId(providerId);
+        model.addAttribute("playlists", playlistDtoList); // 재생 목록을 모델에 추가
         return "playlist_detail";
     }
 
@@ -232,6 +233,9 @@ public class PlaylistController {
         // 사용자의 맞춤형 추천 앨범 가져오기
         List<Album> customizedAlbums = playlistService.getCustomizedAlbumsByUser(providerId);
         model.addAttribute("customizedAlbums", customizedAlbums);
+
+        List<PlaylistDto> playlistDtoList = playlistService.getPlaylistListByProviderId(providerId);
+        model.addAttribute("playlists", playlistDtoList); // 재생 목록을 모델에 추가
 
         // providerId로 사용자 정보를 가져와서 모델에 추가
         Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);
