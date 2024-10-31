@@ -580,6 +580,7 @@ const App = () => {
      // 컴포넌트가 처음 로드될 때 플레이리스트 가져옴
      useEffect(() => {
          fetchPlaylist();
+         handlePlaylistClick();
      }, []);
 
     // 현재 트랙 정보 업데이트

@@ -52,7 +52,6 @@ public class PlaylistDto {
         this.music_name = music_name;
         this.album_image = album_image;
         this.music_artist_name = music_artist_name;
-        this.music_duration_ms= music_duration_ms;
         this.music_uri= music_uri;
         this.detail = detail;
     }

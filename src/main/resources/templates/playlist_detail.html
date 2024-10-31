@@ -43,7 +43,7 @@
     <div class="playlist-header">
     <img th:src="${playlistImage != null ? playlistImage : (playlist[0].album_image != null ? playlist[0].album_image : '/path/to/default-image.png')}"
          class="playlist-cover-image" alt="플레이리스트 이미지">
-    <h1 class="playlist-title" th:text="${entry.key} + '을 위한 음악'">Playlist Title</h1>
+    <h1 class="playlist-title" th:text="${entry.key} + ' 음악'">Playlist Title</h1>
     <p class="playlist-subtitle" th:text="'총 ' + ${totalSongs} + ' 곡 • 총 재생 시간: ' + ${totalDuration}"></p>
     </div>
 
