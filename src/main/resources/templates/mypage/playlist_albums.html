@@ -18,10 +18,10 @@
         <a class="my_shortcuts my_shortcuts_d current" th:attr="data-url='/mypage/playlist/' + ${user.providerId}">플레이리스트</a>
     </div>
 <div class="my_body">
-<!--    class="my_body_title_playlist_albums-->
     <p th:text="${userPlaylistName}" class="my_body_title"></p>
     <table class="my_table_playlist_albums">
-        <tr th:each="album : ${albumList}" th:onclick="|handleMusicClick(${album.albumId})|">
+        <tr th:each="album : ${albumList}" th:onclick="|handleMyPlaylistClick(${album.albumId})|" th:data-myplaylist="${userPlaylistName}">
+            <td style="width: 9%">
             <td style="width: 9%">
                 <img th:src="@{${album.album_image}}" width="50" alt="앨범 이미지"/>
             </td>

@@ -11,7 +11,7 @@ def fetch_album_features(connection, album_ids=None):
             query = f"""
             SELECT id, music_acousticness, music_danceability, music_energy, 
                    music_liveness, music_loudness, music_tempo, music_valence,
-                   music_name, music_uri, album_image, music_artist_name, music_duration_ms
+                   music_name, music_uri, album_image, music_artist_name, music_duration_ms, detail
             FROM album WHERE id IN ({format_strings})
             """
             cursor.execute(query, tuple(album_ids))
@@ -19,7 +19,7 @@ def fetch_album_features(connection, album_ids=None):
             query = """
             SELECT id, music_acousticness, music_danceability, music_energy, 
                    music_liveness, music_loudness, music_tempo, music_valence,
-                   music_name, music_uri, album_image, music_artist_name, music_duration_ms
+                   music_name, music_uri, album_image, music_artist_name, music_duration_ms, detail
             FROM album
             """
             cursor.execute(query)
@@ -33,7 +33,8 @@ def fetch_album_features(connection, album_ids=None):
             'music_uri': album[9],
             'album_image': album[10],
             'music_artist_name': album[11],
-            'music_duration_ms': album[12]
+            'music_duration_ms': album[12],
+            'detail': album[13]
         }
         for album in albums
     }
@@ -92,7 +93,8 @@ def main(target_album_id):
                 'music_uri': album_data['music_uri'],
                 'albumImage': album_data['album_image'],
                 'musicArtistName': album_data['music_artist_name'],
-                'music_duration_ms': album_data['music_duration_ms']
+                'music_duration_ms': album_data['music_duration_ms'],
+                'detail': album_data['detail']
             })
 
         print(json.dumps(result, indent=4, ensure_ascii=False))

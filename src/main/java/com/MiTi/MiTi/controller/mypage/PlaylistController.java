@@ -42,6 +42,7 @@ public class PlaylistController {
         this.likeService = likeService;
     }
 
+    //mypage_playlist
     @GetMapping("/mypage/playlist/{providerId}")
     public String list(@PathVariable String providerId, Model model) {
         List<PlaylistDto> playlistDtoList = playlistService.getPlaylistListByProviderId(String.valueOf(providerId));
@@ -60,12 +61,11 @@ public class PlaylistController {
         return "error"; // 또는 다른 적절한 경로로 리디렉션
     }
 
-
-    @GetMapping("/mypage/playlist/albums/{providerId}")
-    public String getAlbumsByPlaylistName(@PathVariable String providerId, @RequestParam String userPlaylistName, Model model) {
+    //마이페이지 플레이리스트 상세
+    @GetMapping("/mypage/playlist/albums/{providerId}/{userPlaylistName}")
+    public String getAlbumsByPlaylistName(@PathVariable String providerId, @PathVariable("userPlaylistName") String userPlaylistName, Model model) {
         List<PlaylistDto> albumList = playlistService.getAlbumsByPlaylistName(userPlaylistName);
         model.addAttribute("albumList", albumList);
-
         model.addAttribute("userPlaylistName", userPlaylistName);
 
         // Optional 처리
@@ -95,7 +95,45 @@ public class PlaylistController {
         }
     }
 
-    //스트리밍에 필요함
+    //내 플레이리스트 스트리밍에 필요함
+    @GetMapping("/api/mypage/playlist/my/{providerId}/{userPlaylistName}")
+    public ResponseEntity<List<AlbumDto>> playAllSongsInPlaylist(@PathVariable String providerId, @PathVariable("userPlaylistName") String userPlaylistName) {
+        System.out.println("providerId: " + providerId);
+        System.out.println("userPlaylistName: " + userPlaylistName);
+
+        // userPlaylistName으로 PlaylistDto 목록 가져오기
+        List<PlaylistDto> playlistDtos = playlistService.getAlbumsByPlaylistName(userPlaylistName);
+        System.out.println("playlistDtos: " + playlistDtos);
+
+        // 유저 정보 확인
+        Optional<UserDTO> userDTOOptional = userService.getUserById(providerId);
+        if (!userDTOOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 유저가 없으면 404 반환
+        }
+
+        if (playlistDtos.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 플레이리스트가 비어있으면 204 반환
+        }
+
+        // PlaylistDto를 AlbumDto로 변환
+        List<AlbumDto> albumDtoList = playlistDtos.stream()
+                .map(playlistDto -> new AlbumDto(
+                        playlistDto.getAlbumId(),
+                        playlistDto.getMusic_name(),
+                        playlistDto.getAlbum_image(),
+                        playlistDto.getMusic_artist_name(),
+                        playlistDto.getMusic_duration_ms(), // 총 재생 시간
+                        playlistDto.getMusic_uri(),
+                        playlistDto.getDetail()
+                ))
+                .collect(Collectors.toList());
+
+        System.out.println("albumDtoList: " + albumDtoList);
+        return ResponseEntity.ok(albumDtoList); // JSON 형태로 반환하여 프론트에서 재생 처리 가능
+    }
+
+
+    //장르 플레이리스트 스트리밍에 필요함
     @GetMapping("/api/playlist/{providerId}/{genre}")
     public ResponseEntity<List<AlbumDto>> getPlaylistById(@PathVariable("providerId") String providerId, @PathVariable("genre") String genre) {
         // 장르 기반으로 플레이리스트 생성

@@ -79,6 +79,7 @@ public class PlaylistService {
                     .music_name(playlist.getAlbum().getMusicName())
                     .album_image(playlist.getAlbum().getAlbum_image())
                     .music_artist_name(playlist.getAlbum().getMusicArtistName())
+                    .music_uri(playlist.getAlbum().getMusic_uri())
                     .detail(playlist.getAlbum().getDetail())
                     .build();
             playlistDtoList.add(playlistDto);

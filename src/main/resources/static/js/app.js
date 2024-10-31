@@ -32,29 +32,29 @@ const SpotifyPlayer = ({
         localStorage.setItem('musicState', JSON.stringify(musicState));
     };
 
-    const loadLikedTracks = () => {
-        playlist.forEach(track => {
-            const albumId = track.id;
-            fetch(`/mypage/like/album/isLiked?albumId=${albumId}&providerId=${providerId}`, {
-                method: 'GET',
-                cache: 'no-cache'
-            })
-                .then(response => response.json())
-                .then(result => {
-                    setLikedTracks(prevState => ({
-                        ...prevState,
-                        [albumId]: result.isLiked
-                    }));
-                })
-                .catch(error => {
-                    console.error('좋아요 상태 로드 오류:', error);
-                });
-        });
-    };
-
-    useEffect(() => {
-        loadLikedTracks();
-    }, [playlist]);
+    // const loadLikedTracks = () => {
+    //     playlist.forEach(track => {
+    //         const albumId = track.id;
+    //         fetch(`/mypage/like/album/isLiked?albumId=${albumId}&providerId=${providerId}`, {
+    //             method: 'GET',
+    //             cache: 'no-cache'
+    //         })
+    //             .then(response => response.json())
+    //             .then(result => {
+    //                 setLikedTracks(prevState => ({
+    //                     ...prevState,
+    //                     [albumId]: result.isLiked
+    //                 }));
+    //             })
+    //             .catch(error => {
+    //                 console.error('좋아요 상태 로드 오류:', error);
+    //             });
+    //     });
+    // };
+    //
+    // useEffect(() => {
+    //     loadLikedTracks();
+    // }, [playlist]);
 
     const toggleTrackLike = (albumId) => {
         fetch(`/mypage/like/album/toggleTrack?albumId=${albumId}&providerId=${providerId}`, {
@@ -425,11 +425,11 @@ const SpotifyPlayer = ({
                                                             <span>{likedTracks[track.id] ? '♥' : '♡'}</span>
                                                         </button>
                                                         <button>재생 목록에 추가</button>
-                                                        <button
-                                                            onClick={() => {
-                                                                window.location.href = `/album/${track.detail}/${providerId}`;
-                                                            }}
-                                                            data-url={`/album/${track.detail}/${providerId}`}>
+                                                        <button className="my_shortcuts"
+                                                                data-url={`/album/${track.detail}/${providerId}`}
+                                                                onClick={() => {
+                                                                    window.location.href = `/album/${track.detail}/${providerId}`;
+                                                                }}>
                                                             앨범 정보
                                                         </button>
 
@@ -506,12 +506,28 @@ const App = () => {
     const providerId = document.getElementById('root').getAttribute('data-user-id');
     const genre = document.getElementById('root').getAttribute('data-genre');
 
-    console.log(providerId, genre);
 
     // 장르 기반 플레이리스트 가져오기
     const fetchPlaylist = async () => {
         try {
             const response = await fetch(`/api/playlist/${providerId}/${genre}`);
+            if (!response.ok) {
+                throw new Error('플레이리스트를 찾을 수 없습니다.');
+            }
+            const data = await response.json();
+            console.log('Fetched playlist:', data);
+            setPlaylist(data);
+        } catch (error) {
+            console.error('플레이리스트 가져오기 실패:', error);
+        }
+    };
+
+    // 나의 플레이리스트 가져오기
+    const fetchMyPlaylist = async () => {
+        const userPlaylistName = event.currentTarget.getAttribute('data-myplaylist');
+        console.log('User Playlist Name:', userPlaylistName); // 값 확인
+        try {
+            const response = await fetch(`/api/mypage/playlist/my/${providerId}/${userPlaylistName}`);
             if (!response.ok) {
                 throw new Error('플레이리스트를 찾을 수 없습니다.');
             }
@@ -544,10 +560,11 @@ const App = () => {
         }
     };
 
-    // 컴포넌트가 처음 로드될 때 플레이리스트 가져옴
-    useEffect(() => {
-        fetchPlaylist();
-    }, []);
+     // 컴포넌트가 처음 로드될 때 플레이리스트 가져옴
+     useEffect(() => {
+         fetchPlaylist();
+         fetchMyPlaylist();
+     }, []);
 
     // 현재 트랙 정보 업데이트
     useEffect(() => {
@@ -566,7 +583,18 @@ const App = () => {
     }, [currentTrackIndex, playlist]);
 
     // 플레이리스트에서 음악 클릭 시 처리
-    const handlePlaylistClick = (id) => {
+    const handlePlaylistClick =  async (id) => {
+        await fetchPlaylist(id); // 스트리밍 정보 가져오기
+        console.log('Clicked track id: ', id);
+        const trackIndex = playlist.findIndex(track => track.id === id);
+        if (trackIndex !== -1) {
+            setCurrentTrackIndex(trackIndex);
+        }
+    };
+
+    //마이페이지 플레이리스트 클릭 시 처리
+    const handleMyPlaylistClick = async (id) => {
+        await fetchMyPlaylist(id); // 스트리밍 정보 가져오기
         console.log('Clicked track id: ', id);
         const trackIndex = playlist.findIndex(track => track.id === id);
         if (trackIndex !== -1) {
@@ -586,6 +614,7 @@ const App = () => {
     // 전역 범위로 노출 (파일 나누면서 필요)
     window.handlePlaylistClick = handlePlaylistClick;
     window.handleMusicClick = handleMusicClick;
+    window.handleMyPlaylistClick = handleMyPlaylistClick;
 
     return (
         <SpotifyPlayer
