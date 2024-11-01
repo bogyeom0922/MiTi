@@ -21,7 +21,7 @@
 
 <div id="content">
     <!-- 앨범 기본 정보 -->
-    <div th:if="${firstAlbum != null}" class="album" th:onclick="|handleAlbumlistClick(${firstAlbum.id})|" th:data-detail="${firstAlbum.detail}">
+    <div th:if="${firstAlbum != null}" class="album">
     <img th:src="@{${firstAlbum.album_image}}" alt="First Album Image" class="album_img">
     <div class="album_detail">
         <p th:text="${firstAlbum.detail}" class="album_name"></p>
@@ -36,7 +36,7 @@
             <span th:text="${firstAlbum.isLiked != null && firstAlbum.isLiked ? '♥' : '♡'}"></span>
         </button>
     </div>
-    <img src="/images/play.png" class="album_play_img" id="play-all-button">
+    <img src="/images/play.png" class="album_play_img" id="play-all-button" th:onclick="|handleAlbumlistClick(${firstAlbum.id})|" th:data-detail="${firstAlbum.detail}">
     </div>
 
     <!-- 앨범에 해당되는 곡 목록 -->

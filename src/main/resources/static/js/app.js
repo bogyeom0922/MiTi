@@ -116,10 +116,9 @@ const SpotifyPlayer = ({
             });
 
             playerInstance.addListener('ready', ({device_id}) => {
-                console.log('Ready with Device ID', device_id);
                 setDeviceId(device_id);
                 if (musicUri) {
-                    playTrack(device_id, musicUri);
+                    //playTrack(device_id, musicUri);
                 }
             });
 
@@ -189,7 +188,6 @@ const SpotifyPlayer = ({
 
     // musicInfo 업데이트 시 로그 출력
     useEffect(() => {
-        console.log('SpotifyPlayer received new musicInfo:', musicInfo);
     }, [musicInfo]);
 
 
@@ -197,7 +195,6 @@ const SpotifyPlayer = ({
         if (player && musicInfo.musicUri && deviceId) {
             player._options.getOAuthToken((token) => {
                 const sanitizedUri = sanitizeUri(musicInfo.musicUri);
-                console.log(`Attempting to play track with URI: ${sanitizedUri}`);
                 fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
                     method: 'PUT',
                     body: JSON.stringify({uris: [sanitizedUri]}),
@@ -211,7 +208,6 @@ const SpotifyPlayer = ({
                             throw new Error(`Spotify API error: ${errorData.error.message}`);
                         });
                     }
-                    console.log('Track played successfully');
                     if (musicInfo.id) {
                         recordMusicPlay(providerId, musicInfo.id);
                     } else {
@@ -229,7 +225,6 @@ const SpotifyPlayer = ({
     useEffect(() => {
         if (playlist.length > 0 && currentTrackIndex >= 0 && currentTrackIndex < playlist.length) {
             const track = playlist[currentTrackIndex];
-            console.log('Track found:', track);
             setMusicInfo({
                 musicName: track.musicName,
                 musicUri: track.music_uri,
@@ -300,14 +295,12 @@ const SpotifyPlayer = ({
                 body: JSON.stringify({providerId, albumId}),
             });
             const responseText = await response.text();
-            console.log('Server response:', responseText);
 
             if (!response.ok) {
                 throw new Error(`Error recording music: ${responseText.message || response.statusText}`);
             }
             console.log('Music recorded successfully');
         } catch (error) {
-            console.error('Error recording music:', error);
         }
     };
 
@@ -515,10 +508,8 @@ const App = () => {
                 throw new Error('플레이리스트를 찾을 수 없습니다.');
             }
             const data = await response.json();
-            console.log('Fetched playlist:', data);
             setPlaylist(data);
         } catch (error) {
-            console.error('플레이리스트 가져오기 실패:', error);
         }
     };
 
@@ -532,24 +523,20 @@ const App = () => {
                 throw new Error('플레이리스트를 찾을 수 없습니다.');
             }
             const data = await response.json();
-            console.log('Fetched playlist:', data);
             setPlaylist(data);
         } catch (error) {
-            console.error('플레이리스트 가져오기 실패:', error);
         }
     };
 
     // 나의 플레이리스트 가져오기
     const fetchAlbumlist = async () => {
         const detail = event.currentTarget.getAttribute('data-detail');
-        console.log('Album Detail:', detail); // 값 확인
         try {
             const response = await fetch(`/api/album/${providerId}/${detail}`);
             if (!response.ok) {
                 throw new Error('플레이리스트를 찾을 수 없습니다.');
             }
             const data = await response.json();
-            console.log('Fetched playlist:', data);
             setPlaylist(data);
         } catch (error) {
             console.error('플레이리스트 가져오기 실패:', error);
@@ -564,7 +551,6 @@ const App = () => {
                 throw new Error('스트리밍 리스트를 찾을 수 없습니다.');
             }
             const data = await response.json();
-            console.log('Fetched streaming list:', data);
 
             if (data.length > 0) {
                 setPlaylist(data);  // 가져온 스트리밍 리스트를 플레이리스트로 설정
@@ -587,7 +573,6 @@ const App = () => {
     useEffect(() => {
         if (playlist.length > 0 && currentTrackIndex >= 0 && currentTrackIndex < playlist.length) {
             const track = playlist[currentTrackIndex];
-            console.log('Track found:', track);
             setMusicInfo({
                 musicName: track.musicName,
                 musicUri: track.music_uri,
@@ -602,7 +587,6 @@ const App = () => {
     // 플레이리스트에서 음악 클릭 시 처리
     const handlePlaylistClick =  async (id) => {
         await fetchPlaylist(id); // 스트리밍 정보 가져오기
-        console.log('Clicked track id: ', id);
         const trackIndex = playlist.findIndex(track => track.id === id);
         if (trackIndex !== -1) {
             setCurrentTrackIndex(trackIndex);
@@ -612,7 +596,6 @@ const App = () => {
     //앨범 수록곡 클릭 시 처리
     const handleAlbumlistClick = async (id) => {
         await fetchAlbumlist(id); // 스트리밍 정보 가져오기
-        console.log('Clicked track id: ', id);
         const trackIndex = playlist.findIndex(track => track.id === id);
         if (trackIndex !== -1) {
             setCurrentTrackIndex(trackIndex);
@@ -622,7 +605,6 @@ const App = () => {
     //마이페이지 플레이리스트 클릭 시 처리
     const handleMyPlaylistClick = async (id) => {
         await fetchMyPlaylist(id); // 스트리밍 정보 가져오기
-        console.log('Clicked track id: ', id);
         const trackIndex = playlist.findIndex(track => track.id === id);
         if (trackIndex !== -1) {
             setCurrentTrackIndex(trackIndex);

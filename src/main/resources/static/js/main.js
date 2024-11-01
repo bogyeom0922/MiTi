@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.my_shortcuts').forEach(button => {
         button.addEventListener('click', (event) => {
             event.preventDefault(); // 기본 링크 동작 방지
-            console.log("Button clicked:", button);
             const url = button.getAttribute('data-url'); // 링크의 URL 가져오기
             fetch(url)
                 .then(response => response.text())
@@ -96,6 +95,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
+
+        // 아코디언 메뉴 초기화
+        function initAccordion(className) {
+            document.querySelectorAll(className).forEach(button => {
+                button.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    this.classList.toggle('active');
+                    const panel = this.nextElementSibling;
+                    panel.style.display = panel.style.display === "block" ? "none" : "block";
+                });
+            });
+        }
+
+        initAccordion('.accordion2');
+        initAccordion('.accordion3');
+        initAccordion('.accordion4');
+
+        document.addEventListener('click', event => {
+            document.querySelectorAll('.accordion2').forEach(button => {
+                const panel = button.nextElementSibling;
+                if (panel.style.display === "block" && !button.contains(event.target)) {
+                    panel.style.display = "none";
+                    button.classList.remove("active");
+                }
+            });
+        });
+
 
         // 앨범에 대한 좋아요 버튼
         const albumHeartButton = document.querySelector('.albumHeartButton');
