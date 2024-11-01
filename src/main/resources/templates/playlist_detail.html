@@ -22,7 +22,7 @@
 
     <!--플레이 리스트 음악들 -->
     <div class="playlist_songs">
-        <table class="playlist_table music-click-2">
+        <table class="playlist_table">
             <tbody>
             <tr th:each="song, iterStat : ${playlist}" th:data-song-id="${song.id}">
                 <td th:text="${iterStat.index + 1}"></td>
@@ -53,7 +53,8 @@
                                 <button id="addPlaylistBtn">추가</button>
                             </div>
                             <a class="my_shortcuts"
-                               th:href="@{/album/{detail}/{providerId}(detail=${song.detail}, providerId=${user != null ? user.providerId : ''})}">
+                               th:attr="data-url='/album/' + ${song.detail} + '/' + (${user != null ? user.providerId : ''})"
+                            >
                                 <button>앨범 정보</button>
                             </a>
                             <button class="accordion3">공유</button>
