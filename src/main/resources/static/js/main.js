@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+
     // 섹션 애니메이션 처리
     const sections = document.querySelectorAll('.section');
 
@@ -72,6 +74,29 @@ document.addEventListener('DOMContentLoaded', () => {
             if (url) loadPage(url);
         }
 
+
+        function toggleAccordion(event, accordionClass) {
+            event.stopPropagation();
+            const button = event.currentTarget;
+            button.classList.toggle("active");
+            const panel = button.nextElementSibling;
+            panel.style.display = panel.style.display === "block" ? "none" : "block";
+        }
+
+        document.querySelectorAll('.accordion2, .accordion3, .accordion4').forEach(button => {
+            button.addEventListener('click', (event) => toggleAccordion(event, button.className));
+        });
+
+        document.addEventListener("click", function(event) {
+            document.querySelectorAll('.accordion2, .accordion3, .accordion4').forEach(button => {
+                const panel = button.nextElementSibling;
+                if (panel.style.display === "block" && !button.contains(event.target) && !panel.contains(event.target)) {
+                    panel.style.display = "none";
+                    button.classList.remove("active");
+                }
+            });
+        });
+
         // 앨범에 대한 좋아요 버튼
         const albumHeartButton = document.querySelector('.albumHeartButton');
         if (albumHeartButton) {
@@ -123,6 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
         }
     });
+
+
 
     //마이페이지 좋아요 삭제 기능
     window.deleteLike = function (id, button) {
