@@ -53,52 +53,48 @@
                 </script>
             </td>
             <td class="menu">
-                <div class="accordion_container">
-                    <button class="accordion2">:</button>
-                    <div class="panel">
-                        <button class="like-button"
-                                th:data-album-id="${album.id}"
-                                th:data-user-id="${user.providerId}"
-                                th:data-album-detail="${album.detail != null ? album.detail : ''}">
-                            <span th:text="${album.isLiked != null ? (album.isLiked ? '♥' : '♡') : '♡'}"></span>
-                        </button>
-                        <button class="accordion4">플레이리스트에 추가</button>
-                        <div class="panel3">
-                            <div th:each="playlist : ${playlists}">
-                                <button th:text="${playlist.userPlaylistName}"
-                                        th:data-playlist-id="${playlist.id}"
-                                        th:data-user-id="${playlist.providerId}"
-                                        th:data-album-id="${album.id}"
-                                        th:data-album-detail="${album.detail}"></button>
-                            </div>
+                <button class="accordion2">:</button>
+                <div class="panel">
+                    <button class="like-button"
+                            th:data-album-id="${album.id}"
+                            th:data-user-id="${user.providerId}"
+                            th:data-album-detail="${album.detail != null ? album.detail : ''}">
+                        <span th:text="${album.isLiked != null ? (album.isLiked ? '♥' : '♡') : '♡'}"></span>
+                    </button>
+                    <button class="accordion4">플레이리스트에 추가</button>
+                    <div class="panel3">
+                        <div th:each="playlist : ${playlists}">
+                            <button th:text="${playlist.userPlaylistName}"
+                                    th:data-playlist-id="${playlist.id}"
+                                    th:data-user-id="${playlist.providerId}"
+                                    th:data-album-id="${album.id}"
+                                    th:data-album-detail="${album.detail}"></button>
+                        </div>
 
-                            <!-- 새로운 플레이리스트 추가 입력 필드와 버튼 -->
-                            <input type="text" id="newPlaylistName" placeholder="새로운 플레이리스트"/>
-                            <button id="addPlaylistBtn">추가</button>
-                        </div>
-                        <a class="my_shortcuts"
-                           th:attr="data-url='/album/' + ${album.detail} + '/' + (${user != null ? user.providerId : ''})"
-                           onclick="event.stopPropagation();">
-                            <button>앨범 정보</button>
-                        </a>
-                        <button class="accordion3">공유</button>
-                        <div class="panel2">
-                            <button>
-                                <a href="#" onclick="clip(); return false;">링크 복사</a>
-                            </button>
-                            <button>
-                                <a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a>
-                            </button>
-                            <button>
-                                <a href="javascript:shareTwitter();">트위터에 공유</a>
-                            </button>
-                            <button>
-                                <a href="javascript:shareFacebook();">페이스북에 공유</a>
-                            </button>
-                            <button>
-                                <a href="javascript:shareBand();">밴드에 공유</a>
-                            </button>
-                        </div>
+                        <!-- 새로운 플레이리스트 추가 입력 필드와 버튼 -->
+                        <input type="text" id="newPlaylistName" placeholder="새로운 플레이리스트"/>
+                        <button id="addPlaylistBtn">추가</button>
+                    </div>
+                    <a th:href="@{/album/{detail}/{providerId}(detail=${album.detail}, providerId=${user.providerId})}">
+                        <button>앨범 정보</button>
+                    </a>
+                    <button class="accordion3">공유</button>
+                    <div class="panel2">
+                        <button>
+                            <a href="#" onclick="clip(); return false;">링크 복사</a>
+                        </button>
+                        <button>
+                            <a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a>
+                        </button>
+                        <button>
+                            <a href="javascript:shareTwitter();">트위터에 공유</a>
+                        </button>
+                        <button>
+                            <a href="javascript:shareFacebook();">페이스북에 공유</a>
+                        </button>
+                        <button>
+                            <a href="javascript:shareBand();">밴드에 공유</a>
+                        </button>
                     </div>
                 </div>
             </td>
@@ -132,5 +128,302 @@
 <script src="/js/main.js"></script> <!-- JavaScript 파일 연결 -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
+
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // 곡에 대한 개별 좋아요 처리
+        const trackHeartButtons = document.querySelectorAll('.like-button');
+        trackHeartButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                console.log('Track like button clicked');
+                const albumId = this.getAttribute('data-album-id');
+                const providerId = this.getAttribute('data-user-id');
+
+                fetch(`/mypage/like/album/toggleTrack?albumId=${albumId}&providerId=${providerId}`, {
+                    method: 'POST',
+                    cache: 'no-cache'
+                })
+                    .then(response => response.text())
+                    .then(result => {
+                        const isLiked = result === "liked";
+                        if (isLiked) {
+                            this.querySelector('span').innerText = '♥'; // 좋아요 상태일 때 채워진 하트로 변경
+                        } else {
+                            this.querySelector('span').innerText = '♡'; // 좋아요 취소 시 빈 하트로 변경
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error toggling like:', error);
+                        alert("좋아요 처리 중 오류가 발생했습니다.");
+                    });
+            });
+        });
+    });
+</script>
+
+<!-- 댓글 생성 폼 json 형태로 전송 -->
+<script>
+    function submitComment() {
+        var providerId = document.getElementById('providerId').value;
+        var albumId = document.getElementById('albumId').value;
+        var comment = document.getElementById('comment').value;
+
+        // 로그 출력
+        console.log("Provider ID: ", providerId);
+        console.log("Album ID: ", albumId);
+        console.log("Comment: ", comment);
+
+        // 데이터를 JSON 형태로 만들어 서버로 전송
+        var data = {
+            providerId: providerId,
+            albumId: albumId,
+            comment: comment
+        };
+
+        fetch('/submitComment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        }).then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('댓글 작성에 실패했습니다.');
+            }
+        }).then(function (data) {
+            alert('댓글이 작성되었습니다.');
+            location.reload();
+        }).catch(function (error) {
+            console.error('Error:', error);
+            alert('댓글 작성 중 오류가 발생했습니다.');
+        });
+    }
+</script>
+
+<!-- 아코디언 메뉴 -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 첫 번째 아코디언
+        var acc = document.getElementsByClassName("accordion2");
+        Array.from(acc).forEach(button => {
+            button.addEventListener("click", function(event) {
+                event.stopPropagation(); // 버튼 클릭 시 이벤트가 상위로 전달되지 않도록 처리
+                this.classList.toggle("active");
+                const panel = this.nextElementSibling;
+                panel.style.display = panel.style.display === "block" ? "none" : "block";
+            });
+        });
+
+        // 문서 전체에 클릭 이벤트 리스너 추가
+        document.addEventListener("click", function(event) {
+            // 클릭한 부분이 아코디언 메뉴 또는 그 내부가 아니라면 닫기
+            Array.from(acc).forEach(button => {
+                const panel = button.nextElementSibling;
+                if (panel.style.display === "block" && !button.contains(event.target) && !panel.contains(event.target)) {
+                    panel.style.display = "none";
+                    button.classList.remove("active");
+                }
+            });
+        });
+
+        // 두 번째 아코디언 (공유 메뉴)
+        var acc2 = document.getElementsByClassName("accordion3");
+        for (var j = 0; j < acc2.length; j++) {
+            acc2[j].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel2 = this.nextElementSibling;
+                if (panel2.style.display === "block") {
+                    panel2.style.display = "none";
+                } else {
+                    panel2.style.display = "block";
+                }
+            });
+        }
+
+        // 세 번째 아코디언 (재생 목록에 추가)
+        var acc3 = document.getElementsByClassName("accordion4");
+        for (var k = 0; k < acc3.length; k++) {
+            acc3[k].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel3 = this.nextElementSibling;
+                if (panel3.style.display === "block") {
+                    panel3.style.display = "none";
+                } else {
+                    panel3.style.display = "block";
+                }
+            });
+        }
+    });
+</script>
+
+<!--플레이리스트 추가 버튼 클릭 이벤트-->
+<script>
+    // DOMContentLoaded 이벤트 리스너 추가
+    document.addEventListener('DOMContentLoaded', function () {
+        // 플레이리스트 추가 버튼 클릭 이벤트
+        const addPlaylistBtn = document.getElementById('addPlaylistBtn');
+
+        addPlaylistBtn.addEventListener('click', function (event) {
+            event.stopPropagation(); // 이벤트 전파 방지
+            const newPlaylistName = document.getElementById('newPlaylistName').value.trim();
+
+            // 값 로그 확인
+            console.log('New Playlist Name:', newPlaylistName);
+
+            const firstButton = document.querySelector('.panel3 button[data-user-id]');
+            if (!firstButton) {
+                alert('플레이리스트가 없습니다. 먼저 플레이리스트를 추가하세요.');
+                return;
+            }
+
+            const providerId = firstButton.dataset.userId;
+            const albumId = firstButton.dataset.albumId;
+
+            console.log('Provider ID:', providerId);
+            console.log('Album ID:', albumId);
+
+            const playlistDto = {
+                providerId: providerId,
+                albumId: albumId,
+                userPlaylistName: newPlaylistName
+            };
+
+            // AJAX 요청 보내기
+            fetch('/playlist/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(playlistDto)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(errorText => {
+                            throw new Error('Error: ' + errorText);
+                        });
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log('Response data:', data); // 서버로부터의 응답 데이터 출력
+                    alert(data); // 성공 메시지 표시
+
+                    // 새로운 플레이리스트 추가 후 입력 필드 초기화
+                    document.getElementById('newPlaylistName').value = '';
+
+                    // 필요시 UI에 추가된 플레이리스트를 업데이트하는 로직을 여기에 추가
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error); // 구체적인 오류 메시지 출력
+                    alert('오류 발생: ' + error.message); // 오류 메시지 표시
+                });
+        });
+    });
+</script>
+
+<!--새로운 플레이리스트 추가 버튼 클릭 이벤트-->
+<script>
+    document.querySelectorAll('.panel3 button[data-user-id]').forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.stopPropagation(); // 이벤트 전파 방지
+
+            const providerId = this.dataset.userId; // userId 가져오기
+            const albumId = this.dataset.albumId; // albumId 가져오기
+            const userPlaylistName = this.innerText; // 버튼의 텍스트 (플레이리스트 이름)
+
+            // 로그로 값을 확인
+            console.log('User ID:', providerId);
+            console.log('Album ID:', albumId);
+            console.log('Playlist Name:', userPlaylistName);
+
+            // PlaylistDto 생성
+            const playlistDto = {
+                providerId: providerId,
+                albumId: albumId,
+                userPlaylistName: userPlaylistName
+            };
+
+            // AJAX 요청 보내기
+            fetch('/playlist/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(playlistDto)
+            })
+                .then(response => {
+                    console.log('Response status:', response.status); // 상태 코드 출력
+                    console.log('Response statusText:', response.statusText); // 상태 메시지 출력
+
+                    if (!response.ok) {
+                        return response.text().then(errorText => {
+                            throw new Error('Error: ' + errorText);
+                        });
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    console.log('Response data:', data); // 서버로부터의 응답 데이터 출력
+                    alert(data); // 성공 메시지 표시
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error); // 구체적인 오류 메시지 출력
+                    alert('오류 발생: ' + error.message); // 오류 메시지 표시
+                });
+        });
+    });
+</script>
+
+<!-- 트위터 공유 -->
+<script>
+    function shareTwitter() {
+        var text = '앨범 공유 텍스트';
+        var url = window.location.href;
+        var hashtags = '음악,앨범';
+
+        var twitterUrl = 'https://twitter.com/intent/tweet?' +
+            'text=' + encodeURIComponent(text) +
+            '&url=' + encodeURIComponent(url) +
+            '&hashtags=' + encodeURIComponent(hashtags);
+
+        window.open(twitterUrl, '_blank');
+    }
+</script>
+
+<!-- 페이스북 공유 -->
+<script>
+    function shareFacebook() {
+        var url = window.location.href;
+        var facebookUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url);
+        window.open(facebookUrl, '_blank');
+    }
+</script>
+
+<!-- 밴드 공유 -->
+<script>
+    function shareBand() {
+        var url = window.location.href;
+        var bandUrl = 'https://band.us/plugin/share?body=' + encodeURIComponent(url) + '&route=' + encodeURIComponent(url);
+        window.open(bandUrl, '_blank');
+    }
+</script>
+
+<!-- 링크 복사 -->
+<script>
+    function clip() {
+        var url = window.location.href;
+        var textarea = document.createElement('textarea');
+        document.body.appendChild(textarea);
+        textarea.value = url;
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        alert('링크가 복사되었습니다.');
+    }
+</script>
+
 
 </html>
