@@ -55,7 +55,7 @@
                 <div class="accordion_container2">
                     <button class="accordion5">:</button> <!-- 아코디언 버튼 -->
                     <div class="panel" style="display: none; margin-top: 210px"> <!-- 숨겨진 패널 -->
-                        <button class="like-button" th:data-album-id="${song.id}">
+                        <button class="like-button" th:data-album-id="${song.id}" th:data-user-id="${user != null ? user.providerId : ''}">
                             <span th:text="${song.isLiked != null ? (song.isLiked ? '♥' : '♡') : '♡'}"></span>
                         </button>
                         <button class="accordion4">플레이리스트에 추가</button>
@@ -131,35 +131,6 @@
 <!-- 좋아요 기능 -->
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function () {
-        // 앨범에 대한 좋아요 버튼 처리
-        const albumHeartButton = document.querySelector('.albumHeartButton');
-        if (albumHeartButton) {
-            albumHeartButton.addEventListener('click', function () {
-                const albumId = this.getAttribute('data-album-id');
-                const providerId = this.getAttribute('data-user-id');
-
-                fetch(`/mypage/like/album/toggle?albumId=${albumId}&providerId=${providerId}`, {
-                    method: 'POST',
-                    cache: 'no-cache'
-                })
-                    .then(response => response.text())
-                    .then(result => {
-                        const isLiked = result === "liked";
-                        if (isLiked) {
-                            this.querySelector('span').innerText = '♥'; // 좋아요 상태일 때 채워진 하트로 변경
-                            alert("앨범에 좋아요를 눌렀습니다!");
-                        } else {
-                            this.querySelector('span').innerText = '♡'; // 좋아요 취소 시 빈 하트로 변경
-                            alert("앨범에 대한 좋아요를 취소했습니다.");
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error toggling like:', error);
-                        alert("좋아요 처리 중 오류가 발생했습니다.");
-                    });
-            });
-        }
-
         // 곡에 대한 개별 좋아요 처리
         const trackHeartButtons = document.querySelectorAll('.like-button');
         trackHeartButtons.forEach(button => {
