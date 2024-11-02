@@ -78,8 +78,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const albumHeartButton = document.querySelector('.albumHeartButton');
         if (albumHeartButton) {
             albumHeartButton.addEventListener('click', function () {
-                const providerId = this.getAttribute('data-user-id');
-                const albumDetail = this.getAttribute('data-album-detail');
+                const button = this; // 현재 클릭된 버튼을 참조
+                const providerId = button.getAttribute('data-user-id');
+                const albumDetail = button.getAttribute('data-album-detail');
+
+                // 이미 비활성화된 버튼인지 확인
+                if (button.disabled) return; // 버튼이 비활성화되어 있으면 중단
+                button.disabled = true; // 버튼 비활성화
 
                 fetch(`/mypage/like/album/toggle?albumDetail=${albumDetail}&providerId=${providerId}`, {
                     method: 'POST',
@@ -87,16 +92,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     .then(response => response.text())
                     .then(result => {
                         const isLiked = result === "liked";
-                        this.querySelector('span').innerText = isLiked ? '♥' : '♡';
+                        button.querySelector('span').innerText = isLiked ? '♥' : '♡';
                         alert(isLiked ? "앨범 전체 음악에 좋아요를 눌렀습니다!" : "좋아요를 취소했습니다!");
 
-                        document.querySelectorAll('.like-button span').forEach(button => {
-                            button.innerText = isLiked ? '♥' : '♡';
+                        // 모든 like-button의 span 업데이트
+                        document.querySelectorAll('.like-button span').forEach(span => {
+                            span.innerText = isLiked ? '♥' : '♡';
                         });
                     })
                     .catch(error => {
                         console.error('Error toggling like:', error);
                         alert("좋아요 처리 중 오류가 발생했습니다.");
+                    })
+                    .finally(() => {
+                        button.disabled = false; // 요청이 완료된 후 버튼 활성화
                     });
             });
         }
@@ -401,32 +410,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 곡에 대한 개별 좋아요 처리
         document.querySelectorAll('.like-button').forEach(button => {
-            button.removeEventListener('click', handleLikeClick); // 기존 이벤트 제거
-            button.addEventListener('click', handleLikeClick); // 새로운 이벤트 바인딩
+            button.addEventListener('click', handleLikeClick); // 이벤트 바인딩
         });
 
-        function handleLikeClick() {
-            console.log('Track like button clicked');
+        function handleLikeClick(event) {
             const button = event.currentTarget; // 현재 클릭된 버튼 참조
-            if (button.disabled) return;
+            if (button.disabled) return; // 이미 비활성화된 버튼이면 중단
 
-            button.disabled = true;
+            button.disabled = true; // 버튼 비활성화
 
-            const albumId = this.getAttribute('data-album-id');
-            const providerId = this.getAttribute('data-user-id');
+            const albumId = button.getAttribute('data-album-id');
+            const providerId = button.getAttribute('data-user-id');
 
             fetch(`/mypage/like/album/toggleTrack?albumId=${albumId}&providerId=${providerId}`, {
                 method: 'POST',
                 cache: 'no-cache'
             })
-                .then(response => response.text())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
                 .then(result => {
                     const isLiked = result === "liked";
-                    this.querySelector('span').innerText = isLiked ? '♥' : '♡';
+                    button.querySelector('span').innerText = isLiked ? '♥' : '♡';
                 })
                 .catch(error => {
                     console.error('Error toggling like:', error);
                     alert("좋아요 처리 중 오류가 발생했습니다.");
+                })
+                .finally(() => {
+                    button.disabled = false; // 요청이 완료된 후 버튼 활성화
                 });
         }
 
