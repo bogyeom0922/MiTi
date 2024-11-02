@@ -407,6 +407,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function handleLikeClick() {
             console.log('Track like button clicked');
+            const button = event.currentTarget; // 현재 클릭된 버튼 참조
+            if (button.disabled) return;
+
+            button.disabled = true;
+
             const albumId = this.getAttribute('data-album-id');
             const providerId = this.getAttribute('data-user-id');
 
@@ -422,32 +427,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(error => {
                     console.error('Error toggling like:', error);
                     alert("좋아요 처리 중 오류가 발생했습니다.");
+                })
+                .finally(() => {
+                    button.disabled = false;
                 });
         }
 
         // 플레이리스트 추가 버튼 클릭 이벤트 초기화
-        const addPlaylistBtn = document.getElementById('addPlaylistBtn');
-        if (addPlaylistBtn) {
-            addPlaylistBtn.removeEventListener('click', handleAddPlaylistClick); // 기존 이벤트 제거
-            addPlaylistBtn.addEventListener('click', handleAddPlaylistClick); // 새로운 이벤트 바인딩
-        }
-
-        // 새로운 플레이리스트 추가 버튼 클릭 이벤트 초기화
         document.querySelectorAll('.panel3 button[data-user-id]').forEach(button => {
-            button.removeEventListener('click', handlePlaylistButtonClick); // 기존 이벤트 제거
-            button.addEventListener('click', handlePlaylistButtonClick); // 새로운 이벤트 바인딩
+            // 클릭 이벤트 리스너 제거
+            button.removeEventListener('click', handlePlaylistButtonClick);
+            // 새로운 이벤트 바인딩
+            button.addEventListener('click', handlePlaylistButtonClick);
         });
 
         function handlePlaylistButtonClick(event) {
             event.stopPropagation();
 
-            const providerId = this.dataset.userId;
-            const albumId = this.dataset.albumId;
-            const userPlaylistName = this.innerText;
+            const button = event.currentTarget; // 현재 클릭된 버튼 참조
+            if (button.disabled) return;
 
-            console.log('User ID:', providerId);
-            console.log('Album ID:', albumId);
-            console.log('Playlist Name:', userPlaylistName);
+            button.disabled = true;
+
+            const providerId = button.dataset.userId; // data-user-id 값 가져오기
+            const albumId = button.dataset.albumId; // data-album-id 값 가져오기
+            const userPlaylistName = button.innerText;
+
+            console.log('User:', providerId);
+            console.log('Album:', albumId);
+            console.log('Playlist:', userPlaylistName);
 
             const playlistDto = {
                 providerId: providerId,
@@ -475,11 +483,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(error => {
                     console.error('Fetch error:', error);
                     alert('오류 발생: ' + error.message);
+                })
+                .finally(() => {
+                    button.disabled = false;
                 });
+        }
+
+        // 새로운 플레이리스트 추가 버튼 클릭 이벤트 초기화
+        const addPlaylistBtn = document.getElementById('addPlaylistBtn');
+        if (addPlaylistBtn) {
+            addPlaylistBtn.removeEventListener('click', handleAddPlaylistClick); // 기존 이벤트 제거
+            addPlaylistBtn.addEventListener('click', handleAddPlaylistClick); // 새로운 이벤트 바인딩
         }
 
         function handleAddPlaylistClick(event) {
             event.stopPropagation();
+            const button = event.currentTarget; // 현재 클릭된 버튼 참조
+            if (button.disabled) return;
+
+            button.disabled = true;
             const newPlaylistName = document.getElementById('newPlaylistName').value.trim();
 
             console.log('New Playlist Name:', newPlaylistName);
@@ -520,6 +542,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(error => {
                     console.error('Fetch error:', error);
                     alert('오류 발생: ' + error.message);
+                })
+                .finally(() => {
+                    button.disabled = false;
                 });
         }
     });
