@@ -7,7 +7,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@100;200;300;400;500;600;700;800;900&display=swap"
           rel="stylesheet">
-    <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
     <title>Miti</title>
 </head>
 <body>
@@ -50,7 +49,6 @@
                 <img th:src="${song.album_image}" alt="앨범 이미지" class="album-cover-thumbnail">
                 <p class="song-title" th:text="${song.musicName}"></p>
                 <p class="song-artist" th:text="${song.musicArtistName}"></p>
-
                 <!-- 아코디언 메뉴 -->
                 <div class="accordion_container2">
                     <button class="accordion5">:</button> <!-- 아코디언 버튼 -->
@@ -79,7 +77,6 @@
                         <button class="accordion3">공유</button>
                         <div class="panel2" style="display: none; overflow: visible; z-index: 2000; position: absolute;"> <!-- 공유 패널 -->
                             <button><a href="#" onclick="clip(); return false;">링크 복사</a></button>
-                            <button><a id="btnKakao" href="javascript:shareKakao();">카카오톡에 공유</a></button>
                             <button><a href="javascript:shareTwitter();">트위터에 공유</a></button>
                             <button><a href="javascript:shareFacebook();">페이스북에 공유</a></button>
                             <button><a href="javascript:shareBand();">밴드에 공유</a></button>
@@ -222,10 +219,14 @@
         // 두 번째 아코디언 (공유 메뉴)
         initAccordion('accordion3', '.panel2');
 
+        //재생목록 추가
+        initAccordion('accordion4', '.panel3');
+
         // 페이지 전체 클릭 시 아코디언 닫기
         document.addEventListener('click', function (event) {
             closePanelsOutsideClick('accordion5', '.panel', event);
             closePanelsOutsideClick('accordion3', '.panel2', event);
+            closePanelsOutsideClick('accordion4', '.panel3', event);
         });
 
         function closePanelsOutsideClick(accordionClass, panelSelector, event) {
@@ -286,15 +287,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const accordion = document.querySelector('.accordion4');
-        const panel = document.querySelector('.panel3');
-
-        // 아코디언 토글 이벤트 추가
-        accordion.addEventListener('click', function (event) {
-            event.stopPropagation(); // 이벤트 전파 방지
-            const isVisible = panel.style.display === 'block';
-            panel.style.display = isVisible ? 'none' : 'block'; // 토글
-        });
 
         // 새로운 플레이리스트 추가 버튼 클릭 이벤트
         const addPlaylistBtn = document.getElementById('addPlaylistBtn');

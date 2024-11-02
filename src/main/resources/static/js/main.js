@@ -427,9 +427,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 .catch(error => {
                     console.error('Error toggling like:', error);
                     alert("좋아요 처리 중 오류가 발생했습니다.");
-                })
-                .finally(() => {
-                    button.disabled = false;
                 });
         }
 
