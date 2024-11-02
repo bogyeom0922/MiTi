@@ -35,7 +35,7 @@
                 <button
                         th:data-album-id="${album.albumId}"
                         th:data-playlist-name="${userPlaylistName}"
-                        th:data-url="'/mypage/playlist/albums/' + ${user.providerId} + '?userPlaylistName=' + ${userPlaylistName}"
+                        th:data-url="'/mypage/playlist/albums/' + ${user.providerId} + '/' + ${userPlaylistName}"
                         th:onclick="'deleteFromPlaylist(' + ${album.albumId} + ', this)'"
                         class="btn btn-danger my_table_button my_shortcuts">
                 삭제

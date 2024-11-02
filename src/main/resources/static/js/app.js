@@ -333,6 +333,54 @@ const SpotifyPlayer = ({
         }
     };
 
+    const handlePlaylistButtonClick = (event) => {
+        event.stopPropagation();
+
+        const button = event.currentTarget;
+        if (button.disabled) return;
+
+        button.disabled = true;
+
+        const providerId = button.dataset.userId;
+        const albumId = button.dataset.albumId;
+        const userPlaylistName = button.innerText;
+
+        console.log('User:', providerId);
+        console.log('Album:', albumId);
+        console.log('Playlist:', userPlaylistName);
+
+        const playlistDto = {
+            providerId: providerId,
+            albumId: albumId,
+            userPlaylistName: userPlaylistName
+        };
+
+        fetch('/playlist/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(playlistDto)
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(errorText => {
+                        throw new Error('Error: ' + errorText);
+                    });
+                }
+                return response.text();
+            })
+            .then(data => {
+                console.log('Response data:', data);
+                alert(data);
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                alert('오류 발생: ' + error.message);
+            })
+            .finally(() => {
+                button.disabled = false;
+            });
+    };
+
     return (
         <div className="player-container-1">
             {/* 프로그레스 바 컨테이너를 상단으로 이동 */}
@@ -417,7 +465,28 @@ const SpotifyPlayer = ({
                                                                 onClick={() => toggleTrackLike(track.id)}>
                                                             <span>{likedTracks[track.id] ? '♥' : '♡'}</span>
                                                         </button>
-                                                        <button>재생 목록에 추가</button>
+                                                        <button className="accordion4">플레이리스트에 추가
+                                                        </button>
+                                                        <div className="panel3" style={{display: 'none'}}>
+                                                            {playlists.map((playlist) => (
+                                                                <button
+                                                                    key={playlist.id}
+                                                                    data-playlist-id={playlist.id}
+                                                                    data-user-id={providerId}
+                                                                    data-album-id={track.id}
+                                                                    onClick={handlePlaylistButtonClick}
+                                                                >
+                                                                    {playlist.userPlaylistName}
+                                                                </button>
+                                                            ))}
+                                                            {/* 새로운 플레이리스트 추가 입력 필드와 버튼 */}
+                                                            <input type="text" id="newPlaylistName"
+                                                                   placeholder="새로운 플레이리스트"/>
+                                                            <button id="addPlaylistBtn"
+                                                                    onClick={handleAddPlaylistClick}>추가
+                                                            </button>
+                                                        </div>
+
                                                         <button className="my_shortcuts"
                                                                 data-url={`/album/${track.detail}/${providerId}`}
                                                                 onClick={() => {
