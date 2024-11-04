@@ -18,9 +18,10 @@ const SpotifyPlayer = ({
     const [trackDuration, setTrackDuration] = useState(0); // 트랙 길이
     const [activeAccordion, setActiveAccordion] = useState(null);
     const [likedTracks, setLikedTracks] = useState({}); // 좋아요 상태를 저장하는 객체
-    const [newPlaylistName, setNewPlaylistName] = useState("");
-    const [playlists, setPlaylists] = useState([]);
 
+    const toggleAccordion = (index) => {
+        setActiveAccordion(activeAccordion === index ? null : index);
+    };
 
     // 음악 재생 상태를 저장하는 함수
     const saveMusicState = (musicInfo, isPaused) => {
@@ -332,96 +333,6 @@ const SpotifyPlayer = ({
         }
     };
 
-    //아코디언
-
-    const toggleAccordion = (index) => {
-        setActiveAccordion(activeAccordion === index ? null : index);
-    };
-
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (!event.target.closest('.accordion_container2') &&
-                !event.target.closest('.accordion5') &&
-                !event.target.closest('.panel') &&
-                activeAccordion !== null) {
-                setActiveAccordion(null);
-            }
-        };
-
-        document.addEventListener('click', handleClickOutside);
-        return () => {
-            document.removeEventListener('click', handleClickOutside);
-        };
-    }, [activeAccordion]);
-
-
-    // Handle new playlist creation
-    const handleAddPlaylist = () => {
-        if (!newPlaylistName.trim()) return;
-
-        const firstTrack = playlist[0];
-        if (!firstTrack) {
-            alert('플레이리스트가 없습니다. 먼저 플레이리스트를 추가하세요.');
-            return;
-        }
-
-        const playlistDto = {
-            providerId: providerId,
-            albumId: firstTrack.id,
-            userPlaylistName: newPlaylistName
-        };
-
-        fetch('/playlist/create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(playlistDto)
-        })
-            .then(response => response.ok ? response.text() : response.text().then(error => {
-                throw new Error(error);
-            }))
-            .then(data => {
-                alert(data);
-                setNewPlaylistName("");
-            })
-            .catch(error => alert('오류 발생: ' + error.message));
-    };
-
-    // Add to existing playlist
-    const handleAddToExistingPlaylist = (trackId, playlistName) => {
-        const playlistDto = {
-            providerId: providerId,
-            albumId: trackId,
-            userPlaylistName: playlistName
-        };
-
-        fetch('/playlist/add', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(playlistDto)
-        })
-            .then(response => response.ok ? response.text() : response.text().then(error => {
-                throw new Error(error);
-            }))
-            .then(data => alert(data))
-            .catch(error => alert('오류 발생: ' + error.message));
-    };
-
-    useEffect(() => {
-        fetch(`/api/playlists?providerId=${providerId}`)
-            .then(response => response.json())
-            .then(data => setPlaylists(data))
-            .catch(error => console.error('Error fetching playlists:', error));
-    }, [providerId]);
-
-
-    window.toggleAccordion = function (button) {
-        console.log('Accordion button clicked');
-        button.classList.toggle("active");
-
-        const panel = button.nextElementSibling;
-        panel.style.display = panel.style.display === "block" ? "none" : "block";
-    };
-
     return (
         <div className="player-container-1">
             {/* 프로그레스 바 컨테이너를 상단으로 이동 */}
@@ -492,53 +403,46 @@ const SpotifyPlayer = ({
 
                                                 {/* 아코디언 메뉴 */}
                                                 <div className="accordion_container">
-                                                    <button className="accordion5" onClick={() => toggleAccordion(0)}>:</button>
-                                                    <div className="panel"
-                                                         style={{display: activeAccordion === 0 ? 'block' : 'none'}}>
+                                                    <button
+                                                        className="accordion2"
+                                                        onClick={() => toggleAccordion(index)}
+                                                    >
+                                                        :
+                                                    </button>
+                                                    <div
+                                                        className="panel"
+                                                        style={{display: activeAccordion === index ? 'block' : 'none'}}
+                                                    >
                                                         <button className="like-button"
                                                                 onClick={() => toggleTrackLike(track.id)}>
                                                             <span>{likedTracks[track.id] ? '♥' : '♡'}</span>
                                                         </button>
-                                                        <button className="accordion4"
-                                                                onClick={(e) => window.toggleAccordion(e.currentTarget)}>
-                                                            플레이리스트에 추가
+                                                        <button>재생 목록에 추가</button>
+                                                        <button className="my_shortcuts"
+                                                                data-url={`/album/${track.detail}/${providerId}`}
+                                                                onClick={() => {
+                                                                    window.location.href = `/album/${track.detail}/${providerId}`;
+                                                                }}>
+                                                            앨범 정보
                                                         </button>
-                                                        <div className="panel3" style={{ display: 'none' }}>
-                                                        {playlists.length > 0 ? (
-                                                            playlists.map((playlist) => (
-                                                                <button
-                                                                    key={playlist.id}
-                                                                    onClick={() => handleAddToExistingPlaylist(track.id, playlist.userPlaylistName)}
-                                                                >
-                                                                    {playlist.userPlaylistName}
-                                                                </button>
-                                                            ))
-                                                        ) : (
-                                                            <p>플레이리스트를 불러오는 중...</p>
-                                                        )}
-                                                        <input type="text" value={newPlaylistName}
-                                                               onChange={(e) => setNewPlaylistName(e.target.value)}
-                                                               placeholder="새로운 플레이리스트"/>
-                                                        <button onClick={handleAddPlaylist}>추가</button>
-                                                    </div>
-                                                    <a className="my_shortcuts" onClick={(e) => {
-                                                        e.stopPropagation();
-                                                            window.location.href = `/album/${track.detail}/${providerId}`;
-                                                        }}>
-                                                            <button>앨범 정보</button>
-                                                        </a>
-                                                        <button className="accordion3"  onClick={(e) => window.toggleAccordion(e.currentTarget)}>공유</button>
-                                                        <div className="panel2" style={{ display: activeAccordion === 2 ? 'block' : 'none' }}>
-                                                            <button onClick={() => copyLink(track.id)}>링크 복사</button>
-                                                            <button onClick={() => shareKakao(track.id)}>카카오톡에 공유</button>
-                                                            <button onClick={() => shareTwitter(track.id)}>트위터에 공유</button>
-                                                            <button onClick={() => shareFacebook(track.id)}>페이스북에 공유</button>
-                                                            <button onClick={() => shareBand(track.id)}>밴드에 공유</button>
+
+                                                        <button className="accordion3">공유</button>
+                                                        <div className="panel2" style={{display: 'none'}}>
+                                                            <button><a href="#" onClick={() => { /* 클립보드 복사 로직 */
+                                                            }}>링크 복사</a></button>
+                                                            <button><a href="#" onClick={() => shareKakao(track.id)}>카카오톡에
+                                                                공유</a></button>
+                                                            <button><a href="#" onClick={() => shareTwitter(track.id)}>트위터에
+                                                                공유</a></button>
+                                                            <button><a href="#" onClick={() => shareFacebook(track.id)}>페이스북에
+                                                                공유</a></button>
+                                                            <button><a href="#" onClick={() => shareBand(track.id)}>밴드에
+                                                                공유</a></button>
                                                         </div>
                                                     </div>
-                                            </div>
+                                                </div>
                                             </li>
-                                            ))}
+                                        ))}
                                     </ul>
                                 </div>
                             </div>

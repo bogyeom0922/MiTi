@@ -12,10 +12,9 @@
 <div th:fragment="header">
     <div class="header">
         <!-- 로고 -->
-        <p class="logo my_shortcuts" th:if="${user != null}" th:attr="data-url='/main'" data-provider-id="${user.providerId}" onclick=window.location.href='/main';>
+        <p class="logo" onclick=window.location.href='/main';>
             MITI
         </p>
-
 
         <!-- 음악 검색 -->
         <input type="text" class="search_input" id="search" placeholder="Search for music or artist" autocomplete="off"/>
