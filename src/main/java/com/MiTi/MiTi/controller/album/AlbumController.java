@@ -85,6 +85,14 @@ public class AlbumController {
         return "album/album_detail"; // 또는 다른 적절한 경로로 리디렉션
     }
 
+    //토글 아코디언
+    @GetMapping("/api/playlists")
+    @ResponseBody
+    public List<PlaylistDto> getPlaylistsByProvider(@RequestParam String providerId) {
+        return playlistService.getPlaylistListByProviderId(providerId);
+    }
+
+
     @PostMapping("/playlist/add")
     @ResponseBody
     public ResponseEntity<String> addPlaylist(@RequestBody PlaylistDto playlistDto) {
