@@ -469,7 +469,7 @@ const SpotifyPlayer = ({
                                     <ul>
                                         {playlist.map((track, index) => (
                                             <li key={track.id}
-                                                style={{display: 'flex', alignItems: 'center', marginBottom: '10px'}}>
+                                                style={{position: 'relative', display: 'flex', alignItems: 'center', marginBottom: '10px', justifyContent: 'space-between'}}>
                                                 <div
                                                     onClick={() => handlePlaylistClick(track.id)}
                                                     style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}
@@ -491,10 +491,10 @@ const SpotifyPlayer = ({
                                                 </div>
 
                                                 {/* 아코디언 메뉴 */}
-                                                <div className="accordion_container">
-                                                    <button className="accordion5" onClick={() => toggleAccordion(0)}>:</button>
+                                                <div className="accordion_container" style={{overflow: 'visible'}}>
+                                                    <button className="accordion5" onClick={() => toggleAccordion(0)} style={{marginRight: '15px'}}>:</button>
                                                     <div className="panel"
-                                                         style={{display: activeAccordion === 0 ? 'block' : 'none'}}>
+                                                         style={{display: activeAccordion === 0 ? 'block' : 'none', position: 'absolute', width: '140px', marginLeft: '-100px'}}>
                                                         <button className="like-button"
                                                                 onClick={() => toggleTrackLike(track.id)}>
                                                             <span>{likedTracks[track.id] ? '♥' : '♡'}</span>

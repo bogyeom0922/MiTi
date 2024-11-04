@@ -35,7 +35,7 @@
                 <td class="menu">
                     <div class="accordion_container">
                         <button class="accordion2">:</button>
-                        <div class="panel">
+                        <div class="panel" style="width: 140px">
                             <button class="like-button" th:data-album-id="${song.id}" th:data-user-id="${user != null ? user.providerId : ''}">
                                 <span th:text="${song.isLiked != null ? (song.isLiked ? '♥' : '♡') : '♡'}"></span>
                             </button>
