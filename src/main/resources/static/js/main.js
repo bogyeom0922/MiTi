@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
         //mypage_playlist(playlist_album)
         // 마이페이지 플레이리스트 삭제 기능
         window.deleteFromPlaylist = function (albumId, button) {
-            const playlistName = button.getAttribute('data-playlist-name');
+            const playlistName = button.getAttribute('data-playlist-name'); // data-* 속성으로 문자열 값 가져오기
             const url = button.getAttribute('data-url');
 
             console.log(`Deleting albumId: ${albumId} from playlist: ${playlistName}`);
@@ -340,13 +340,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ albumId: albumId, playlistName: playlistName })
+                body: JSON.stringify({albumId: albumId, playlistName: playlistName})
             })
                 .then(response => response.text())
                 .then(result => {
                     console.log(`Response: ${result}`);
                     if (result === 'success') {
-                        // 삭제된 앨범 행 제거
                         document.querySelector(`tr[data-album-id="${albumId}"]`).remove();
 
                         // 페이지 업데이트
@@ -356,6 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 document.getElementById('content').innerHTML = html;
                             });
                     } else {
+
                     }
                 })
                 .catch(error => {
@@ -363,8 +363,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('삭제 중 오류가 발생했습니다.');
                 });
         };
-
-
 
         //album_detail js q부분
 
@@ -564,7 +562,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-
-
 });
-

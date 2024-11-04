@@ -3,79 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiTi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Gothic+A1:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>Login</title>
     <style>
         body {
-            margin: 0;
-            overflow: hidden; /* 스크롤바 제거 */
-            display: flex;
-            justify-content: center; /* 수평 중앙 정렬 */
-            align-items: center; /* 수직 중앙 정렬 */
-            height: 100vh; /* 전체 화면 높이 설정 */
-            background-color: #121212; /* 배경 색 설정 */
-        }
-        img {
-            position: absolute; /* 위치를 절대적으로 설정 */
-            top: 0;
-            left: 0;
-            width: 100vw; /* 전체 너비를 차지하도록 설정 */
-            height: 100vh; /* 전체 높이를 차지하도록 설정 */
-            object-fit: cover; /* 비율 유지하며 잘림 */
-            opacity: 0; /* 시작할 때 투명하게 설정 */
-        }
-        /* 메인 이미지 */
-        .main {
-            animation: fadeInMain 1s forwards; /* 2초 동안 서서히 나타나는 애니메이션 */
-        }
-        /* 로고 이미지 */
-        .logo {
-            animation: fadeInLogo 1s forwards 2s; /* 메인 이미지 후 2초 후에 애니메이션 시작 */
-        }
-        /* 헤드셋 이미지 */
-        .miti {
-            animation: fadeInHeadset 2s forwards 4s; /* 로고 후 4초 후에 애니메이션 시작 */
-        }
-
-        @keyframes fadeInMain {
-            from {
-                opacity: 0; /* 시작할 때 완전 투명 */
-            }
-            to {
-                opacity: 1; /* 끝날 때 불투명 */
-            }
-        }
-
-        @keyframes fadeInLogo {
-            from {
-                opacity: 0; /* 시작할 때 완전 투명 */
-            }
-            to {
-                opacity: 1; /* 끝날 때 불투명 */
-            }
-        }
-
-        @keyframes fadeInHeadset {
-            from {
-                opacity: 0; /* 시작할 때 완전 투명 */
-            }
-            to {
-                opacity: 1; /* 끝날 때 불투명 */
-            }
+            font-family: "Gothic A1", sans-serif;
+            font-weight: 900;
+            font-style: normal;
         }
     </style>
 </head>
-<body>
-<div class="container">
-    <img src="images/main.png" alt="Main" class="main"> <!-- 메인 이미지 파일 경로 -->
-    <img src="images/logo.png" alt="Logo" class="logo"> <!-- 로고 파일 경로 -->
-    <img src="images/MiTi.png" alt="MiTi" class="miti"> <!-- 헤드셋 파일 경로 -->
-</div>
+<body style="background-color: #121212; margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;"
+>
+<p style="color: white; font-size: 80px;">MITI</p>
+</body>
 
 <script>
-    setTimeout(move_page, 1000); // 8초 후 이동
+    setTimeout('move_page()', 1500); //1.5초 후 이동
     function move_page() {
-        location.href = "/oauth2/authorization/spotify"; // 이동할 URL
+        location.href = "/oauth2/authorization/spotify"
     }
 </script>
-</body>
 </html>

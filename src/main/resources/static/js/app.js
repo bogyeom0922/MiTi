@@ -504,25 +504,25 @@ const SpotifyPlayer = ({
                                                             플레이리스트에 추가
                                                         </button>
                                                         <div className="panel3" style={{ display: 'none' }}>
-                                                        {playlists.length > 0 ? (
-                                                            playlists.map((playlist) => (
-                                                                <button
-                                                                    key={playlist.id}
-                                                                    onClick={() => handleAddToExistingPlaylist(track.id, playlist.userPlaylistName)}
-                                                                >
-                                                                    {playlist.userPlaylistName}
-                                                                </button>
-                                                            ))
-                                                        ) : (
-                                                            <p>플레이리스트를 불러오는 중...</p>
-                                                        )}
-                                                        <input type="text" value={newPlaylistName}
-                                                               onChange={(e) => setNewPlaylistName(e.target.value)}
-                                                               placeholder="새로운 플레이리스트"/>
-                                                        <button onClick={handleAddPlaylist}>추가</button>
-                                                    </div>
-                                                    <a className="my_shortcuts" onClick={(e) => {
-                                                        e.stopPropagation();
+                                                            {playlists.length > 0 ? (
+                                                                playlists.map((playlist) => (
+                                                                    <button
+                                                                        key={playlist.id}
+                                                                        onClick={() => handleAddToExistingPlaylist(track.id, playlist.userPlaylistName)}
+                                                                    >
+                                                                        {playlist.userPlaylistName}
+                                                                    </button>
+                                                                ))
+                                                            ) : (
+                                                                <p>플레이리스트를 불러오는 중...</p>
+                                                            )}
+                                                            <input type="text" value={newPlaylistName}
+                                                                   onChange={(e) => setNewPlaylistName(e.target.value)}
+                                                                   placeholder="새로운 플레이리스트"/>
+                                                            <button onClick={handleAddPlaylist}>추가</button>
+                                                        </div>
+                                                        <a className="my_shortcuts" onClick={(e) => {
+                                                            e.stopPropagation();
                                                             window.location.href = `/album/${track.detail}/${providerId}`;
                                                         }}>
                                                             <button>앨범 정보</button>
@@ -536,9 +536,9 @@ const SpotifyPlayer = ({
                                                             <button onClick={() => shareBand(track.id)}>밴드에 공유</button>
                                                         </div>
                                                     </div>
-                                            </div>
+                                                </div>
                                             </li>
-                                            ))}
+                                        ))}
                                     </ul>
                                 </div>
                             </div>
