@@ -422,6 +422,23 @@ const SpotifyPlayer = ({
         panel.style.display = panel.style.display === "block" ? "none" : "block";
     };
 
+    // 페이지 전체 클릭 시 아코디언 닫기
+    document.addEventListener('click', function (event) {
+        closePanelsOutsideClick('accordion2', '.panel', event);
+        closePanelsOutsideClick('accordion4', '.panel3', event);
+        closePanelsOutsideClick('accordion3', '.panel2', event);
+    });
+
+    function closePanelsOutsideClick(accordionClass, panelSelector, event) {
+        const accordions = document.getElementsByClassName(accordionClass);
+        Array.from(accordions).forEach(button => {
+            const panel = button.nextElementSibling;
+            if (panel.style.display === 'block' && !button.contains(event.target) && !panel.contains(event.target)) {
+                panel.style.display = 'none';
+                button.classList.remove('active');
+            }
+        });
+    }
     return (
         <div className="player-container-1">
             {/* 프로그레스 바 컨테이너를 상단으로 이동 */}
@@ -492,7 +509,7 @@ const SpotifyPlayer = ({
 
                                                 {/* 아코디언 메뉴 */}
                                                 <div className="accordion_container" style={{overflow: 'visible'}}>
-                                                    <button className="accordion5" onClick={() => toggleAccordion(0)} style={{marginRight: '15px'}}>:</button>
+                                                    <button className="accordion5" onClick={(e) => window.toggleAccordion(e.currentTarget)} style={{marginRight: '15px'}}>:</button>
                                                     <div className="panel"
                                                          style={{display: activeAccordion === 0 ? 'block' : 'none', position: 'absolute', width: '140px', marginLeft: '-100px'}}>
                                                         <button className="like-button"

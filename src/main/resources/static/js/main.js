@@ -453,6 +453,27 @@ document.addEventListener('DOMContentLoaded', () => {
             button.addEventListener('click', handlePlaylistButtonClick);
         });
 
+
+
+
+        // 페이지 전체 클릭 시 아코디언 닫기
+        document.addEventListener('click', function (event) {
+            closePanelsOutsideClick('accordion2', '.panel', event);
+            closePanelsOutsideClick('accordion4', '.panel3', event);
+            closePanelsOutsideClick('accordion3', '.panel2', event);
+        });
+
+        function closePanelsOutsideClick(accordionClass, panelSelector, event) {
+            const accordions = document.getElementsByClassName(accordionClass);
+            Array.from(accordions).forEach(button => {
+                const panel = button.nextElementSibling;
+                if (panel.style.display === 'block' && !button.contains(event.target) && !panel.contains(event.target)) {
+                    panel.style.display = 'none';
+                    button.classList.remove('active');
+                }
+            });
+        }
+
         function handlePlaylistButtonClick(event) {
             event.stopPropagation();
 
@@ -507,6 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
             addPlaylistBtn.removeEventListener('click', handleAddPlaylistClick); // 기존 이벤트 제거
             addPlaylistBtn.addEventListener('click', handleAddPlaylistClick); // 새로운 이벤트 바인딩
         }
+
 
         function handleAddPlaylistClick(event) {
             event.stopPropagation();
