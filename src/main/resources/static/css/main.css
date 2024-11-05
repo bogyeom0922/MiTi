@@ -943,7 +943,7 @@ a:hover {
     font-size: 18px;
     position: relative;
     top: 270px;
-    left: 18%;
+    left: 11%;
     color: rgba(195, 195, 195, 0.77);
 }
 
@@ -1438,12 +1438,3 @@ a:hover {
     background-color: #f0f0f0; /* 호버 시 약간 회색 */
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* 호버 시 그림자 강조 */
 }
-
-/*.album_ranking {*/
-/*    position: relative;*/
-/*    left: 8%;*/
-/*    top: 200px;*/
-/*    font-size: 25px;*/
-/*    font-weight: bolder;*/
-/*    margin-bottom: 50px;*/
-/*}*/
