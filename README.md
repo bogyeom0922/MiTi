@@ -1,28 +1,37 @@
 <p align="center">
-  <img width="700" alt="스크린샷 2024-11-13 오전 9 35 57" src="https://github.com/user-attachments/assets/381d055e-2bf0-4299-8eb7-5ecbe86b0bb9">
+  <img width="700" alt="프로젝트 메인 이미지" src="https://github.com/user-attachments/assets/381d055e-2bf0-4299-8eb7-5ecbe86b0bb9">
 </p>
 <br>
 
 ## 프로젝트 소개
-- 이름 : MITI
-- 소개 : 사용자에게 개인 맞춤형 음악을 추천 기능을 제공하는 음악 스트리밍 서비스
-- 기간: 2024.02-2024-11
-- 환경 : SpringBoot, Java, Python, JavaScript, MySql, Spotify Api
-- <a href="https://miti.p-e.kr"/>https://miti.p-e.kr</a>
+- **프로젝트 이름**: MITI  
+- **개요**: 개인 맞춤형 음악 추천 기능을 제공하는 최적화된 음악 스트리밍 서비스  
+- **개발 기간**: 2024.03 ~ 2024.10
+- **기술 스택**: Spring Boot, Java, Python, JavaScript, MySQL, Spotify API  
+- **배포 링크**: [https://miti.p-e.kr](https://miti.p-e.kr)  
 <br>
 
 ## 주요 기능
-- Spotify 소셜 로그인
-- 음악 스트리밍
-- 유사한 음악 추천
-- 맞춤형 음악 추천
-- 장르별 음악 추천
-- 곡 평가
+### 맞춤형 추천 알고리즘  
+  - **사용자 데이터 최적화**: 개인의 청취 기록 및 선호도를 학습하여 고도화된 맞춤형 음악 추천 제공  
+  - **유사 음악 탐지**: 재생 중인 곡과 관련된 곡을 빠르게 분석하고, 끊김 없이 연속 재생  
+  - **장르별 최적화**: 대표 장르별 선호도를 반영하여 세분화된 추천 제공  
+
+### Spotify 소셜 로그인  
+  - Spotify 계정을 통해 간단하고 빠르게 로그인  
+
+### 음악 스트리밍  
+  - **스트리밍 품질 최적화**: 국내에서 재생 가능한 곡을 사전 필터링하여 최적의 곡 제공
+  - 페이지 이동 시에도 재생이 끊기지 않도록 구현  
+
+### 곡 평가 및 사용자 피드백  
+  - 좋아요 및 댓글 기능으로 실시간 사용자 반응 반영
+  - 평가 데이터를 추천 알고리즘에 반영해 정밀도를 향상
+<br>
 
 ## 개발자 소개
-- 김민서[BE] : <a href="https://github.com/mimmimkim"/>https://github.com/mimmimkim</a>
-  - 스트리밍 관련 기능 전체, 마이페이지 전체, 하단 재생바, 토글 화면, 현재 재생 트랙, header, footer 유지 
-- 박보겸[BE] : <a href="https://github.com/bogyeom0922"/>https://github.com/bogyeom0922</a>
-  - 알고리즘 제작(맞춤형, 장르별, 유사), 앨범 상세 페이지 조회, 상세 페이지 댓글 작성 및 조회, 재생 목록에 추가, 링크 공유, 전체 페이지 프론트
-- 이해든[BE] : <a href="https://github.com/haedeune"/>https://github.com/haedeune</a>
-  - 장르 추천 플레이리스트 조회, 사용자 맞춤형 플레이리스트 조회, 인기차트, 앨범 전체 좋아요, 개별 음악 좋아요, 검색창, 검색 앨범 상세 페이지 이동
+| 이름             | 역할                                                                                       | GitHub 링크                                   |
+|------------------|------------------------------------------------------------------------------------------|---------------------------------------------|
+| **김민서 [BE]**  | 스트리밍 기능 구현, 마이페이지, 하단 재생바, 토글 화면, 현재 재생 트랙, Header/Footer 유지 | [GitHub](https://github.com/mimmimkim)     |
+| **박보겸 [BE]**  | 추천 알고리즘 (개인 맞춤형/장르별/유사 음악), 앨범 상세 조회, 댓글 기능, 재생 목록 관리, 프론트엔드 전체 구현 | [GitHub](https://github.com/bogyeom0922)   |
+| **이해든 [BE]**  | 플레이리스트 조회 (장르별/맞춤형), 인기 차트, 앨범 좋아요 기능, 앨범 검색 기능            | [GitHub](https://github.com/haedeune)      |
