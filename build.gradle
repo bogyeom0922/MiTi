@@ -4,8 +4,6 @@ plugins {
 	id 'io.spring.dependency-management' version '1.1.4'
 }
 
-group = 'com.MiTi'
-version = '0.0.1-SNAPSHOT'
 
 java {
 	sourceCompatibility = '17'
@@ -27,7 +25,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
-	implementation 'javax.servlet:javax.servlet-api:4.0.1'
+	implementation 'org.apache.tomcat.embed:tomcat-embed-core:10.1.20' // 최신 tomcat 버전 예시
+
 
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation 'com.github.thelinmichael:spotify-web-api-java:2.1.0'
@@ -48,4 +47,10 @@ allprojects {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+configurations.all {
+	resolutionStrategy {
+		force 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+	}
 }

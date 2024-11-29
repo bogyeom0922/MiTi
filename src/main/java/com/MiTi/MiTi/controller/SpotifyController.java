@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -49,7 +49,7 @@ public class SpotifyController {
 
     @GetMapping("/login")
     public void login(HttpServletResponse response) throws IOException {
-        String scope = "user-read-playback-state user-modify-playback-state streaming app-remote-control user-read-currently-playing";
+        String scope = "user-read-email user-read-private user-read-playback-state user-modify-playback-state streaming app-remote-control user-read-currently-playing";
         String state = UUID.randomUUID().toString(); // CSRF 보호를 위한 상태 토큰 생성
         String encodedScope = URLEncoder.encode(scope, StandardCharsets.UTF_8.toString());
 
@@ -136,7 +136,7 @@ public class SpotifyController {
         model.addAttribute("accessToken", accessToken);
 
         // 템플릿 이름이 아닌 URL로 리다이렉트
-        return "redirect:/index"; // index.html로 리디렉션
+        return "redirect:/main"; // main.html로 리디렉션
     }
 
     @GetMapping("/api/get-token")

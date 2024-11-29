@@ -415,7 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function handleLikeClick(event) {
             const button = event.currentTarget; // 현재 클릭된 버튼 참조
-            if (button.disabled) return; // 이미 비활성화된 버튼이면 중단
+            if (button.disabled) return; // 이미 비활성화된 버튼이    면 중단
 
             button.disabled = true; // 버튼 비활성화
 

@@ -181,7 +181,7 @@ public class AlbumController {
 
         try {
             // 파이썬 스크립트 실행
-            ProcessBuilder pb = new ProcessBuilder("python", "src/main/scripts/recommendation_algorithm.py", albumId.toString());
+            ProcessBuilder pb = new ProcessBuilder("python3", "/home/ec2-user/mititest/src/main/scripts/recommendation_algorithm.py", albumId.toString());
             Process process = pb.start();
 
             // 파이썬 스크립트의 출력을 읽음

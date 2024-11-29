@@ -19,9 +19,9 @@ public class MiTiApplication {
 		@Override
 		public void addCorsMappings(CorsRegistry registry) {
 			registry.addMapping("/**")
-					.allowedOrigins("http://localhost:8080")
+					.allowedOrigins("https://miti.p-e.kr")
 					.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-					.allowedHeaders("true");
+					.allowedHeaders("*");
 		}
 	}
 }

@@ -2,8 +2,6 @@ package com.MiTi.MiTi.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import javax.sound.midi.Track;
-import java.util.List;
 
 @Getter
 @Setter
