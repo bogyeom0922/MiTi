@@ -1,100 +1,145 @@
 import spotipy
 import csv
-#spotify api 인증을 위한 클래스
+import time
 from spotipy.oauth2 import SpotifyClientCredentials
+from requests.exceptions import ReadTimeout
 
-#spotify 계정 정보
-client_id = '552a87573e13448e934f2c843c11c6a5'
-client_secret = '3823736d49a94614912d2da790d0a808' 
+# Spotify 계정 정보
+client_id = 'acd4545842e24ce09389488d38a4456e'
+client_secret = '5511b82814894eda8fa1617f764444e3'
 
-#spotify api 인증을 위해 변수 값으로 클라이언트 인증 매니저를 생성
+# Spotify API 인증을 위해 클라이언트 인증 매니저를 생성
 client_credentials_manager = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
 
-#spotify 라이브러리를 이용하여 클라이언트 초기화
+# Spotify 라이브러리를 이용하여 클라이언트 초기화
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-#파일이 저장될 경로 지정
-csv_file_path = "spotify_tracks.csv"
+# API 호출 제한 대비 대기 시간 설정
+REQUEST_DELAY = 0.5  # 0.5초 대기 후 다음 요청
 
-#인기차트 id를 이용해 트랙 정보 가져옴
-chart_tracks = sp.playlist_tracks('37i9dQZEVXbNG2KDcFcKOF') 
+# 파일이 저장될 경로 지정
+csv_file_path = "음악.csv"
 
-#기록된 음악 이름들을 추적하기 위한 집합 생성
-#set()자료형은 중복을 허용하지 않기 때문에 중복 검사를 위해 사용됨
+# 기록된 음악 이름들을 추적하기 위한 집합 생성
 recorded_music_names = set()
 
-#csv파일 열기
-with open(csv_file_path, 'w', newline='', encoding='utf-8') as file:
-    writer = csv.writer(file)
-    
-    #csv 파일 헤더 (album테이블 필드이름)
-    writer.writerow([
-        "id", "music_name", "music_id", "music_popularity", "album_image", "album_detail",
-        "music_artist_name", "music_artist_id", "music_artist_popular", "music_genre", 
-        "music_artist_genres", "music_artist_followers", "music_analysis_url", 
-        "music_key", "music_duration_ms", "music_instrumentalness", "music_acousticness", 
-        "music_danceability", "music_energy", "music_liveness", "music_loudness", 
-        "music_mode", "music_speechiness", "music_tempo", "music_time_signature", 
-        "music_valence", "music_track_href", "music_type", "music_uri"
-    ])
-    
-    #트랙 id 초기화
-    track_id = 1
+# 카테고리별로 플레이리스트에서 트랙을 가져오는 함수
+def fetch_tracks_from_playlists():
+    try:
+        # CSV 파일 열기
+        with open(csv_file_path, 'w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
 
-    #가져온 인기 차트의 트랙에서 트랙 정보와 해당 앨범의 모든 트랙 정보를 가져옴
-    for track in chart_tracks['items']:
-        track_info = track['track']
-        album_id = track_info['album']['id']
-        album_tracks = sp.album_tracks(album_id)['items']
-
-        #각 앨범 트랙의 상세 정보 가져옴
-        for album_track in album_tracks:
-            track_details = sp.track(album_track['id'])
-
-            #이미 기록된 음악인지 중복 확인
-            music_name = album_track['name']
-            if music_name in recorded_music_names:
-                continue  #이미 기록된 음악이면 건너뛰기
-
-            #새로운 음악인 경우 기록
-            recorded_music_names.add(music_name)
-
-            #각 트랙의 오디오 특징 가져옴
-            audio_features = sp.audio_features(album_track['id'])[0]
-            
-            #아티스트 정보 저장할 리스트 초기화
-            artist_names = []
-            artist_ids = []
-            artist_popularities = []
-            artist_genres = []
-            artist_followers = []
-
-            #각 트랙마다 아티스트 정보를 가져온 후 리스트에 추가
-            for artist in album_track['artists']:
-                artist_id = artist['id']
-                artist_info = sp.artist(artist_id)
-                artist_names.append(artist_info['name'])
-                artist_ids.append(artist_info['id'])
-                artist_popularities.append(artist_info['popularity'])
-                artist_genres.append(', '.join(artist_info['genres']))
-                artist_followers.append(artist_info['followers']['total'])
-
-            #각 트랙에서 가져온 정보를 모두 파일에 작성
+            # CSV 파일 헤더 (필드 이름)
             writer.writerow([
-                track_id, music_name, album_track['id'], 
-                track_details['popularity'],  # 개별 트랙의 인기도 가져오기
-                track_info['album']['images'][0]['url'], track_info['album']['name'],
-                ', '.join(artist_names), ', '.join(artist_ids), ', '.join(map(str, artist_popularities)),
-                ', '.join(artist_names), ', '.join(artist_genres), ', '.join(map(str, artist_followers)),
-                audio_features['analysis_url'], audio_features['key'], 
-                audio_features['duration_ms'], audio_features['instrumentalness'],
-                audio_features['acousticness'], audio_features['danceability'], 
-                audio_features['energy'], audio_features['liveness'], 
-                audio_features['loudness'], audio_features['mode'], 
-                audio_features['speechiness'], audio_features['tempo'], 
-                audio_features['time_signature'], audio_features['valence'], 
-                audio_features['track_href'], audio_features['type'], album_track['uri']
+                "id", "music_name", "music_id", "music_popularity", "album_image", "album_detail",
+                "music_artist_name", "music_artist_id", "music_artist_popular", "music_genre", 
+                "music_artist_genres", "music_artist_followers", "music_analysis_url", 
+                "music_key", "music_duration_ms", "music_instrumentalness", "music_acousticness", 
+                "music_danceability", "music_energy", "music_liveness", "music_loudness", 
+                "music_mode", "music_speechiness", "music_tempo", "music_time_signature", 
+                "music_valence", "music_track_href", "music_type", "music_uri"
             ])
+            
+            # 트랙 ID 초기화
+            track_id = 1
 
-            #다음 트랙으로 이동하기 위해 id값 +1
-            track_id += 1
+            # Spotify에서 제공하는 카테고리 가져오기
+            categories = sp.categories(limit=50)  # 최대 50개의 카테고리 가져오기
+            for category in categories['categories']['items']:
+                category_id = category['id']
+                print(f"Fetching playlists from category: {category['name']}")
+
+                # 카테고리별 플레이리스트 가져오기 (최대 20개)
+                playlists = sp.category_playlists(category_id=category_id, limit=20)  # 각 카테고리당 20개의 플레이리스트
+                for playlist in playlists['playlists']['items']:
+                    playlist_id = playlist['id']
+                    playlist_name = playlist['name']
+                    print(f"Fetching tracks from playlist: {playlist_name}")
+
+                    # 플레이리스트에서 트랙 가져오기
+                    offset = 0
+                    limit = 50  # 트랙을 50개씩 가져오기
+                    total_tracks = sp.playlist_tracks(playlist_id, limit=1)['total']  # 전체 트랙 수 확인
+
+                    while offset < total_tracks:
+                        try:
+                            tracks = sp.playlist_tracks(playlist_id, limit=limit, offset=offset)['items']
+                        except ReadTimeout:
+                            print("Timeout occurred, retrying after delay...")
+                            time.sleep(REQUEST_DELAY)
+                            tracks = sp.playlist_tracks(playlist_id, limit=limit, offset=offset)['items']
+
+                        # 각 트랙의 정보 가져오기
+                        for track_item in tracks:
+                            track_info = track_item['track']
+                            
+                            # 트랙이 한국에서 스트리밍 가능한지 확인
+                            if track_info.get('is_playable', True) and 'KR' in track_info.get('available_markets', []):
+                                music_name = track_info['name']
+
+                                # 중복된 트랙은 건너뛰기
+                                if music_name in recorded_music_names:
+                                    continue
+
+                                # 트랙의 앨범 및 아티스트 정보 가져오기
+                                album_info = track_info['album']
+                                album_id = album_info['id']
+                                album_name = album_info['name']
+                                album_image_url = album_info['images'][0]['url']
+
+                                # 아티스트 정보 가져오기
+                                artist_names = []
+                                artist_ids = []
+                                artist_popularities = []
+                                artist_genres = []
+                                artist_followers = []
+
+                                for artist in track_info['artists']:
+                                    artist_id = artist['id']
+                                    artist_info = sp.artist(artist_id)
+                                    artist_names.append(artist_info['name'])
+                                    artist_ids.append(artist_info['id'])
+                                    artist_popularities.append(str(artist_info['popularity']))
+                                    artist_genres.append(', '.join(artist_info['genres']))
+                                    artist_followers.append(str(artist_info['followers']['total']))
+
+                                # 트랙의 오디오 특징 가져오기
+                                audio_features = sp.audio_features(track_info['id'])[0] if sp.audio_features(track_info['id']) else {}
+                                normalized_loudness = (audio_features.get('loudness', -60) + 60) / 60
+                                normalized_tempo = audio_features.get('tempo', 0) / 200
+
+                                # 트랙 정보 CSV에 작성
+                                writer.writerow([
+                                    track_id, music_name, track_info['id'], track_info['popularity'], 
+                                    album_image_url, album_name, ', '.join(artist_names), 
+                                    ', '.join(artist_ids), ', '.join(artist_popularities), 
+                                    ', '.join(artist_names), ', '.join(artist_genres), 
+                                    ', '.join(artist_followers), audio_features.get('analysis_url', ''), 
+                                    audio_features.get('key', ''), audio_features.get('duration_ms', ''), 
+                                    audio_features.get('instrumentalness', ''), audio_features.get('acousticness', ''), 
+                                    audio_features.get('danceability', ''), audio_features.get('energy', ''), 
+                                    audio_features.get('liveness', ''), normalized_loudness, audio_features.get('mode', ''), 
+                                    audio_features.get('speechiness', ''), normalized_tempo, 
+                                    audio_features.get('time_signature', ''), audio_features.get('valence', ''), 
+                                    audio_features.get('track_href', ''), audio_features.get('type', ''), 
+                                    track_info['uri']
+                                ])
+
+                                # 중복 방지를 위해 트랙 이름 기록
+                                recorded_music_names.add(music_name)
+
+                                # 다음 트랙으로 이동하기 위해 트랙 ID 증가
+                                track_id += 1
+
+                        offset += limit  # 다음 50개의 트랙 가져오기
+                        time.sleep(REQUEST_DELAY)  # API 호출 간 딜레이
+
+        # 파일 작성 완료
+        print("파일 작성이 완료되었습니다.")
+    
+    except Exception as e:
+        print(f"오류 발생: {e}")
+
+# 데이터 수집 실행
+fetch_tracks_from_playlists()
